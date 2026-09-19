@@ -22,6 +22,7 @@ class GenerationResult:
     completion_tokens: int | None = None
     cost_usd: float = 0.0
     error: str | None = None
+    finish_reason: str | None = None
 
 
 def build_prompt(
@@ -69,6 +70,8 @@ class OpenRouterGenerator:
         max_budget_usd: float = 0.0,
         budget_ledger: BudgetLedger | None = None,
         max_retries: int = 2,
+        temperature: float = 0.0,
+        reasoning_effort: str | None = None,
         api_key: str | None = None,
         client: httpx.Client | None = None,
     ):
@@ -79,6 +82,8 @@ class OpenRouterGenerator:
         self.output_price = output_usd_per_million_tokens
         self.budget_ledger = budget_ledger or BudgetLedger(max_budget_usd)
         self.max_retries = max_retries
+        self.temperature = temperature
+        self.reasoning_effort = reasoning_effort
         self.api_key = api_key or os.getenv("OPENROUTER_API_KEY")
         self.client = client
 
@@ -115,6 +120,18 @@ class OpenRouterGenerator:
         try:
             response = None
             for attempt in range(self.max_retries + 1):
+                request_body = {
+                    "model": self.model,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "temperature": self.temperature,
+                    "seed": 20260919,
+                    "max_tokens": self.max_output_tokens,
+                    "reasoning": (
+                        {"effort": self.reasoning_effort}
+                        if self.reasoning_effort
+                        else {"enabled": False}
+                    ),
+                }
                 response = client.post(
                     self.endpoint,
                     headers={
@@ -122,14 +139,7 @@ class OpenRouterGenerator:
                         "HTTP-Referer": "https://github.com/erendikmenn/jev-rag-benchmark",
                         "X-OpenRouter-Title": "jev-rag-benchmark",
                     },
-                    json={
-                        "model": self.model,
-                        "messages": [{"role": "user", "content": prompt}],
-                        "temperature": 0,
-                        "seed": 20260919,
-                        "max_tokens": self.max_output_tokens,
-                        "reasoning": {"enabled": False},
-                    },
+                    json=request_body,
                 )
                 if response.status_code < 400:
                     break
@@ -158,6 +168,7 @@ class OpenRouterGenerator:
                 completion_tokens=completion_tokens,
                 cost_usd=measured_cost,
                 error=None if content else "OpenRouter returned empty content",
+                finish_reason=payload["choices"][0].get("finish_reason"),
             )
         except Exception as exc:
             return GenerationResult(
@@ -183,6 +194,8 @@ def create_generator(config: dict, budget_ledger: BudgetLedger | None = None):
         max_budget_usd=budget_ledger.limit_usd if budget_ledger else 0.0,
         budget_ledger=budget_ledger,
         max_retries=config.get("max_retries", 2),
+        temperature=config.get("temperature", 0.0),
+        reasoning_effort=config.get("reasoning_effort"),
     )
 
 

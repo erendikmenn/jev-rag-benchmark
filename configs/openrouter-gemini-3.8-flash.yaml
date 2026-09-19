@@ -1,0 +1,22 @@
+extends: default.yaml
+run:
+  seed: 20260919
+  concurrency: 1
+  cache: warm
+  max_budget_usd: 5.00
+  latency_repetitions: 1
+  deduplicate_queries: true
+
+generator:
+  provider: openrouter
+  model: google/gemini-3.8-flash
+  temperature: 0.0
+  reasoning_effort: medium
+  timeout_seconds: 120
+  max_output_tokens: 4096
+  retry_token_caps: [512, 1024, 2048, 4096]
+  max_retries: 3
+  input_usd_per_million_tokens: 0.75
+  output_usd_per_million_tokens: 3.75
+  price_verified_on: "2026-09-19"
+  prompt_version: answer-v3

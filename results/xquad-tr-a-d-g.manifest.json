@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-19T19:46:16.226117+00:00",
+  "run_kind": "real-generator-replay",
+  "git_commit": "2ff8df706aa3b68668be7cf09ffc6cc4e82b54d5",
+  "python": "3.12.12",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "dependencies": {
+    "httpx": "0.28.1",
+    "numpy": "2.5.3",
+    "pydantic": "2.13.5",
+    "PyYAML": "6.0.3",
+    "typer": "0.27.2"
+  },
+  "dataset_files": {
+    "data/processed/xquad-tr/documents.jsonl": "0dc0c9cddd57e891798bd2a1083e4138e1eff19d05e2cdf5f0197499729c87b5",
+    "data/processed/xquad-tr/queries.jsonl": "a6e61439d824f3791a8e43f0144a5d9946cfbd731591dd5b822dce21892e1dce"
+  },
+  "models": {
+    "generator_requested": "google/gemini-3.8-flash",
+    "jev_requested": "typesafe/jev-1.13",
+    "cross_encoder_requested": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+    "generator_resolved": [
+      "google/gemini-3.8-flash"
+    ],
+    "reranker_resolved": [
+      "typesafe/jev-1.13-20260917"
+    ]
+  },
+  "prices": {
+    "jev_input_usd_per_million_tokens": 0.042,
+    "generator_input_usd_per_million_tokens": 0.75,
+    "generator_output_usd_per_million_tokens": 3.75,
+    "jev_verified_on": "2026-09-19",
+    "generator_verified_on": "2026-09-19"
+  },
+  "seed": 20260919,
+  "prompt_versions": {
+    "answer": "answer-v3",
+    "jev": "relevance-noul-v1"
+  },
+  "cache": "warm",
+  "concurrency": 1,
+  "config": {
+    "run": {
+      "seed": 20260919,
+      "concurrency": 1,
+      "cache": "warm",
+      "max_budget_usd": 5.0,
+      "latency_repetitions": 1,
+      "deduplicate_queries": true
+    },
+    "retrieval": {
+      "candidate_k": 20,
+      "context_k": 5,
+      "context_char_budget": 6000,
+      "backend": "bm25"
+    },
+    "generator": {
+      "provider": "openrouter",
+      "model": "google/gemini-3.8-flash",
+      "temperature": 0.0,
+      "timeout_seconds": 120,
+      "max_output_tokens": 4096,
+      "max_retries": 3,
+      "input_usd_per_million_tokens": 0.75,
+      "output_usd_per_million_tokens": 3.75,
+      "price_verified_on": "2026-09-19",
+      "prompt_version": "answer-v3",
+      "reasoning_effort": "medium",
+      "retry_token_caps": [
+        512,
+        1024,
+        2048,
+        4096
+      ]
+    },
+    "rerankers": {
+      "cross_encoder": {
+        "model": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+        "device": "cpu"
+      },
+      "jev": {
+        "provider": "openrouter",
+        "model": "typesafe/jev-1.13",
+        "threshold": 0.5,
+        "threshold_source": "uncalibrated",
+        "timeout_seconds": 60,
+        "max_retries": 2,
+        "prompt_version": "relevance-noul-v1",
+        "input_usd_per_million_tokens": 0.042,
+        "price_verified_on": "2026-09-19"
+      },
+      "small_llm": {
+        "provider": "openrouter",
+        "model": "qwen/qwen3.7-flash"
+      }
+    },
+    "policies": {
+      "no_document": "original_top_k",
+      "jev_error": "original_order",
+      "answer_abstention_text": "Kaynaklarda bu soruyu yanıtlamak için yeterli kanıt yok."
+    },
+    "datasets": {
+      "scifact": {
+        "version": "beir-scifact-1.0.0",
+        "split": "test"
+      },
+      "xquad_en": {
+        "version": "google-deepmind/xquad@master",
+        "language": "en"
+      },
+      "xquad_tr": {
+        "version": "google-deepmind/xquad@master",
+        "language": "tr"
+      }
+    }
+  },
+  "replay": {
+    "source_results": "results/xquad-tr-a-d.jsonl",
+    "source_results_sha256": "22bdaf02f266739eae0d3ba03e7913ebc4602d26ba17474dae089998f1e4770f",
+    "source_branch": "D",
+    "target_branch": "G",
+    "frozen_contexts": true,
+    "adaptive_max_output_tokens": [
+      512,
+      1024,
+      2048,
+      4096
+    ],
+    "rows": 1044
+  }
+}

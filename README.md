@@ -62,6 +62,17 @@ uv run python scripts/analyze_full_results.py \
   results/xquad-tr-a-d.jsonl data/processed/xquad-tr/documents.jsonl \
   reports/generated/xquad-tr-openrouter-jev/detailed-analysis.tr.md
 
+# Controlled third arm: replay Gemini over the exact frozen Jev contexts from D.
+# Existing successful rows are resumable; no Jev request is repeated.
+uv run python scripts/replay_generator.py \
+  results/xquad-tr-a-d.jsonl data/processed/xquad-tr/documents.jsonl \
+  configs/openrouter-gemini-3.8-flash.yaml results/xquad-tr-a-d-g.jsonl
+uv run jev-rag report results/xquad-tr-a-d-g.jsonl \
+  --output-dir reports/generated/xquad-tr-openrouter-three-way --seed 20260919
+uv run python scripts/analyze_three_way.py \
+  results/xquad-tr-a-d-g.jsonl \
+  reports/generated/xquad-tr-openrouter-three-way/detailed-analysis.tr.md
+
 # Real 25-query Jev smoke through OpenRouter, capped at $0.02.
 uv run jev-rag benchmark smoke --dataset scifact --branches A,B,D \
   --no-fixture-jev --skip-generation --config-path configs/openrouter-smoke.yaml
@@ -98,8 +109,9 @@ Each run writes JSONL, a downloadable flat CSV, and a manifest containing commit
 dependency versions, dataset hashes, requested models, price date, seed, prompt versions,
 cache mode, and concurrency. Reports separate retrieval, reranking, generation, and
 end-to-end latency; Jev, generator, retry/fallback, and local compute are not conflated.
-Generation is capped at 128 output tokens so a malformed local-model completion cannot
-consume the full context window or distort latency and cost.
+Qwen generation is capped at 128 output tokens. The Gemini reasoning replay records an
+adaptive 512/1,024/2,048/4,096-token retry policy in its manifest so hidden reasoning does
+not truncate the visible answer or its citation.
 
 Mock/fixture output has `run_kind=fixture` and must never be cited as a real benchmark.
 Local models have zero API price but non-zero measured runtime; the report calls this out.
