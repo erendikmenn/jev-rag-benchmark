@@ -32,6 +32,11 @@ def _citations(answer: str) -> set[str]:
     return set(re.findall(r"\[([^\]]+)\]", answer))
 
 
+def _answer_text(answer: str) -> str:
+    """Remove machine-readable citations before QA text metrics."""
+    return re.sub(r"\s*\[[^\]]+\]", "", answer).strip()
+
+
 def run_benchmark(
     *,
     documents_path: Path,
@@ -47,6 +52,15 @@ def run_benchmark(
     documents, queries = load_dataset(documents_path, queries_path, split)
     rng = random.Random(config["run"]["seed"])
     queries = sorted(queries, key=lambda q: q.query_id)
+    if config["run"].get("deduplicate_queries", False):
+        unique_queries = []
+        seen_texts = set()
+        for query in queries:
+            normalized = " ".join(query.text.casefold().split())
+            if normalized not in seen_texts:
+                unique_queries.append(query)
+                seen_texts.add(normalized)
+        queries = unique_queries
     if limit and len(queries) > limit:
         queries = rng.sample(queries, limit)
     index_started = time.perf_counter()
@@ -116,6 +130,7 @@ def run_benchmark(
             candidate_ids = [item.document.doc_id for item in candidates]
             relevant = set(query.relevant_doc_ids)
             cited = _citations(answer)
+            answer_text = _answer_text(answer)
             context_ids = set(ranked_ids)
             support = any(
                 reference.casefold() in item.document.text.casefold()
@@ -142,14 +157,19 @@ def run_benchmark(
                 "ndcg_10_context": ndcg_at_k(ranked_ids, relevant, 10),
                 "mrr_10_context": mrr_at_k(ranked_ids, relevant, 10),
                 "recall_context_k": recall_at_k(ranked_ids, relevant, context_k),
-                "answer_em": exact_match(answer, query.answers) if query.answers else None,
-                "answer_f1": token_f1(answer, query.answers) if query.answers else None,
+                "answer_em": exact_match(answer_text, query.answers) if query.answers else None,
+                "answer_f1": token_f1(answer_text, query.answers) if query.answers else None,
                 "source_contains_gold": support,
                 "citation_validity": (
                     len(cited & context_ids) / len(cited) if cited else (0.0 if answer else None)
                 ),
                 "abstained": config["policies"]["answer_abstention_text"] in answer,
-                "wrong_answer": bool(query.answers and answer and not exact_match(answer, query.answers)),
+                "wrong_answer": bool(
+                    query.answers
+                    and answer_text
+                    and config["policies"]["answer_abstention_text"] not in answer
+                    and token_f1(answer_text, query.answers) < 0.5
+                ),
                 "index_ms_once": index_ms if query_idx == 0 and branch == branches[0] else None,
                 "retrieval_ms": retrieval_ms,
                 "rerank_ms": telemetry.latency_ms,
@@ -173,6 +193,9 @@ def run_benchmark(
                 "run_kind": "fixture" if fixture_jev else "real",
             }
             rows.append(row)
+        completed = query_idx + 1
+        if completed % 25 == 0 or completed == len(queries):
+            print(f"progress: {completed}/{len(queries)} queries", flush=True)
     write_jsonl(output_path, rows)
     flat_rows = [
         {**row, "candidate_ids": "|".join(row["candidate_ids"]), "context_ids": "|".join(row["context_ids"]), "references": "|".join(row["references"])}

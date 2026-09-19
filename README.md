@@ -53,6 +53,15 @@ uv run jev-rag estimate --dataset scifact --jev-branches 1
 uv run jev-rag benchmark full --dataset xquad-tr --branches A,D --limit 5 \
   --no-fixture-jev --no-skip-generation --config-path configs/openrouter-smoke.yaml
 
+# Every unique XQuAD-TR test question (1,044 paired A/D questions)
+uv run jev-rag benchmark full --dataset xquad-tr --branches A,D \
+  --no-fixture-jev --no-skip-generation --config-path configs/openrouter-full.yaml
+uv run jev-rag report results/xquad-tr-a-d.jsonl \
+  --output-dir reports/generated/xquad-tr-openrouter-jev
+uv run python scripts/analyze_full_results.py \
+  results/xquad-tr-a-d.jsonl data/processed/xquad-tr/documents.jsonl \
+  reports/generated/xquad-tr-openrouter-jev/detailed-analysis.tr.md
+
 # Real 25-query Jev smoke through OpenRouter, capped at $0.02.
 uv run jev-rag benchmark smoke --dataset scifact --branches A,B,D \
   --no-fixture-jev --skip-generation --config-path configs/openrouter-smoke.yaml

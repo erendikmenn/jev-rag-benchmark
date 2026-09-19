@@ -4,6 +4,7 @@ run:
   cache: warm
   max_budget_usd: 0.0
   latency_repetitions: 3
+  deduplicate_queries: false
 
 retrieval:
   candidate_k: 20

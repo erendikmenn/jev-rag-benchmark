@@ -26,8 +26,8 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
         "",
         "## Özet",
         "",
-        "| Dil | Kol | n | nDCG@10 bağlam | Recall@k | EM | F1 | p50 ms | p95 ms | USD/sorgu | Fallback |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+        "| Dil | Kol | n | nDCG@10 bağlam | Recall@k | EM | F1 | Başarı | p50 ms | p95 ms | USD/sorgu | Fallback |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     summary = []
     for (language, branch), items in sorted(grouped.items()):
@@ -42,6 +42,7 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
             "recall": mean(item["recall_context_k"] for item in items),
             "em": mean(valid_em) if valid_em else None,
             "f1": mean(valid_f1) if valid_f1 else None,
+            "success": mean(float(value >= 0.5) for value in valid_f1) if valid_f1 else None,
             "p50": percentile(latencies, 0.50),
             "p95": percentile(latencies, 0.95),
             "cost": mean(item["online_cost_usd"] for item in items),
@@ -61,9 +62,14 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
         }
         summary.append(record)
         lines.append(
-            f"| {language} | {branch} | {record['n']} | {_fmt(record['ndcg'])} | {_fmt(record['recall'])} | {_fmt(record['em'])} | {_fmt(record['f1'])} | {_fmt(record['p50'], 1)} | {_fmt(record['p95'], 1)} | {_fmt(record['cost'], 6)} | {_fmt(record['fallback'])} |"
+            f"| {language} | {branch} | {record['n']} | {_fmt(record['ndcg'])} | {_fmt(record['recall'])} | {_fmt(record['em'])} | {_fmt(record['f1'])} | {_fmt(record['success'])} | {_fmt(record['p50'], 1)} | {_fmt(record['p95'], 1)} | {_fmt(record['cost'], 6)} | {_fmt(record['fallback'])} |"
         )
 
+    sample_note = (
+        "- Küçük smoke örneği kesin sonuç değildir."
+        if max((record["n"] for record in summary), default=0) < 100
+        else "- Bu koşu seçilen test kümesinin tamamını kapsar; başka alanlara otomatik genellenmemelidir."
+    )
     lines.extend(
         [
             "",
@@ -136,6 +142,25 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
             lines.append(
                 f"- `{language}` A→{branch} nDCG@10 farkı: **{delta:+.3f}** (GA {low:+.3f}, {high:+.3f}; n={len(common)})."
             )
+            baseline_f1 = [branches["A"][qid]["answer_f1"] for qid in common]
+            treatment_f1 = [branches[branch][qid]["answer_f1"] for qid in common]
+            if all(value is not None for value in baseline_f1 + treatment_f1):
+                delta, low, high = paired_bootstrap_ci(
+                    baseline_f1, treatment_f1, seed=seed
+                )
+                lines.append(
+                    f"- `{language}` A→{branch} F1 farkı: **{delta:+.3f}** "
+                    f"(GA {low:+.3f}, {high:+.3f}; n={len(common)})."
+                )
+                baseline_success = [float(value >= 0.5) for value in baseline_f1]
+                treatment_success = [float(value >= 0.5) for value in treatment_f1]
+                delta, low, high = paired_bootstrap_ci(
+                    baseline_success, treatment_success, seed=seed
+                )
+                lines.append(
+                    f"- `{language}` A→{branch} başarı oranı farkı: **{delta:+.3f}** "
+                    f"(GA {low:+.3f}, {high:+.3f}; n={len(common)})."
+                )
 
     lines.extend(
         [
@@ -146,7 +171,7 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
             "- XQuAD cevapları EM/F1 için kullanılır; kaynakta altın cevabın bulunması ayrıca raporlanır.",
             "- Yerel cross-encoder için API bedeli sıfırdır; gecikme ve yerel donanım süresi maliyet telemetrisidir.",
             "- Tasarruf yüzdesi raporlanacaksa payda A kolunun USD/sorgu değeridir; negatif değerler korunur.",
-            "- Küçük smoke örneği kesin sonuç değildir.",
+            sample_note,
             "",
         ]
     )

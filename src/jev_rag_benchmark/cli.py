@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import random
 from pathlib import Path
 from typing import Annotated
 
@@ -90,8 +91,18 @@ def estimate(
     queries = read_jsonl(queries_path)
     if dataset.startswith("xquad"):
         queries = [row for row in queries if row.get("split") == "test"]
-    if limit is not None:
-        queries = sorted(queries, key=lambda row: row["query_id"])[:limit]
+    queries = sorted(queries, key=lambda row: row["query_id"])
+    if config["run"].get("deduplicate_queries", False):
+        unique_queries = []
+        seen_texts = set()
+        for query in queries:
+            normalized = " ".join(query["text"].casefold().split())
+            if normalized not in seen_texts:
+                unique_queries.append(query)
+                seen_texts.add(normalized)
+        queries = unique_queries
+    if limit is not None and len(queries) > limit:
+        queries = random.Random(config["run"]["seed"]).sample(queries, limit)
     index = BM25Index(documents)
     jev_cfg = config["rerankers"]["jev"]
     estimator = JevReranker(

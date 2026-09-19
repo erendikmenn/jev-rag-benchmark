@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "created_at": "2026-09-19T17:18:43.822612+00:00",
+  "created_at": "2026-09-19T18:16:30.509355+00:00",
   "run_kind": "real",
-  "git_commit": "5bf0fcb2a5b079a7cf01b67e582e652f6056e520",
+  "git_commit": "2ff8df706aa3b68668be7cf09ffc6cc4e82b54d5",
   "python": "3.12.12",
   "platform": "macOS-27.0-arm64-arm-64bit",
   "dependencies": {
@@ -46,8 +46,9 @@
       "seed": 20260919,
       "concurrency": 1,
       "cache": "warm",
-      "max_budget_usd": 0.02,
-      "latency_repetitions": 1
+      "max_budget_usd": 5.0,
+      "latency_repetitions": 1,
+      "deduplicate_queries": true
     },
     "retrieval": {
       "candidate_k": 20,
@@ -106,9 +107,6 @@
         "version": "google-deepmind/xquad@master",
         "language": "tr"
       }
-    },
-    "limits": {
-      "queries": 25
     }
   }
 }
