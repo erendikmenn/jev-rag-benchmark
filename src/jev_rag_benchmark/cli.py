@@ -147,7 +147,12 @@ def ask(
     else:
         reranker = IdentityReranker()
     contexts, telemetry = reranker.rerank(question, candidates, config["retrieval"]["context_k"])
-    prompt = build_prompt(question, contexts, config["policies"]["answer_abstention_text"])
+    prompt = build_prompt(
+        question,
+        contexts,
+        config["policies"]["answer_abstention_text"],
+        config["retrieval"]["context_char_budget"],
+    )
     result = OllamaGenerator(
         config["generator"]["model"],
         config["generator"]["timeout_seconds"],
@@ -164,6 +169,10 @@ def _run(dataset: str, config_path: Path, branches: str, limit: int | None, fixt
     if missing:
         raise typer.BadParameter("dataset missing; run `jev-rag data prepare` first")
     selected = [item.strip().upper() for item in branches.split(",") if item.strip()]
+    if "E" in selected and config["rerankers"]["jev"].get("threshold_source") != "dev":
+        raise typer.BadParameter(
+            "branch E is locked until rerankers.jev.threshold_source is set to dev after calibration"
+        )
     name = f"{dataset}-{'-'.join(selected).lower()}"
     output = ROOT / f"results/{name}.jsonl"
     split = "test" if dataset.startswith("xquad") else None

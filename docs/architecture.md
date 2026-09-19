@@ -23,9 +23,13 @@ query -> BM25 top 20 -> frozen candidate ids -> A: original top 5 ---------+
                                       `-> E: Jev Noul threshold then <= 5-+
 ```
 
-A/B/D keep the same context count. E is reported separately because it may reduce context
+A/B/D keep the same context count and the same 6,000-character maximum context budget. E is reported separately because it may reduce context
 and generation work. Branch execution order rotates by query. Candidate ids are written to
 every result row, making equality auditable.
+
+Branch E is locked while `threshold_source: uncalibrated`. It can only run after the
+threshold is selected on dev data and the config records `threshold_source: dev`; test data
+must not be used to choose it.
 
 ## Jev contract verified on 2026-09-19
 
@@ -49,4 +53,3 @@ this is mitigation and telemetry—not a security guarantee.
   article-grouped dev/test split so a context cannot leak across splits. XQuAD is originally
   an evaluation set; the derived dev split is only for project-level threshold calibration
   and is recorded in the manifest.
-

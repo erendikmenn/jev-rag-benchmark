@@ -162,4 +162,19 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
 <rect width="100%" height="100%" fill="white"/><text x="32" y="32" font-size="20" font-family="sans-serif">Bağlam nDCG@10</text>
 <line x1="35" y1="290" x2="890" y2="290" stroke="#333"/>{''.join(bars)}</svg>'''
     (output_dir / "ndcg-context.svg").write_text(svg, encoding="utf-8")
+    latency_bars = []
+    max_latency = max((item["p50"] for item in summary), default=1) or 1
+    for idx, item in enumerate(summary):
+        x = 50 + idx * max(80, 800 // max(1, len(summary)))
+        bar_h = 240 * item["p50"] / max_latency
+        y = 290 - bar_h
+        latency_bars.append(
+            f'<rect x="{x}" y="{y:.1f}" width="48" height="{bar_h:.1f}" fill="#00a896"/>'
+            f'<text x="{x + 24}" y="315" text-anchor="middle" font-size="12">{html.escape(item["language"])}-{item["branch"]}</text>'
+            f'<text x="{x + 24}" y="{y - 7:.1f}" text-anchor="middle" font-size="12">{item["p50"]:.1f}</text>'
+        )
+    latency_svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
+<rect width="100%" height="100%" fill="white"/><text x="32" y="32" font-size="20" font-family="sans-serif">Uçtan uca p50 gecikme (ms)</text>
+<line x1="35" y1="290" x2="890" y2="290" stroke="#333"/>{''.join(latency_bars)}</svg>'''
+    (output_dir / "latency-p50.svg").write_text(latency_svg, encoding="utf-8")
     return report_path

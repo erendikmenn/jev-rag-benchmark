@@ -104,7 +104,10 @@ def run_benchmark(
             completion_tokens = None
             if not skip_generation:
                 prompt = build_prompt(
-                    query.text, contexts, config["policies"]["answer_abstention_text"]
+                    query.text,
+                    contexts,
+                    config["policies"]["answer_abstention_text"],
+                    config["retrieval"]["context_char_budget"],
                 )
                 generated = generator.generate(prompt)
                 answer = generated.answer
@@ -131,6 +134,10 @@ def run_benchmark(
                 "branch": branch,
                 "candidate_ids": candidate_ids,
                 "context_ids": ranked_ids,
+                "context_chars": min(
+                    sum(len(item.document.text) for item in contexts),
+                    config["retrieval"]["context_char_budget"],
+                ),
                 "answer": answer,
                 "references": list(query.answers),
                 "ndcg_10_candidates": ndcg_at_k(candidate_ids, relevant, 10),

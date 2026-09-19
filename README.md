@@ -68,7 +68,9 @@ uv run jev-rag report results/scifact-a-b-d.jsonl
 
 `benchmark full` uses every selected test query unless `--limit` is passed. A/B/D use the
 same frozen top-20 candidates and exactly five context documents. E applies the dev-selected
-threshold and is intentionally separate.
+threshold and is intentionally separate. E is configuration-locked until
+`threshold_source: dev` is recorded after calibration. Every generator prompt also has the
+same 6,000-character maximum context budget.
 
 ## Tests
 

@@ -59,7 +59,12 @@ def query_documents(request: QueryRequest):
         config["generator"]["timeout_seconds"],
         config["generator"]["max_output_tokens"],
     ).generate(
-        build_prompt(request.query, contexts, config["policies"]["answer_abstention_text"])
+        build_prompt(
+            request.query,
+            contexts,
+            config["policies"]["answer_abstention_text"],
+            config["retrieval"]["context_char_budget"],
+        )
     )
     if generated.error:
         raise HTTPException(status_code=503, detail=generated.error)

@@ -8,6 +8,7 @@ run:
 retrieval:
   candidate_k: 20
   context_k: 5
+  context_char_budget: 6000
   backend: bm25
 
 generator:
@@ -25,6 +26,7 @@ rerankers:
   jev:
     model: jev-1.13.0
     threshold: 0.50
+    threshold_source: uncalibrated
     timeout_seconds: 60
     max_retries: 2
     prompt_version: relevance-noul-v1
