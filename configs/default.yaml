@@ -1,0 +1,50 @@
+run:
+  seed: 20260919
+  concurrency: 1
+  cache: warm
+  max_budget_usd: 0.0
+  latency_repetitions: 3
+
+retrieval:
+  candidate_k: 20
+  context_k: 5
+  backend: bm25
+
+generator:
+  provider: ollama
+  model: qwen2.5:0.5b
+  temperature: 0.0
+  timeout_seconds: 180
+  max_output_tokens: 128
+  prompt_version: answer-v2
+
+rerankers:
+  cross_encoder:
+    model: cross-encoder/mmarco-mMiniLMv2-L12-H384-v1
+    device: cpu
+  jev:
+    model: jev-1.13.0
+    threshold: 0.50
+    timeout_seconds: 60
+    max_retries: 2
+    prompt_version: relevance-noul-v1
+    input_usd_per_million_tokens: 0.042
+    price_verified_on: "2026-09-19"
+  small_llm:
+    model: qwen2.5:0.5b
+
+policies:
+  no_document: original_top_k
+  jev_error: original_order
+  answer_abstention_text: "Kaynaklarda bu soruyu yanıtlamak için yeterli kanıt yok."
+
+datasets:
+  scifact:
+    version: beir-scifact-1.0.0
+    split: test
+  xquad_en:
+    version: google-deepmind/xquad@master
+    language: en
+  xquad_tr:
+    version: google-deepmind/xquad@master
+    language: tr

@@ -1,0 +1,3 @@
+{"query_id":"q1","text":"What is the capital of Türkiye?","relevant_doc_ids":["d1"],"answers":["Ankara"],"language":"en","split":"test"}
+{"query_id":"q2","text":"Which planet is called the Red Planet?","relevant_doc_ids":["d6"],"answers":["Mars"],"language":"en","split":"test"}
+

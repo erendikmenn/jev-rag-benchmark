@@ -1,0 +1,10 @@
+extends: default.yaml
+run:
+  seed: 20260919
+  concurrency: 1
+  cache: warm
+  max_budget_usd: 0.0
+  latency_repetitions: 1
+limits:
+  queries: 25
+
