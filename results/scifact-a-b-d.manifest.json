@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-19T17:00:05.653340+00:00",
+  "run_kind": "fixture",
+  "git_commit": "9c8a6587ec963f36099a458cb3c576592dddd4b2",
+  "python": "3.12.12",
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "dependencies": {
+    "httpx": "0.28.1",
+    "numpy": "2.5.3",
+    "pydantic": "2.13.5",
+    "PyYAML": "6.0.3",
+    "typer": "0.27.2"
+  },
+  "dataset_files": {
+    "data/processed/scifact/documents.jsonl": "8da540d40b37806e8dfdb59c1c06c7f9859f212fbd222da896e94f59d223acfd",
+    "data/processed/scifact/queries.test.jsonl": "abf01a08641852309e7e28c7a20366bb73dc1915dd7dca2d308d3099b4bd436c"
+  },
+  "models": {
+    "generator_requested": "qwen2.5:0.5b",
+    "jev_requested": "jev-1.13.0",
+    "cross_encoder_requested": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+    "generator_resolved": [],
+    "reranker_resolved": [
+      "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+      "fixture-not-jev"
+    ]
+  },
+  "prices": {
+    "jev_input_usd_per_million_tokens": 0.042,
+    "verified_on": "2026-09-19"
+  },
+  "seed": 20260919,
+  "prompt_versions": {
+    "answer": "answer-v2",
+    "jev": "relevance-noul-v1"
+  },
+  "cache": "warm",
+  "concurrency": 1,
+  "config": {
+    "run": {
+      "seed": 20260919,
+      "concurrency": 1,
+      "cache": "warm",
+      "max_budget_usd": 0.0,
+      "latency_repetitions": 1
+    },
+    "retrieval": {
+      "candidate_k": 20,
+      "context_k": 5,
+      "context_char_budget": 6000,
+      "backend": "bm25"
+    },
+    "generator": {
+      "provider": "ollama",
+      "model": "qwen2.5:0.5b",
+      "temperature": 0.0,
+      "timeout_seconds": 180,
+      "max_output_tokens": 128,
+      "prompt_version": "answer-v2"
+    },
+    "rerankers": {
+      "cross_encoder": {
+        "model": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+        "device": "cpu"
+      },
+      "jev": {
+        "model": "jev-1.13.0",
+        "threshold": 0.5,
+        "threshold_source": "uncalibrated",
+        "timeout_seconds": 60,
+        "max_retries": 2,
+        "prompt_version": "relevance-noul-v1",
+        "input_usd_per_million_tokens": 0.042,
+        "price_verified_on": "2026-09-19"
+      },
+      "small_llm": {
+        "model": "qwen2.5:0.5b"
+      }
+    },
+    "policies": {
+      "no_document": "original_top_k",
+      "jev_error": "original_order",
+      "answer_abstention_text": "Kaynaklarda bu soruyu yanıtlamak için yeterli kanıt yok."
+    },
+    "datasets": {
+      "scifact": {
+        "version": "beir-scifact-1.0.0",
+        "split": "test"
+      },
+      "xquad_en": {
+        "version": "google-deepmind/xquad@master",
+        "language": "en"
+      },
+      "xquad_tr": {
+        "version": "google-deepmind/xquad@master",
+        "language": "tr"
+      }
+    },
+    "limits": {
+      "queries": 25
+    }
+  }
+}
