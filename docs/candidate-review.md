@@ -12,6 +12,6 @@ default branches, and HEAD commits were checked on the review date.
 The selected repository was active and its documented RAG API exposes retrievers and node
 postprocessors. Its full default local model stack is heavy, so the controlled benchmark
 records one baseline change: deterministic BM25 candidates replace embedding retrieval.
-The answer generator remains local Ollama and is identical across branches. This avoids
+The upstream reproduction remains unchanged, while the controlled benchmark uses the same
+low-cost OpenRouter answer model in every branch. This avoids
 claiming that a changed local model is an “unchanged” upstream execution.
-

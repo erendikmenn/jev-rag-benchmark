@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "created_at": "2026-09-19T17:18:43.804768+00:00",
+  "created_at": "2026-09-19T17:18:43.822612+00:00",
   "run_kind": "real",
   "git_commit": "5bf0fcb2a5b079a7cf01b67e582e652f6056e520",
   "python": "3.12.12",
@@ -13,16 +13,17 @@
     "typer": "0.27.2"
   },
   "dataset_files": {
-    "data/processed/scifact/documents.jsonl": "8da540d40b37806e8dfdb59c1c06c7f9859f212fbd222da896e94f59d223acfd",
-    "data/processed/scifact/queries.test.jsonl": "abf01a08641852309e7e28c7a20366bb73dc1915dd7dca2d308d3099b4bd436c"
+    "data/processed/xquad-tr/documents.jsonl": "0dc0c9cddd57e891798bd2a1083e4138e1eff19d05e2cdf5f0197499729c87b5",
+    "data/processed/xquad-tr/queries.jsonl": "a6e61439d824f3791a8e43f0144a5d9946cfbd731591dd5b822dce21892e1dce"
   },
   "models": {
     "generator_requested": "qwen/qwen3.7-flash",
     "jev_requested": "typesafe/jev-1.13",
     "cross_encoder_requested": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
-    "generator_resolved": [],
+    "generator_resolved": [
+      "qwen/qwen3.7-flash"
+    ],
     "reranker_resolved": [
-      "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
       "typesafe/jev-1.13-20260917"
     ]
   },

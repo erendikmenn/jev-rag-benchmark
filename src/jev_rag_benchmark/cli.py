@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess
 from pathlib import Path
 from typing import Annotated
 
@@ -11,13 +10,13 @@ import typer
 from .benchmark import run_benchmark
 from .config import load_config
 from .data import prepare_all
-from .generation import OllamaGenerator, build_prompt
+from .generation import build_prompt, create_generator
 from .io import read_jsonl
 from .manifest import build_manifest, write_manifest
 from .models import Document
 from .report import generate_report
 from .retrieval import BM25Index
-from .rerankers import IdentityReranker, JevReranker
+from .rerankers import BudgetLedger, IdentityReranker, JevReranker
 
 app = typer.Typer(help="Reproducible Jev RAG benchmark")
 data_app = typer.Typer(help="Download and normalize benchmark datasets")
@@ -54,8 +53,7 @@ def _dataset_paths(dataset: str) -> tuple[Path, Path]:
 def doctor() -> None:
     """Check local services and credentials without printing secret values."""
     checks = {
-        "TYPESAFE_API_KEY": bool(os.getenv("TYPESAFE_API_KEY")),
-        "ollama_binary": subprocess.run(["which", "ollama"], capture_output=True).returncode == 0,
+        "OPENROUTER_API_KEY": bool(os.getenv("OPENROUTER_API_KEY")),
     }
     typer.echo(json.dumps(checks, indent=2))
 
@@ -137,12 +135,14 @@ def ask(
     documents_path, _ = _dataset_paths(dataset)
     index = BM25Index([Document(**row) for row in read_jsonl(documents_path)])
     candidates = index.retrieve(question, config["retrieval"]["candidate_k"])
+    ledger = BudgetLedger(config["run"]["max_budget_usd"])
     if branch == "D":
         jev = config["rerankers"]["jev"]
         reranker = JevReranker(
             model=jev["model"],
             input_usd_per_million_tokens=jev["input_usd_per_million_tokens"],
             max_budget_usd=config["run"]["max_budget_usd"],
+            budget_ledger=ledger,
         )
     else:
         reranker = IdentityReranker()
@@ -153,11 +153,7 @@ def ask(
         config["policies"]["answer_abstention_text"],
         config["retrieval"]["context_char_budget"],
     )
-    result = OllamaGenerator(
-        config["generator"]["model"],
-        config["generator"]["timeout_seconds"],
-        config["generator"]["max_output_tokens"],
-    ).generate(prompt)
+    result = create_generator(config["generator"], ledger).generate(prompt)
     typer.echo(result.answer or result.error)
     typer.echo(json.dumps({"sources": [c.document.doc_id for c in contexts], "reranker": telemetry.__dict__}, ensure_ascii=False))
 

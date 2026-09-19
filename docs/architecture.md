@@ -9,7 +9,8 @@
 
 The upstream app is a minimal FastAPI RAG service using LlamaIndex, Ollama, and a local
 vector index. The benchmark keeps its local-service boundary, the query → retrieve →
-context → generate flow, and its Ollama generator. The reproducibility harness makes the
+context → generate flow. The controlled harness replaces only the generator transport with
+the same capped OpenRouter model in every branch. The reproducibility harness makes the
 retrieval boundary explicit and defaults to deterministic BM25 because it can be reproduced
 without an API or embedding-model drift. This is a recorded baseline change, not a claimed
 unchanged upstream run.
@@ -18,7 +19,7 @@ unchanged upstream run.
 
 ```text
 query -> BM25 top 20 -> frozen candidate ids -> A: original top 5 ---------+
-                                      |-> B: cross-encoder top 5 ---------+-> identical prompt -> Ollama
+                                      |-> B: cross-encoder top 5 ---------+-> identical prompt -> OpenRouter
                                       |-> D: Jev Noul top 5 --------------+
                                       `-> E: Jev Noul threshold then <= 5-+
 ```
@@ -33,8 +34,8 @@ must not be used to choose it.
 
 ## Jev contract verified on 2026-09-19
 
-- Endpoint: `POST https://api.typesafe.ai/v1/systemone`
-- Pinned model: `jev-1.13.0`; returned `model` is logged.
+- Endpoint: `POST https://openrouter.ai/api/alpha/decisions`
+- Pinned OpenRouter model: `typesafe/jev-1.13`; the resolved dated `model` is logged.
 - Noul response: `answers[question_id].noul`, the probability of “yes”. It is not renamed
   confidence and is not treated as a correctness guarantee.
 - Usage: `usage.input_tokens` and `usage.output_tokens`.

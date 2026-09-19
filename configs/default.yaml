@@ -12,19 +12,24 @@ retrieval:
   backend: bm25
 
 generator:
-  provider: ollama
-  model: qwen2.5:0.5b
+  provider: openrouter
+  model: qwen/qwen3.7-flash
   temperature: 0.0
-  timeout_seconds: 180
+  timeout_seconds: 60
   max_output_tokens: 128
-  prompt_version: answer-v2
+  max_retries: 2
+  input_usd_per_million_tokens: 0.03
+  output_usd_per_million_tokens: 0.13
+  price_verified_on: "2026-09-19"
+  prompt_version: answer-v3
 
 rerankers:
   cross_encoder:
     model: cross-encoder/mmarco-mMiniLMv2-L12-H384-v1
     device: cpu
   jev:
-    model: jev-1.13.0
+    provider: openrouter
+    model: typesafe/jev-1.13
     threshold: 0.50
     threshold_source: uncalibrated
     timeout_seconds: 60
@@ -33,7 +38,8 @@ rerankers:
     input_usd_per_million_tokens: 0.042
     price_verified_on: "2026-09-19"
   small_llm:
-    model: qwen2.5:0.5b
+    provider: openrouter
+    model: qwen/qwen3.7-flash
 
 policies:
   no_document: original_top_k

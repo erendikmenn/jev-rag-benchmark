@@ -1,20 +1,27 @@
 import httpx
 
-from jev_rag_benchmark.generation import OllamaGenerator
+from jev_rag_benchmark.generation import OpenRouterGenerator
 
 
-def test_ollama_generation_has_hard_output_cap(monkeypatch):
-    captured = {}
-
-    def fake_post(url, *, json, timeout):
-        captured.update(json)
+def test_openrouter_generation_records_usage_and_cost():
+    def handler(request: httpx.Request):
+        payload = __import__("json").loads(request.content)
+        assert payload["model"] == "qwen/qwen3.7-flash"
+        assert payload["reasoning"] == {"enabled": False}
         return httpx.Response(
             200,
-            request=httpx.Request("POST", url),
-            json={"response": "short", "model": "fixture", "eval_count": 1},
+            json={
+                "model": "qwen/qwen3.7-flash",
+                "choices": [{"message": {"content": "Ankara [d1]"}}],
+                "usage": {"prompt_tokens": 40, "completion_tokens": 5, "cost": 0.000002},
+            },
         )
 
-    monkeypatch.setattr(httpx, "post", fake_post)
-    result = OllamaGenerator("model", max_output_tokens=37).generate("prompt")
-    assert result.answer == "short"
-    assert captured["options"]["num_predict"] == 37
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    result = OpenRouterGenerator(
+        "qwen/qwen3.7-flash", api_key="test", max_budget_usd=1, client=client
+    ).generate("prompt")
+    assert result.answer == "Ankara [d1]"
+    assert result.prompt_tokens == 40
+    assert result.completion_tokens == 5
+    assert result.cost_usd == 0.000002

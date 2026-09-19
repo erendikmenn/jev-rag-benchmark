@@ -58,7 +58,14 @@ def build_manifest(
             "jev_input_usd_per_million_tokens": config["rerankers"]["jev"][
                 "input_usd_per_million_tokens"
             ],
-            "verified_on": str(config["rerankers"]["jev"]["price_verified_on"]),
+            "generator_input_usd_per_million_tokens": config["generator"].get(
+                "input_usd_per_million_tokens"
+            ),
+            "generator_output_usd_per_million_tokens": config["generator"].get(
+                "output_usd_per_million_tokens"
+            ),
+            "jev_verified_on": str(config["rerankers"]["jev"]["price_verified_on"]),
+            "generator_verified_on": str(config["generator"].get("price_verified_on")),
         },
         "seed": config["run"]["seed"],
         "prompt_versions": {

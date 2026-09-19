@@ -2,4 +2,3 @@ extends: default.yaml
 run:
   # Copy this file to paid.yaml and set a deliberate cap before real API calls.
   max_budget_usd: 1.00
-

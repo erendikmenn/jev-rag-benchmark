@@ -15,7 +15,7 @@ def test_jev_retries_transient_error(monkeypatch):
         return httpx.Response(
             200,
             json={
-                "model": "jev-1.13.0",
+                "model": "typesafe/jev-1.13-20260917",
                 "answers": {"candidate_0": {"type": "noul", "noul": 0.8}},
                 "usage": {"input_tokens": 10, "output_tokens": 1},
             },

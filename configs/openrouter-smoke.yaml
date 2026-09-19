@@ -1,0 +1,4 @@
+extends: smoke.yaml
+run:
+  # The 25-query SciFact preflight estimate is about $0.01; stop before $0.02.
+  max_budget_usd: 0.02

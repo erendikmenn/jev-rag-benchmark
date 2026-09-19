@@ -7,10 +7,10 @@ from pydantic import BaseModel
 
 from .cli import DEFAULT_CONFIG, _dataset_paths
 from .config import load_config
-from .generation import OllamaGenerator, build_prompt
+from .generation import build_prompt, create_generator
 from .io import read_jsonl
 from .models import Document
-from .rerankers import IdentityReranker, JevReranker
+from .rerankers import BudgetLedger, IdentityReranker, JevReranker
 from .retrieval import BM25Index
 
 app = FastAPI(title="Jev RAG Benchmark API", version="0.1.0")
@@ -39,6 +39,7 @@ def query_documents(request: QueryRequest):
     except (FileNotFoundError, ValueError) as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     candidates = index.retrieve(request.query, config["retrieval"]["candidate_k"])
+    ledger = BudgetLedger(config["run"]["max_budget_usd"])
     if request.branch == "A":
         reranker = IdentityReranker()
     elif request.branch in {"D", "E"}:
@@ -48,17 +49,14 @@ def query_documents(request: QueryRequest):
             threshold=jev["threshold"] if request.branch == "E" else None,
             input_usd_per_million_tokens=jev["input_usd_per_million_tokens"],
             max_budget_usd=config["run"]["max_budget_usd"],
+            budget_ledger=ledger,
         )
     else:
         raise HTTPException(status_code=400, detail="API supports branches A, D, and E")
     contexts, telemetry = reranker.rerank(
         request.query, candidates, config["retrieval"]["context_k"]
     )
-    generated = OllamaGenerator(
-        config["generator"]["model"],
-        config["generator"]["timeout_seconds"],
-        config["generator"]["max_output_tokens"],
-    ).generate(
+    generated = create_generator(config["generator"], ledger).generate(
         build_prompt(
             request.query,
             contexts,

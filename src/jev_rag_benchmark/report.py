@@ -45,6 +45,8 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
             "p50": percentile(latencies, 0.50),
             "p95": percentile(latencies, 0.95),
             "cost": mean(item["online_cost_usd"] for item in items),
+            "reranker_cost": mean(item.get("reranker_cost_usd", 0.0) for item in items),
+            "generator_cost": mean(item.get("generator_cost_usd", 0.0) for item in items),
             "fallback": mean(float(item["fallback"]) for item in items),
             "citation": mean(
                 item["citation_validity"] for item in items if item["citation_validity"] is not None
@@ -94,6 +96,8 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
         )
 
     total_cost = sum(float(row["online_cost_usd"]) for row in rows)
+    total_reranker_cost = sum(float(row.get("reranker_cost_usd", 0.0)) for row in rows)
+    total_generator_cost = sum(float(row.get("generator_cost_usd", 0.0)) for row in rows)
     successful = [row for row in rows if row["answer_f1"] is not None and row["answer_f1"] >= 0.5]
     one_time_index_ms = sum(float(row["index_ms_once"] or 0) for row in rows)
     lines.extend(
@@ -102,6 +106,7 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
             "## Maliyet",
             "",
             f"- Toplam ölçülen çevrimiçi deney gideri: **${total_cost:.6f}**.",
+            f"- Reranking API gideri: **${total_reranker_cost:.6f}**; cevap üretimi API gideri: **${total_generator_cost:.6f}**.",
             f"- Bir defalık indeksleme süresi: **{one_time_index_ms:.1f} ms**; API gideri: **$0**.",
             f"- Başarılı cevap tanımı: `F1 >= 0.5`; başarılı cevap sayısı: **{len(successful)}**.",
             f"- Başarılı cevap başına ölçülen çevrimiçi gider: **{'—' if not successful else f'${total_cost / len(successful):.6f}'}**.",
@@ -109,7 +114,9 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
     )
     for record in summary:
         lines.append(
-            f"- `{record['language']}-{record['branch']}`: ${record['cost']:.6f}/sorgu; ${record['cost'] * 1000:.4f}/1000 sorgu."
+            f"- `{record['language']}-{record['branch']}`: ${record['cost']:.6f}/sorgu "
+            f"(rerank ${record['reranker_cost']:.6f} + üretim ${record['generator_cost']:.6f}); "
+            f"${record['cost'] * 1000:.4f}/1000 sorgu."
         )
 
     lines.extend(["", "## Eşleştirilmiş bootstrap (%95 GA)", ""])

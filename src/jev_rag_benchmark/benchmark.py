@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 from typing import Any
 
-from .generation import OllamaGenerator, build_prompt
+from .generation import build_prompt, create_generator
 from .io import read_jsonl, write_csv, write_jsonl
 from .metrics import exact_match, mrr_at_k, ndcg_at_k, recall_at_k, token_f1
 from .models import Document, Query
@@ -83,11 +83,7 @@ def run_benchmark(
             max_retries=jev_cfg["max_retries"],
         ),
     }
-    generator = OllamaGenerator(
-        config["generator"]["model"],
-        config["generator"]["timeout_seconds"],
-        config["generator"]["max_output_tokens"],
-    )
+    generator = create_generator(config["generator"], budget_ledger)
     rows = []
     for query_idx, query in enumerate(queries):
         retrieval_started = time.perf_counter()
@@ -166,7 +162,10 @@ def run_benchmark(
                 "reranker_output_tokens": telemetry.output_tokens,
                 "generator_prompt_tokens": prompt_tokens,
                 "generator_completion_tokens": completion_tokens,
-                "online_cost_usd": telemetry.estimated_cost_usd,
+                "reranker_cost_usd": telemetry.estimated_cost_usd,
+                "generator_cost_usd": generated.cost_usd if not skip_generation else 0.0,
+                "online_cost_usd": telemetry.estimated_cost_usd
+                + (generated.cost_usd if not skip_generation else 0.0),
                 "fallback": telemetry.fallback,
                 "retry_count": telemetry.retry_count,
                 "reranker_error": telemetry.error,

@@ -80,12 +80,12 @@ class CrossEncoderReranker:
 
 
 class JevReranker:
-    endpoint = "https://api.typesafe.ai/v1/systemone"
+    endpoint = "https://openrouter.ai/api/alpha/decisions"
 
     def __init__(
         self,
         *,
-        model: str = "jev-1.13.0",
+        model: str = "typesafe/jev-1.13",
         threshold: float | None = None,
         timeout_seconds: float = 60,
         input_usd_per_million_tokens: float = 0.042,
@@ -102,7 +102,7 @@ class JevReranker:
         self.max_budget_usd = max_budget_usd
         self.budget_ledger = budget_ledger or BudgetLedger(max_budget_usd)
         self.max_retries = max_retries
-        self.api_key = api_key or os.getenv("TYPESAFE_API_KEY")
+        self.api_key = api_key or os.getenv("OPENROUTER_API_KEY")
         self.client = client
 
     @staticmethod
@@ -127,7 +127,7 @@ class JevReranker:
         started = time.perf_counter()
         estimated_cost = self.estimate_cost(query, candidates)
         if not self.api_key:
-            return self._fallback(candidates, top_k, started, "TYPESAFE_API_KEY is not set")
+            return self._fallback(candidates, top_k, started, "OPENROUTER_API_KEY is not set")
         if self.budget_ledger.limit_usd <= 0:
             return self._fallback(candidates, top_k, started, "paid calls require max_budget_usd > 0")
         if estimated_cost > self.budget_ledger.remaining_usd:
@@ -164,7 +164,11 @@ class JevReranker:
             for attempt in range(self.max_retries + 1):
                 response = client.post(
                     self.endpoint,
-                    headers={"Authorization": f"Bearer {self.api_key}"},
+                    headers={
+                        "Authorization": f"Bearer {self.api_key}",
+                        "HTTP-Referer": "https://github.com/erendikmenn/jev-rag-benchmark",
+                        "X-OpenRouter-Title": "jev-rag-benchmark",
+                    },
                     json={"state": state, "model": self.model, "questions": questions},
                 )
                 if response.status_code < 400:
@@ -193,7 +197,7 @@ class JevReranker:
                 no_document_fallback = False
             usage = payload.get("usage") or {}
             input_tokens = usage.get("input_tokens")
-            measured_cost = (
+            measured_cost = float(usage.get("cost", 0.0)) or (
                 float(input_tokens) / 1_000_000 * self.price
                 if input_tokens is not None
                 else estimated_cost
@@ -209,7 +213,7 @@ class JevReranker:
                 estimated_cost_usd=measured_cost,
                 fallback=no_document_fallback,
                 error="no document passed threshold" if no_document_fallback else None,
-                request_id=response.headers.get("x-typesafe-request-id"),
+                request_id=payload.get("id") or response.headers.get("x-request-id"),
                 retry_count=retry_count,
             )
         except Exception as exc:  # fallback is part of the benchmark contract

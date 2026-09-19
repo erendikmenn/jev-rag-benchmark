@@ -12,19 +12,12 @@ The capped three-candidate comparison is in
 
 ## Install
 
-Requirements: macOS/Linux, Python 3.11–3.13, `uv`, and (for answer generation) Ollama.
-The verified local run used Ollama v0.34.2; other versions should be recorded in the run manifest.
+Requirements: macOS/Linux, Python 3.11–3.13, `uv`, and an OpenRouter API key.
 
 ```bash
 uv sync --extra dev --extra cross-encoder
 cp .env.example .env
 uv run jev-rag doctor
-```
-
-For local generation:
-
-```bash
-ollama pull qwen2.5:0.5b
 ```
 
 Optional FastAPI surface, retained from the selected upstream app shape:
@@ -33,6 +26,7 @@ Optional FastAPI surface, retained from the selected upstream app shape:
 uv run uvicorn jev_rag_benchmark.app:app --host 127.0.0.1 --port 8000
 ```
 
+Jev is called through OpenRouter's Decisions endpoint with `OPENROUTER_API_KEY`.
 Credentials remain server-side/environment-only. The CLI reports whether a key exists but
 never prints it.
 
@@ -45,8 +39,9 @@ uv run jev-rag data prepare
 # Validate/materialize the deterministic index
 uv run jev-rag index --dataset scifact
 
-# One sourced baseline question (requires Ollama)
-uv run jev-rag ask "Türkiye'nin başkenti neresidir?" --dataset xquad-tr --branch A
+# One sourced baseline question through the capped OpenRouter config
+uv run jev-rag ask "Türkiye'nin başkenti neresidir?" --dataset xquad-tr --branch A \
+  --config-path configs/openrouter-smoke.yaml
 
 # 25-query infrastructure smoke. Jev fixture is visibly marked; no paid calls.
 uv run jev-rag benchmark smoke --dataset scifact --branches A,B,D --fixture-jev --skip-generation
@@ -54,10 +49,15 @@ uv run jev-rag benchmark smoke --dataset scifact --branches A,B,D --fixture-jev 
 # Preflight cost from the real top-20 candidate texts; makes zero API calls.
 uv run jev-rag estimate --dataset scifact --jev-branches 1
 
-# QA smoke with local answer generation
-uv run jev-rag benchmark smoke --dataset xquad-tr --branches A,B --no-fixture-jev --no-skip-generation
+# QA smoke with OpenRouter answer generation
+uv run jev-rag benchmark full --dataset xquad-tr --branches A,D --limit 5 \
+  --no-fixture-jev --no-skip-generation --config-path configs/openrouter-smoke.yaml
 
-# Real Jev run: first set an explicit positive max_budget_usd in a copied config.
+# Real 25-query Jev smoke through OpenRouter, capped at $0.02.
+uv run jev-rag benchmark smoke --dataset scifact --branches A,B,D \
+  --no-fixture-jev --skip-generation --config-path configs/openrouter-smoke.yaml
+
+# Larger real Jev run: first set an explicit positive max_budget_usd in a copied config.
 # The default of 0 blocks every paid call.
 cp configs/paid.example.yaml configs/paid.yaml
 uv run jev-rag benchmark full --dataset scifact --branches A,B,D --config-path configs/paid.yaml

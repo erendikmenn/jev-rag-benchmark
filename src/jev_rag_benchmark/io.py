@@ -35,7 +35,7 @@ def write_csv(path: str | Path, rows: list[dict[str, Any]]) -> None:
         return
     fields = sorted({key for row in rows for key in row})
     with target.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -46,4 +46,3 @@ def sha256_file(path: str | Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
-
