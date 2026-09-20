@@ -334,8 +334,16 @@ def run_benchmark(
                 "ndcg_10_context": ndcg_at_k(ranked_ids, relevant, 10),
                 "mrr_10_context": mrr_at_k(ranked_ids, relevant, 10),
                 "recall_context_k": recall_at_k(ranked_ids, relevant, context_k),
-                "answer_em": exact_match(answer_text, query.answers) if query.answers else None,
-                "answer_f1": token_f1(answer_text, query.answers) if query.answers else None,
+                "answer_em": (
+                    exact_match(answer_text, query.answers)
+                    if query.answers and not skip_generation
+                    else None
+                ),
+                "answer_f1": (
+                    token_f1(answer_text, query.answers)
+                    if query.answers and not skip_generation
+                    else None
+                ),
                 "source_contains_gold": support,
                 "citation_validity": (
                     len(cited & context_ids) / len(cited) if cited else (0.0 if answer else None)
