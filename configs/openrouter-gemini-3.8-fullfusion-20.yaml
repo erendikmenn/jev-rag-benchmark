@@ -1,0 +1,7 @@
+extends: openrouter-gemini-3.8-hybrid.yaml
+
+retrieval:
+  candidate_k: 20
+  context_k: 5
+  hybrid:
+    source_k: 240
