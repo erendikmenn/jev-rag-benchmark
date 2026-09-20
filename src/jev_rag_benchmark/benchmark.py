@@ -19,6 +19,7 @@ from .rerankers import (
     JevEvidenceRouter,
     JevHierarchicalReranker,
     JevReranker,
+    OpenRouterReranker,
 )
 from .retrieval import create_retrieval_index
 from .verification import JevCitationVerifier
@@ -90,9 +91,18 @@ def run_benchmark(
     context_k = config["retrieval"]["context_k"]
     jev_cfg = config["rerankers"]["jev"]
     budget_ledger = BudgetLedger(config["run"]["max_budget_usd"])
+    hosted_cfg = config["rerankers"]["hosted"]
     rerankers = {
         "A": IdentityReranker(),
         "B": CrossEncoderReranker(**config["rerankers"]["cross_encoder"]),
+        "O": OpenRouterReranker(
+            model=hosted_cfg["model"],
+            usd_per_search_unit=hosted_cfg["usd_per_search_unit"],
+            timeout_seconds=hosted_cfg["timeout_seconds"],
+            max_retries=hosted_cfg["max_retries"],
+            max_budget_usd=config["run"]["max_budget_usd"],
+            budget_ledger=budget_ledger,
+        ),
         "D": FixtureJevReranker()
         if fixture_jev
         else JevReranker(

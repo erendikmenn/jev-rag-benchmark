@@ -124,6 +124,116 @@ class CrossEncoderReranker:
         )
 
 
+class OpenRouterReranker:
+    endpoint = "https://openrouter.ai/api/v1/rerank"
+
+    def __init__(
+        self,
+        model: str = "cohere/rerank-v3.5",
+        *,
+        usd_per_search_unit: float = 0.001,
+        timeout_seconds: float = 60,
+        max_retries: int = 2,
+        max_budget_usd: float = 0.0,
+        budget_ledger: BudgetLedger | None = None,
+        api_key: str | None = None,
+        client: httpx.Client | None = None,
+    ):
+        self.model = model
+        self.usd_per_search_unit = usd_per_search_unit
+        self.timeout_seconds = timeout_seconds
+        self.max_retries = max_retries
+        self.budget_ledger = budget_ledger or BudgetLedger(max_budget_usd)
+        self.api_key = api_key or os.getenv("OPENROUTER_API_KEY")
+        self.client = client
+
+    def rerank(self, query: str, candidates: list[Candidate], top_k: int):
+        started = time.perf_counter()
+        if not self.api_key:
+            return candidates[:top_k], RerankTelemetry(
+                method="openrouter_rerank",
+                latency_ms=0.0,
+                requested_model=self.model,
+                fallback=True,
+                error="OPENROUTER_API_KEY is not set",
+            )
+        if self.budget_ledger.limit_usd <= 0:
+            return candidates[:top_k], RerankTelemetry(
+                method="openrouter_rerank",
+                latency_ms=0.0,
+                requested_model=self.model,
+                fallback=True,
+                error="paid calls require max_budget_usd > 0",
+            )
+        client = self.client or httpx.Client(timeout=self.timeout_seconds)
+        try:
+            response = None
+            retry_count = 0
+            for attempt in range(self.max_retries + 1):
+                response = client.post(
+                    self.endpoint,
+                    headers={
+                        "Authorization": f"Bearer {self.api_key}",
+                        "HTTP-Referer": "https://github.com/erendikmenn/jev-rag-benchmark",
+                        "X-OpenRouter-Title": "jev-rag-benchmark",
+                    },
+                    json={
+                        "model": self.model,
+                        "query": query,
+                        "documents": [candidate.document.text for candidate in candidates],
+                        "top_n": len(candidates),
+                    },
+                )
+                if response.status_code < 400:
+                    break
+                retryable = response.status_code == 429 or response.status_code >= 500
+                if not retryable or attempt >= self.max_retries:
+                    response.raise_for_status()
+                retry_count += 1
+                time.sleep(min(float(response.headers.get("retry-after", 2**attempt)), 10.0))
+            assert response is not None
+            response.raise_for_status()
+            payload = response.json()
+            scored = [
+                replace(
+                    candidates[item["index"]],
+                    rerank_score=float(item["relevance_score"]),
+                )
+                for item in payload["results"]
+            ]
+            scored.sort(key=lambda item: (-(item.rerank_score or 0.0), item.retrieval_rank))
+            usage = payload.get("usage") or {}
+            search_units = int(usage.get("search_units") or 0)
+            cost = float(usage.get("cost") or search_units * self.usd_per_search_unit)
+            self.budget_ledger.charge(cost)
+            return scored[:top_k], RerankTelemetry(
+                method="openrouter_rerank",
+                latency_ms=(time.perf_counter() - started) * 1000,
+                requested_model=self.model,
+                resolved_model=payload.get("model"),
+                input_tokens=usage.get("total_tokens"),
+                estimated_cost_usd=cost,
+                request_id=payload.get("id") or response.headers.get("x-request-id"),
+                retry_count=retry_count,
+                details={
+                    "provider": payload.get("provider"),
+                    "search_units": search_units,
+                    "scores": {item.document.doc_id: item.rerank_score for item in scored},
+                },
+            )
+        except Exception as exc:
+            return candidates[:top_k], RerankTelemetry(
+                method="openrouter_rerank",
+                latency_ms=(time.perf_counter() - started) * 1000,
+                requested_model=self.model,
+                fallback=True,
+                error=f"{type(exc).__name__}: {exc}",
+            )
+        finally:
+            if self.client is None:
+                client.close()
+
+
 class JevReranker:
     endpoint = "https://openrouter.ai/api/alpha/decisions"
 

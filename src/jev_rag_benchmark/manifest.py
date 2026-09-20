@@ -55,6 +55,7 @@ def build_manifest(
             "generator_requested": config["generator"]["model"],
             "jev_requested": config["rerankers"]["jev"]["model"],
             "cross_encoder_requested": config["rerankers"]["cross_encoder"]["model"],
+            "hosted_reranker_requested": config["rerankers"]["hosted"]["model"],
             "embedding_requested": config["retrieval"].get("embedding", {}).get("model"),
         },
         "prices": {
@@ -74,6 +75,12 @@ def build_manifest(
             .get("input_usd_per_million_tokens"),
             "embedding_verified_on": str(
                 config["retrieval"].get("embedding", {}).get("price_verified_on")
+            ),
+            "hosted_reranker_usd_per_search_unit": config["rerankers"]["hosted"].get(
+                "usd_per_search_unit"
+            ),
+            "hosted_reranker_verified_on": str(
+                config["rerankers"]["hosted"].get("price_verified_on")
             ),
         },
         "seed": config["run"]["seed"],

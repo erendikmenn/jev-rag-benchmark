@@ -38,6 +38,13 @@ generator:
   prompt_version: answer-v3
 
 rerankers:
+  hosted:
+    provider: openrouter
+    model: cohere/rerank-v3.5
+    usd_per_search_unit: 0.001
+    price_verified_on: "2026-09-20"
+    timeout_seconds: 60
+    max_retries: 2
   cross_encoder:
     model: cross-encoder/mmarco-mMiniLMv2-L12-H384-v1
     device: cpu
