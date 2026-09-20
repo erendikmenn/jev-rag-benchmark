@@ -116,6 +116,31 @@ generator can produce two sourced sentences; exact match is therefore deliberate
 The wrong-answer flag is an automatic `non-abstaining F1 < 0.5` proxy, not human factuality
 adjudication. Latency is observed OpenRouter route latency, not a universal TPS guarantee.
 
+### 6. Visual benchmark
+
+The charts below visualize the same locked results reported in the tables above. Their SVG
+sources are committed next to the PNG files so labels, scales, and values remain auditable.
+
+![Retrieval errors across the classic BM25, hybrid, and hybrid plus Jev pipelines](assets/benchmark/retrieval-errors.png)
+
+**How to read it:** the y-axis lists the retrieval pipeline, while the x-axis counts questions
+whose gold passage is missing from the final top five. Lower is better. The labels below each
+pipeline also report Recall@5, where higher is better.
+
+![Recall, ranking quality, and cost for the raw hybrid order, Jev, and Cohere](assets/benchmark/reranker-comparison.png)
+
+**How to read it:** the first two x-axes show percentages and are explicitly zoomed to
+90–100%; higher is better. The third x-axis shows total reranking cost in USD for all 1,044
+questions; lower is better. The y-axis in every panel lists the reranking method. All methods
+receive the same frozen hybrid top-20 candidates.
+
+![Successful answers, total cost, and median latency for Gemini and DeepSeek](assets/benchmark/generator-tradeoffs.png)
+
+**How to read it:** the first x-axis counts answers with token F1 >= 0.5, where higher is
+better. The next two x-axes show total pipeline cost and median generation latency, where lower
+is better. Both generators receive the exact same frozen Jev top-five contexts, so this chart
+isolates the answer-model trade-off.
+
 The complete methodology, interpretation limits, confidence intervals, and artifact map
 are also preserved in [`docs/benchmark-2026-09-20.md`](docs/benchmark-2026-09-20.md).
 
