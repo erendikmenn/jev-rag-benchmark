@@ -28,6 +28,8 @@ class Candidate:
     retrieval_score: float
     retrieval_rank: int
     rerank_score: float | None = None
+    route: str = "evidence"
+    signals: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass
@@ -43,3 +45,4 @@ class RerankTelemetry:
     error: str | None = None
     request_id: str | None = None
     retry_count: int = 0
+    details: dict[str, Any] = field(default_factory=dict)

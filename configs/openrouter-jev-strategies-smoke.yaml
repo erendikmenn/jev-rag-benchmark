@@ -1,0 +1,13 @@
+extends: openrouter-hybrid.yaml
+
+run:
+  max_budget_usd: 2.0
+
+retrieval:
+  candidate_k: 5
+  context_k: 3
+
+rerankers:
+  jev:
+    max_concurrency: 5
+

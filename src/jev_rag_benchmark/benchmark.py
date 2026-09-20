@@ -15,6 +15,7 @@ from .rerankers import (
     CrossEncoderReranker,
     FixtureJevReranker,
     IdentityReranker,
+    JevEvidenceRouter,
     JevReranker,
 )
 from .retrieval import create_retrieval_index
@@ -99,6 +100,8 @@ def run_benchmark(
             max_budget_usd=config["run"]["max_budget_usd"],
             budget_ledger=budget_ledger,
             max_retries=jev_cfg["max_retries"],
+            strategy="batch",
+            max_concurrency=jev_cfg.get("max_concurrency", 12),
         ),
         "E": FixtureJevReranker()
         if fixture_jev
@@ -110,6 +113,46 @@ def run_benchmark(
             max_budget_usd=config["run"]["max_budget_usd"],
             budget_ledger=budget_ledger,
             max_retries=jev_cfg["max_retries"],
+            strategy="batch",
+            max_concurrency=jev_cfg.get("max_concurrency", 12),
+        ),
+        "P": FixtureJevReranker()
+        if fixture_jev
+        else JevReranker(
+            model=jev_cfg["model"],
+            threshold=None,
+            timeout_seconds=jev_cfg["timeout_seconds"],
+            input_usd_per_million_tokens=jev_cfg["input_usd_per_million_tokens"],
+            max_budget_usd=config["run"]["max_budget_usd"],
+            budget_ledger=budget_ledger,
+            max_retries=jev_cfg["max_retries"],
+            strategy="pointwise",
+            max_concurrency=jev_cfg.get("max_concurrency", 12),
+        ),
+        "C": FixtureJevReranker()
+        if fixture_jev
+        else JevReranker(
+            model=jev_cfg["model"],
+            threshold=jev_cfg["threshold"],
+            timeout_seconds=jev_cfg["timeout_seconds"],
+            input_usd_per_million_tokens=jev_cfg["input_usd_per_million_tokens"],
+            max_budget_usd=config["run"]["max_budget_usd"],
+            budget_ledger=budget_ledger,
+            max_retries=jev_cfg["max_retries"],
+            strategy="choice",
+            max_concurrency=jev_cfg.get("max_concurrency", 12),
+        ),
+        "R": FixtureJevReranker()
+        if fixture_jev
+        else JevEvidenceRouter(
+            model=jev_cfg["model"],
+            timeout_seconds=jev_cfg["timeout_seconds"],
+            input_usd_per_million_tokens=jev_cfg["input_usd_per_million_tokens"],
+            max_budget_usd=config["run"]["max_budget_usd"],
+            budget_ledger=budget_ledger,
+            max_retries=jev_cfg["max_retries"],
+            max_concurrency=jev_cfg.get("max_concurrency", 12),
+            **jev_cfg.get("evidence_router", {}),
         ),
     }
     generator = create_generator(config["generator"], budget_ledger)
@@ -168,6 +211,8 @@ def run_benchmark(
                 "branch": branch,
                 "candidate_ids": candidate_ids,
                 "context_ids": ranked_ids,
+                "context_routes": [item.route for item in contexts],
+                "context_signals": [item.signals for item in contexts],
                 "context_chars": min(
                     sum(len(item.document.text) for item in contexts),
                     config["retrieval"]["context_char_budget"],
@@ -225,6 +270,7 @@ def run_benchmark(
                 "fallback": telemetry.fallback,
                 "retry_count": telemetry.retry_count,
                 "reranker_error": telemetry.error,
+                "reranker_details": telemetry.details,
                 "generation_error": generation_error,
                 "run_kind": "fixture" if fixture_jev else "real",
             }
@@ -238,6 +284,9 @@ def run_benchmark(
             **row,
             "candidate_ids": "|".join(row["candidate_ids"]),
             "context_ids": "|".join(row["context_ids"]),
+            "context_routes": "|".join(row["context_routes"]),
+            "context_signals": str(row["context_signals"]),
+            "reranker_details": str(row["reranker_details"]),
             "references": "|".join(row["references"]),
         }
         for row in rows
