@@ -175,15 +175,16 @@ def run_benchmark(
         ),
         "V": FixtureJevReranker()
         if fixture_jev
-        else JevEvidenceRouter(
+        else JevReranker(
             model=jev_cfg["model"],
+            threshold=None,
             timeout_seconds=jev_cfg["timeout_seconds"],
             input_usd_per_million_tokens=jev_cfg["input_usd_per_million_tokens"],
             max_budget_usd=config["run"]["max_budget_usd"],
             budget_ledger=budget_ledger,
             max_retries=jev_cfg["max_retries"],
+            strategy="batch",
             max_concurrency=jev_cfg.get("max_concurrency", 12),
-            **jev_cfg.get("evidence_router", {}),
         ),
         "H": FixtureJevReranker()
         if fixture_jev
