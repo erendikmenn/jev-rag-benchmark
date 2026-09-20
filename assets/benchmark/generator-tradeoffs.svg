@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100">
+  <style>
+    .t { font-family: Arial, Helvetica, sans-serif; fill: #111; }
+    .muted { fill: #555; }
+    .grid { stroke: #d0d0d0; stroke-width: 1.5; stroke-dasharray: 6 8; }
+  </style>
+  <rect width="1600" height="1100" fill="#fff"/>
+  <g class="t">
+    <text x="70" y="66" font-size="20" font-weight="700">XQUAD-TR • SAME FROZEN JEV TOP-5 CONTEXTS</text>
+    <text x="70" y="122" font-size="44" font-weight="700">Answer-model trade-offs</text>
+    <text x="70" y="158" class="muted" font-size="20">Quality, total pipeline cost, and median generation latency across 1,044 questions</text>
+
+    <g transform="translate(70,215)">
+      <text x="0" y="0" font-size="20" font-weight="700">1 — SUCCESSFUL ANSWERS</text>
+      <text x="420" y="0" class="muted" font-size="16">Token F1 ≥ 0.5 • higher is better</text>
+      <text x="0" y="66" font-size="19" font-weight="700">Gemini 3.8 Flash</text>
+      <text x="0" y="138" font-size="19" font-weight="700">DeepSeek V4.1 Flash</text>
+      <line x1="320" y1="25" x2="320" y2="170" stroke="#111" stroke-width="2"/>
+      <line x1="320" y1="170" x2="1380" y2="170" stroke="#111" stroke-width="2"/>
+      <line x1="850" y1="25" x2="850" y2="170" class="grid"/>
+      <line x1="1380" y1="25" x2="1380" y2="170" class="grid"/>
+      <rect x="320" y="38" width="785" height="45" fill="#777"/><text x="1121" y="69" font-size="20">163 / 15.61%</text>
+      <rect x="320" y="110" width="935" height="45" fill="#111"/><text x="1271" y="141" font-size="20" font-weight="700">194 / 18.58%</text>
+      <text x="320" y="198" text-anchor="middle" class="muted" font-size="15">0</text><text x="850" y="198" text-anchor="middle" class="muted" font-size="15">110</text><text x="1380" y="198" text-anchor="middle" class="muted" font-size="15">220</text>
+      <text x="850" y="226" text-anchor="middle" font-size="15" font-weight="700">X AXIS — NUMBER OF SUCCESSFUL ANSWERS</text>
+    </g>
+
+    <g transform="translate(70,500)">
+      <text x="0" y="0" font-size="20" font-weight="700">2 — TOTAL PIPELINE COST (USD)</text>
+      <text x="380" y="0" class="muted" font-size="16">Jev reranking + generation • lower is better</text>
+      <text x="0" y="66" font-size="19" font-weight="700">Gemini 3.8 Flash</text>
+      <text x="0" y="138" font-size="19" font-weight="700">DeepSeek V4.1 Flash</text>
+      <line x1="320" y1="25" x2="320" y2="170" stroke="#111" stroke-width="2"/>
+      <line x1="320" y1="170" x2="1380" y2="170" stroke="#111" stroke-width="2"/>
+      <line x1="850" y1="25" x2="850" y2="170" class="grid"/>
+      <line x1="1380" y1="25" x2="1380" y2="170" class="grid"/>
+      <rect x="320" y="38" width="1013" height="45" fill="#777"/><text x="1349" y="69" font-size="20">$2.868</text>
+      <rect x="320" y="110" width="378" height="45" fill="#111"/><text x="714" y="141" font-size="20" font-weight="700">$1.070</text>
+      <text x="320" y="198" text-anchor="middle" class="muted" font-size="15">$0</text><text x="850" y="198" text-anchor="middle" class="muted" font-size="15">$1.50</text><text x="1380" y="198" text-anchor="middle" class="muted" font-size="15">$3.00</text>
+      <text x="850" y="226" text-anchor="middle" font-size="15" font-weight="700">X AXIS — TOTAL COST FOR 1,044 QUESTIONS</text>
+    </g>
+
+    <g transform="translate(70,785)">
+      <text x="0" y="0" font-size="20" font-weight="700">3 — GENERATION p50 (SECONDS)</text>
+      <text x="355" y="0" class="muted" font-size="16">Median generation latency • lower is better</text>
+      <text x="0" y="66" font-size="19" font-weight="700">Gemini 3.8 Flash</text>
+      <text x="0" y="138" font-size="19" font-weight="700">DeepSeek V4.1 Flash</text>
+      <line x1="320" y1="25" x2="320" y2="170" stroke="#111" stroke-width="2"/>
+      <line x1="320" y1="170" x2="1380" y2="170" stroke="#111" stroke-width="2"/>
+      <line x1="850" y1="25" x2="850" y2="170" class="grid"/>
+      <line x1="1380" y1="25" x2="1380" y2="170" class="grid"/>
+      <rect x="320" y="38" width="414" height="45" fill="#777"/><text x="750" y="69" font-size="20">3.13 s</text>
+      <rect x="320" y="110" width="1013" height="45" fill="#111"/><text x="1349" y="141" font-size="20" font-weight="700">7.64 s</text>
+      <text x="320" y="198" text-anchor="middle" class="muted" font-size="15">0 s</text><text x="850" y="198" text-anchor="middle" class="muted" font-size="15">4 s</text><text x="1380" y="198" text-anchor="middle" class="muted" font-size="15">8 s</text>
+      <text x="850" y="226" text-anchor="middle" font-size="15" font-weight="700">X AXIS — MEDIAN GENERATION LATENCY</text>
+    </g>
+
+    <rect x="70" y="1042" width="1460" height="42" fill="#f4f4f4" stroke="#111" stroke-width="2"/>
+    <text x="92" y="1070" font-size="17"><tspan font-weight="700">Trade-off:</tspan> DeepSeek produced 31 more successful answers at 62.7% lower total cost, but was 2.44× slower at the median.</text>
+  </g>
+</svg>

@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+  <style>
+    .t { font-family: Arial, Helvetica, sans-serif; fill: #111; }
+    .muted { fill: #555; }
+    .grid { stroke: #d0d0d0; stroke-width: 1.5; stroke-dasharray: 6 8; }
+  </style>
+  <rect width="1600" height="1200" fill="#fff"/>
+  <g class="t">
+    <text x="70" y="66" font-size="20" font-weight="700">XQUAD-TR • SAME FROZEN HYBRID TOP-20</text>
+    <text x="70" y="122" font-size="44" font-weight="700">Reranker quality and cost</text>
+    <text x="70" y="158" class="muted" font-size="20">Every method receives the same 20 candidates and returns five passages</text>
+
+    <g transform="translate(70,205)">
+      <text x="0" y="0" font-size="20" font-weight="700">1 — RECALL@5 (%)</text>
+      <text x="240" y="0" class="muted" font-size="16">Gold passage appears in the final top five • higher is better</text>
+      <text x="0" y="50" font-size="18" font-weight="700">Raw hybrid</text>
+      <text x="0" y="108" font-size="18" font-weight="700">Jev batch</text>
+      <text x="0" y="166" font-size="18" font-weight="700">Cohere 3.5</text>
+      <line x1="280" y1="24" x2="280" y2="194" stroke="#111" stroke-width="2"/>
+      <line x1="280" y1="194" x2="1380" y2="194" stroke="#111" stroke-width="2"/>
+      <line x1="830" y1="24" x2="830" y2="194" class="grid"/>
+      <line x1="1380" y1="24" x2="1380" y2="194" class="grid"/>
+      <rect x="280" y="28" width="837" height="34" fill="#aaa"/><text x="1133" y="54" font-size="18">97.61%</text>
+      <rect x="280" y="86" width="1037" height="34" fill="#111"/><text x="1333" y="112" font-size="18" font-weight="700">99.43%</text>
+      <rect x="280" y="144" width="1037" height="34" fill="#777"/><text x="1333" y="170" font-size="18">99.43%</text>
+      <text x="280" y="222" text-anchor="middle" class="muted" font-size="15">90%</text><text x="830" y="222" text-anchor="middle" class="muted" font-size="15">95%</text><text x="1380" y="222" text-anchor="middle" class="muted" font-size="15">100%</text>
+      <text x="830" y="250" text-anchor="middle" font-size="15" font-weight="700">X AXIS — RECALL@5, ZOOMED TO 90–100%</text>
+    </g>
+
+    <g transform="translate(70,500)">
+      <text x="0" y="0" font-size="20" font-weight="700">2 — nDCG@10 (%)</text>
+      <text x="240" y="0" class="muted" font-size="16">Ranks better placements of the gold passage more highly • higher is better</text>
+      <text x="0" y="50" font-size="18" font-weight="700">Raw hybrid</text>
+      <text x="0" y="108" font-size="18" font-weight="700">Jev batch</text>
+      <text x="0" y="166" font-size="18" font-weight="700">Cohere 3.5</text>
+      <line x1="280" y1="24" x2="280" y2="194" stroke="#111" stroke-width="2"/>
+      <line x1="280" y1="194" x2="1380" y2="194" stroke="#111" stroke-width="2"/>
+      <line x1="830" y1="24" x2="830" y2="194" class="grid"/>
+      <line x1="1380" y1="24" x2="1380" y2="194" class="grid"/>
+      <rect x="280" y="28" width="475" height="34" fill="#aaa"/><text x="771" y="54" font-size="18">94.31%</text>
+      <rect x="280" y="86" width="891" height="34" fill="#111"/><text x="1187" y="112" font-size="18" font-weight="700">98.10%</text>
+      <rect x="280" y="144" width="949" height="34" fill="#777"/><text x="1245" y="170" font-size="18">98.63%</text>
+      <text x="280" y="222" text-anchor="middle" class="muted" font-size="15">90%</text><text x="830" y="222" text-anchor="middle" class="muted" font-size="15">95%</text><text x="1380" y="222" text-anchor="middle" class="muted" font-size="15">100%</text>
+      <text x="830" y="250" text-anchor="middle" font-size="15" font-weight="700">X AXIS — nDCG@10, ZOOMED TO 90–100%</text>
+    </g>
+
+    <g transform="translate(70,795)">
+      <text x="0" y="0" font-size="20" font-weight="700">3 — TOTAL RERANK COST (USD)</text>
+      <text x="355" y="0" class="muted" font-size="16">Cost for all 1,044 questions • lower is better</text>
+      <text x="0" y="50" font-size="18" font-weight="700">Raw hybrid</text>
+      <text x="0" y="108" font-size="18" font-weight="700">Jev batch</text>
+      <text x="0" y="166" font-size="18" font-weight="700">Cohere 3.5</text>
+      <line x1="280" y1="24" x2="280" y2="194" stroke="#111" stroke-width="2"/>
+      <line x1="280" y1="194" x2="1380" y2="194" stroke="#111" stroke-width="2"/>
+      <line x1="780" y1="24" x2="780" y2="194" class="grid"/>
+      <line x1="1280" y1="24" x2="1280" y2="194" class="grid"/>
+      <text x="295" y="54" font-size="18">$0.000</text>
+      <rect x="280" y="86" width="374" height="34" fill="#111"/><text x="670" y="112" font-size="18" font-weight="700">$0.411</text>
+      <rect x="280" y="144" width="949" height="34" fill="#777"/><text x="1245" y="170" font-size="18">$1.044</text>
+      <text x="280" y="222" text-anchor="middle" class="muted" font-size="15">$0.0</text><text x="780" y="222" text-anchor="middle" class="muted" font-size="15">$0.55</text><text x="1280" y="222" text-anchor="middle" class="muted" font-size="15">$1.10</text>
+      <text x="830" y="250" text-anchor="middle" font-size="15" font-weight="700">X AXIS — TOTAL RERANK COST IN USD</text>
+    </g>
+
+    <rect x="70" y="1090" width="1460" height="66" fill="#f4f4f4" stroke="#111" stroke-width="2"/>
+    <text x="94" y="1131" font-size="19"><tspan font-weight="700">Result:</tspan> Jev matches Cohere's 99.43% Recall@5 at 60.6% lower cost; Cohere leads nDCG by 0.53 points.</text>
+    <text x="70" y="1183" class="muted" font-size="14">github.com/erendikmenn/jev-rag-benchmark</text>
+  </g>
+</svg>
