@@ -9,6 +9,7 @@ from typing import Annotated
 import typer
 
 from .benchmark import run_benchmark
+from .calibration import CalibrationPoint, query_gate_metrics, select_threshold
 from .config import load_config
 from .data import prepare_all
 from .generation import build_prompt, create_generator
@@ -218,6 +219,93 @@ def retrieval_audit(
             indent=2,
         )
     )
+
+
+@app.command("calibrate-jev")
+def calibrate_jev(
+    dataset: str = "xquad-tr",
+    config_path: Path = ROOT / "configs/openrouter-hybrid.yaml",
+    minimum_recall: float = 0.95,
+    limit: int | None = None,
+    output: Path = ROOT / "reports/calibration/jev-threshold.json",
+) -> None:
+    """Select a Jev passage threshold on the development split only."""
+    if not 0 < minimum_recall <= 1:
+        raise typer.BadParameter("minimum-recall must be in (0, 1]")
+    config = load_config(config_path)
+    documents_path, queries_path = _dataset_paths(dataset)
+    documents = [Document(**row) for row in read_jsonl(documents_path)]
+    queries = [row for row in read_jsonl(queries_path) if row.get("split") == "dev"]
+    seen_texts = set()
+    unique_queries = []
+    for query in sorted(queries, key=lambda row: row["query_id"]):
+        normalized = " ".join(query["text"].casefold().split())
+        if normalized not in seen_texts:
+            unique_queries.append(query)
+            seen_texts.add(normalized)
+    if limit is not None:
+        unique_queries = unique_queries[:limit]
+
+    embedding_model = config["retrieval"].get("embedding", {}).get("model", "none")
+    cache_name = "".join(
+        char if char.isalnum() or char in "_.-" else "-" for char in embedding_model
+    )
+    index = create_retrieval_index(
+        documents,
+        config["retrieval"],
+        cache_path=documents_path.parent / f"embeddings.{cache_name}.json",
+    )
+    jev_cfg = config["rerankers"]["jev"]
+    ledger = BudgetLedger(config["run"]["max_budget_usd"])
+    reranker = JevReranker(
+        model=jev_cfg["model"],
+        timeout_seconds=jev_cfg["timeout_seconds"],
+        input_usd_per_million_tokens=jev_cfg["input_usd_per_million_tokens"],
+        max_budget_usd=config["run"]["max_budget_usd"],
+        budget_ledger=ledger,
+        max_retries=jev_cfg["max_retries"],
+        strategy="batch",
+    )
+    candidate_k = config["retrieval"]["candidate_k"]
+    points: list[CalibrationPoint] = []
+    traces = []
+    for index_number, query in enumerate(unique_queries, start=1):
+        candidates = index.retrieve(query["text"], candidate_k)
+        scored, telemetry = reranker.rerank(query["text"], candidates, candidate_k)
+        if telemetry.fallback:
+            raise RuntimeError(f"Jev calibration failed for {query['query_id']}: {telemetry.error}")
+        relevant = set(query.get("relevant_doc_ids", ()))
+        query_points = [
+            CalibrationPoint(
+                query_id=query["query_id"],
+                doc_id=item.document.doc_id,
+                score=float(item.rerank_score or 0.0),
+                relevant=item.document.doc_id in relevant,
+            )
+            for item in scored
+        ]
+        points.extend(query_points)
+        traces.extend(point.__dict__ for point in query_points)
+        if index_number % 25 == 0 or index_number == len(unique_queries):
+            typer.echo(f"progress: {index_number}/{len(unique_queries)} dev queries", err=True)
+
+    selected = select_threshold(points, minimum_recall=minimum_recall)
+    result = {
+        "dataset": dataset,
+        "split": "dev",
+        "queries": len(unique_queries),
+        "candidate_k": candidate_k,
+        "retrieval_backend": config["retrieval"].get("backend", "bm25"),
+        "jev_model": jev_cfg["model"],
+        "minimum_recall": minimum_recall,
+        "selected": selected,
+        "query_gate": query_gate_metrics(points, float(selected["threshold"])),
+        "cost_usd": ledger.spent_usd,
+        "traces": traces,
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    typer.echo(json.dumps({**result, "traces": f"{len(traces)} rows"}, indent=2))
 
 
 @app.command()

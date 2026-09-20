@@ -375,7 +375,11 @@ class JevReranker:
                     else None
                 ),
                 retry_count=retry_count,
-                details={"strategy": self.strategy, "exists": exists},
+                details={
+                    "strategy": self.strategy,
+                    "exists": exists,
+                    "scores": {item.document.doc_id: item.rerank_score for item in scored},
+                },
             )
         except Exception as exc:  # fallback is part of the benchmark contract
             return self._fallback(candidates, top_k, started, f"{type(exc).__name__}: {exc}")
@@ -490,7 +494,11 @@ class JevEvidenceRouter(JevReranker):
                 if first
                 else None,
                 retry_count=sum(item[4] for item in completed),
-                details={"strategy": "evidence_router", "route_counts": counts},
+                details={
+                    "strategy": "evidence_router",
+                    "route_counts": counts,
+                    "signals": {item.document.doc_id: item.signals for item in classified},
+                },
             )
         except Exception as exc:
             return self._fallback(candidates, top_k, started, f"{type(exc).__name__}: {exc}")
