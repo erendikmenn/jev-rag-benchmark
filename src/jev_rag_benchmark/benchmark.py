@@ -62,6 +62,8 @@ def run_benchmark(
     limit: int | None,
     fixture_jev: bool = False,
     skip_generation: bool = False,
+    shard_index: int = 0,
+    shard_count: int = 1,
 ) -> list[dict[str, Any]]:
     documents, queries = load_dataset(documents_path, queries_path, split)
     rng = random.Random(config["run"]["seed"])
@@ -77,6 +79,9 @@ def run_benchmark(
         queries = unique_queries
     if limit and len(queries) > limit:
         queries = rng.sample(queries, limit)
+    if shard_count <= 0 or shard_index < 0 or shard_index >= shard_count:
+        raise ValueError("shard_index must be in [0, shard_count)")
+    queries = [query for index, query in enumerate(queries) if index % shard_count == shard_index]
     index_started = time.perf_counter()
     embedding_model = config["retrieval"].get("embedding", {}).get("model", "none")
     cache_name = re.sub(r"[^a-zA-Z0-9_.-]+", "-", embedding_model)

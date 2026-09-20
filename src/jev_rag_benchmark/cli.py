@@ -13,7 +13,7 @@ from .calibration import CalibrationPoint, query_gate_metrics, select_threshold
 from .config import load_config
 from .data import prepare_all
 from .generation import build_prompt, create_generator
-from .io import read_jsonl
+from .io import read_jsonl, write_csv, write_jsonl
 from .manifest import build_manifest, write_manifest
 from .models import Document
 from .metrics import ndcg_at_k, recall_at_k
@@ -454,6 +454,8 @@ def _run(
     limit: int | None,
     fixture_jev: bool,
     skip_generation: bool,
+    shard_index: int = 0,
+    shard_count: int = 1,
 ):
     config = load_config(config_path)
     documents_path, queries_path = _dataset_paths(dataset)
@@ -465,7 +467,8 @@ def _run(
         raise typer.BadParameter(
             "branch E is locked until rerankers.jev.threshold_source is set to dev after calibration"
         )
-    name = f"{dataset}-{'-'.join(selected).lower()}"
+    shard_suffix = f".shard-{shard_index}-of-{shard_count}" if shard_count > 1 else ""
+    name = f"{dataset}-{'-'.join(selected).lower()}{shard_suffix}"
     output = ROOT / f"results/{name}.jsonl"
     split = "test" if dataset.startswith("xquad") else None
     rows = run_benchmark(
@@ -478,6 +481,8 @@ def _run(
         limit=limit,
         fixture_jev=fixture_jev,
         skip_generation=skip_generation,
+        shard_index=shard_index,
+        shard_count=shard_count,
     )
     manifest = build_manifest(
         ROOT, config, [documents_path, queries_path], run_kind="fixture" if fixture_jev else "real"
@@ -511,8 +516,59 @@ def benchmark_full(
     fixture_jev: bool = False,
     skip_generation: bool = False,
     config_path: Path = DEFAULT_CONFIG,
+    shard_index: int = 0,
+    shard_count: int = 1,
 ) -> None:
-    _run(dataset, config_path, branches, limit, fixture_jev, skip_generation)
+    _run(
+        dataset,
+        config_path,
+        branches,
+        limit,
+        fixture_jev,
+        skip_generation,
+        shard_index,
+        shard_count,
+    )
+
+
+@app.command("merge-results")
+def merge_results(output: Path, inputs: str) -> None:
+    """Merge deterministic benchmark shards into one JSONL/CSV result set."""
+    paths = [Path(value.strip()) for value in inputs.split(",") if value.strip()]
+    if not paths:
+        raise typer.BadParameter("inputs must contain at least one JSONL path")
+    rows = [row for path in paths for row in read_jsonl(path)]
+    keys = [(row["query_id"], row["branch"]) for row in rows]
+    if len(keys) != len(set(keys)):
+        raise typer.BadParameter("duplicate query/branch rows found across shards")
+    rows.sort(key=lambda row: (row["query_id"], row["branch"]))
+    write_jsonl(output, rows)
+
+    def flatten(value):
+        if isinstance(value, list) and all(isinstance(item, str) for item in value):
+            return "|".join(value)
+        if isinstance(value, (list, dict)):
+            return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
+        return value
+
+    write_csv(
+        output.with_suffix(".csv"),
+        [{key: flatten(value) for key, value in row.items()} for row in rows],
+    )
+    manifests = []
+    for path in paths:
+        manifest_path = path.with_suffix(".manifest.json")
+        if manifest_path.exists():
+            manifests.append(json.loads(manifest_path.read_text(encoding="utf-8")))
+    manifest = {
+        "schema_version": 1,
+        "run_kind": "merged-real-shards",
+        "rows": len(rows),
+        "shards": [str(path) for path in paths],
+        "source_manifests": manifests,
+    }
+    write_manifest(output.with_suffix(".manifest.json"), manifest)
+    typer.echo(f"merged {len(paths)} shards and {len(rows)} rows -> {output}")
 
 
 @app.command()
