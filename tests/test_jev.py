@@ -1,7 +1,9 @@
 import httpx
+from concurrent.futures import ThreadPoolExecutor
 
 from jev_rag_benchmark.models import Candidate, Document
 from jev_rag_benchmark.rerankers import (
+    BudgetLedger,
     JevEvidenceRouter,
     JevHierarchicalReranker,
     JevPermutationEnsembleReranker,
@@ -14,6 +16,15 @@ def candidates():
         Candidate(Document("d1", "Ankara is the capital of Türkiye."), 1.0, 1),
         Candidate(Document("d2", "Paris is the capital of France."), 0.5, 2),
     ]
+
+
+def test_budget_ledger_is_safe_for_concurrent_generation():
+    ledger = BudgetLedger(10)
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        list(pool.map(ledger.charge, [0.001] * 1_000))
+
+    assert abs(ledger.spent_usd - 1.0) < 1e-9
+    assert abs(ledger.remaining_usd - 9.0) < 1e-9
 
 
 def test_jev_parses_noul_and_records_resolved_model():

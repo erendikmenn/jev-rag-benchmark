@@ -4,9 +4,10 @@ import os
 import random
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass
+from dataclasses import dataclass, field as dataclass_field
 from dataclasses import replace
 from hashlib import sha256
+from threading import Lock
 from typing import Protocol
 
 import httpx
@@ -81,13 +82,16 @@ class IdentityReranker:
 class BudgetLedger:
     limit_usd: float
     spent_usd: float = 0.0
+    _lock: Lock = dataclass_field(default_factory=Lock, repr=False, compare=False)
 
     @property
     def remaining_usd(self) -> float:
-        return max(0.0, self.limit_usd - self.spent_usd)
+        with self._lock:
+            return max(0.0, self.limit_usd - self.spent_usd)
 
     def charge(self, amount_usd: float) -> None:
-        self.spent_usd += amount_usd
+        with self._lock:
+            self.spent_usd += amount_usd
 
 
 class CrossEncoderReranker:

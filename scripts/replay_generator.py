@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -35,6 +36,7 @@ def main() -> None:
     parser.add_argument("--limit", type=int)
     parser.add_argument("--shard-index", type=int, default=0)
     parser.add_argument("--shard-count", type=int, default=1)
+    parser.add_argument("--concurrency", type=int, default=1)
     parser.add_argument(
         "--target-only",
         action="store_true",
@@ -46,6 +48,8 @@ def main() -> None:
 
     if args.shard_count < 1:
         parser.error("--shard-count must be at least 1")
+    if args.concurrency < 1:
+        parser.error("--concurrency must be at least 1")
     if not 0 <= args.shard_index < args.shard_count:
         parser.error("--shard-index must be between 0 and shard-count - 1")
 
@@ -80,9 +84,8 @@ def main() -> None:
         )
 
     generated_rows = dict(completed)
-    for index, original in enumerate(frozen, start=1):
-        if original["query_id"] in completed:
-            continue
+
+    def generate_row(original: dict) -> dict:
         contexts = [
             Candidate(documents[doc_id], retrieval_score=0.0, retrieval_rank=rank)
             for rank, doc_id in enumerate(original["context_ids"], start=1)
@@ -97,7 +100,7 @@ def main() -> None:
         cleaned = answer_text(result.answer)
         cited = citations(result.answer)
         context_ids = set(original["context_ids"])
-        row = {
+        return {
             **original,
             "branch": args.target_branch,
             "answer": result.answer,
@@ -126,17 +129,26 @@ def main() -> None:
             "generation_error": result.error,
             "generation_finish_reason": result.finish_reason,
         }
-        generated_rows[original["query_id"]] = row
 
-        if index % 10 == 0 or index == len(frozen) or result.error:
-            target_rows = [generated_rows[key] for key in sorted(generated_rows)]
-            combined = target_rows if args.target_only else source_rows + target_rows
-            write_jsonl(args.output, combined)
-            print(
-                f"progress: {len(generated_rows)}/{len(frozen)}; "
-                f"incremental cost: ${ledger.spent_usd:.6f}",
-                flush=True,
-            )
+    pending = [row for row in frozen if row["query_id"] not in completed]
+    with ThreadPoolExecutor(max_workers=args.concurrency) as pool:
+        futures = {pool.submit(generate_row, row): row["query_id"] for row in pending}
+        for future in as_completed(futures):
+            row = future.result()
+            generated_rows[row["query_id"]] = row
+            if (
+                len(generated_rows) % 10 == 0
+                or len(generated_rows) == len(frozen)
+                or row["generation_error"]
+            ):
+                target_rows = [generated_rows[key] for key in sorted(generated_rows)]
+                combined = target_rows if args.target_only else source_rows + target_rows
+                write_jsonl(args.output, combined)
+                print(
+                    f"progress: {len(generated_rows)}/{len(frozen)}; "
+                    f"incremental cost: ${ledger.spent_usd:.6f}",
+                    flush=True,
+                )
 
     target_rows = [generated_rows[key] for key in sorted(generated_rows)]
     combined = target_rows if args.target_only else source_rows + target_rows
@@ -190,6 +202,7 @@ def main() -> None:
             "target_only": args.target_only,
             "shard_index": args.shard_index,
             "shard_count": args.shard_count,
+            "concurrency": args.concurrency,
         },
     }
     args.output.with_suffix(".manifest.json").write_text(
