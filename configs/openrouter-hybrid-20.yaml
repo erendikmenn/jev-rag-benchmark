@@ -1,0 +1,8 @@
+extends: openrouter-hybrid.yaml
+
+run:
+  deduplicate_queries: true
+
+retrieval:
+  candidate_k: 20
+  context_k: 5
