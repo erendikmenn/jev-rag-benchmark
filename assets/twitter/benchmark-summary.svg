@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <style>
+    .t { font-family: Arial, Helvetica, sans-serif; fill: #111; }
+    .muted { fill: #555; }
+    .line { stroke: #c8c8c8; stroke-width: 1.5; }
+    .alt { fill: #f4f4f4; }
+  </style>
+  <rect width="1600" height="900" fill="#fff"/>
+  <g class="t">
+    <text x="70" y="70" font-size="20" font-weight="700">JEV RAG BENCHMARK — GÜNCEL SONUÇ</text>
+    <text x="70" y="128" font-size="48" font-weight="700">65 retrieval hatasından 6’ya</text>
+    <text x="70" y="166" class="muted" font-size="21">1.044 Türkçe XQuAD sorusu • apples-to-apples ölçüm • 20 aday → 5 bağlam</text>
+
+    <g transform="translate(70,210)">
+      <rect width="1460" height="70" fill="#111"/>
+      <text x="26" y="44" fill="#fff" font-size="19" font-weight="700">METRİK</text>
+      <text x="650" y="33" fill="#fff" text-anchor="middle" font-size="19" font-weight="700">KLASİK BM25</text>
+      <text x="650" y="55" fill="#d8d8d8" text-anchor="middle" font-size="14">doğrudan top-5</text>
+      <text x="990" y="33" fill="#fff" text-anchor="middle" font-size="19" font-weight="700">HYBRID</text>
+      <text x="990" y="55" fill="#d8d8d8" text-anchor="middle" font-size="14">reranker yok</text>
+      <text x="1310" y="33" fill="#fff" text-anchor="middle" font-size="19" font-weight="700">HYBRID + JEV</text>
+      <text x="1310" y="55" fill="#d8d8d8" text-anchor="middle" font-size="14">aynı top-20 aday havuzu</text>
+
+      <rect y="70" width="1460" height="92" class="alt"/>
+      <text x="26" y="115" font-size="22" font-weight="700">Recall@5</text>
+      <text x="26" y="143" class="muted" font-size="16">Doğru kaynak ilk 5 bağlamın içinde mi?</text>
+      <text x="650" y="126" text-anchor="middle" font-size="28">%93,77</text>
+      <text x="990" y="126" text-anchor="middle" font-size="28">%97,61</text>
+      <text x="1310" y="126" text-anchor="middle" font-size="30" font-weight="700">%99,43</text>
+
+      <rect y="162" width="1460" height="92" fill="#fff"/>
+      <text x="26" y="207" font-size="22" font-weight="700">Top-5’te kaçan soru</text>
+      <text x="26" y="235" class="muted" font-size="16">1.044 soru içinde doğru pasaj bulunamayanlar</text>
+      <text x="650" y="218" text-anchor="middle" font-size="28">65</text>
+      <text x="990" y="218" text-anchor="middle" font-size="28">25</text>
+      <text x="1310" y="218" text-anchor="middle" font-size="30" font-weight="700">6</text>
+
+      <rect y="254" width="1460" height="92" class="alt"/>
+      <text x="26" y="299" font-size="22" font-weight="700">nDCG@10</text>
+      <text x="26" y="327" class="muted" font-size="16">Doğru kaynak listenin ne kadar üstünde?</text>
+      <text x="650" y="310" text-anchor="middle" font-size="28">%89,17*</text>
+      <text x="990" y="310" text-anchor="middle" font-size="28">%94,31</text>
+      <text x="1310" y="310" text-anchor="middle" font-size="30" font-weight="700">%98,10</text>
+
+      <rect width="1460" height="346" fill="none" stroke="#111" stroke-width="2"/>
+      <line x1="500" y1="0" x2="500" y2="346" class="line"/>
+      <line x1="820" y1="0" x2="820" y2="346" class="line"/>
+      <line x1="1150" y1="0" x2="1150" y2="346" class="line"/>
+      <line x1="0" y1="162" x2="1460" y2="162" class="line"/>
+      <line x1="0" y1="254" x2="1460" y2="254" class="line"/>
+    </g>
+
+    <g transform="translate(70,588)">
+      <rect width="710" height="116" fill="#fff" stroke="#111" stroke-width="2"/>
+      <text x="22" y="34" font-size="18" font-weight="700">JEV’İN İZOLE ETKİSİ</text>
+      <text x="22" y="69" font-size="26" font-weight="700">25 hata → 6 hata</text>
+      <text x="22" y="96" class="muted" font-size="17">Aynı hybrid top-20’den 19 soru geri kazanıldı.</text>
+    </g>
+    <g transform="translate(820,588)">
+      <rect width="710" height="116" fill="#fff" stroke="#111" stroke-width="2"/>
+      <text x="22" y="34" font-size="18" font-weight="700">JEV vs COHERE RERANK 3.5</text>
+      <text x="22" y="69" font-size="26" font-weight="700">Aynı Recall@5: %99,43</text>
+      <text x="22" y="96" class="muted" font-size="17">$0,411 vs $1,044 toplam rerank maliyeti: %60,6 daha ucuz.</text>
+    </g>
+
+    <g transform="translate(70,744)">
+      <text x="0" y="0" font-size="20" font-weight="700">En net sonuç:</text>
+      <text x="150" y="0" font-size="20">Hybrid top-20’de doğru kaynak bulunan 1.039 sorunun 1.038’inde Jev onu ilk 5’e taşıdı.</text>
+      <text x="0" y="31" class="muted" font-size="17">Kalan 6 hatanın 5’inde doğru kaynak aday havuzunda yoktu; yalnızca 1’i Jev sıralama hatasıydı.</text>
+      <text x="0" y="60" class="muted" font-size="15">* Klasik BM25 nDCG değeri ilk çalışmadan; Jev’in izole etkisi aynı aday havuzundaki Hybrid ve Hybrid + Jev sütunlarıyla ölçülür.</text>
+    </g>
+
+    <line x1="70" y1="840" x2="1530" y2="840" class="line"/>
+    <text x="70" y="874" class="muted" font-size="15">github.com/erendikmenn/jev-rag-benchmark</text>
+    <text x="1530" y="874" text-anchor="end" class="muted" font-size="15">Dataset: google/xquad • Türkçe split</text>
+  </g>
+</svg>

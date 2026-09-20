@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+  <style>
+    .t { font-family: Arial, Helvetica, sans-serif; fill: #111; }
+    .muted { fill: #555; }
+    .line { stroke: #c8c8c8; stroke-width: 1.5; }
+    .alt { fill: #f4f4f4; }
+  </style>
+  <rect width="1600" height="1200" fill="#fff"/>
+  <g class="t">
+    <text x="60" y="58" font-size="19" font-weight="700">DETAYLI BENCHMARK — 1.044 XQUAD-TR SORUSU</text>
+    <text x="60" y="108" font-size="40" font-weight="700">Reranker ve cevap modeli karşılaştırması</text>
+    <text x="60" y="143" class="muted" font-size="19">Aynı veri, aynı aday havuzu, aynı bağlam bütçesi • gerçek API çağrıları</text>
+
+    <text x="60" y="190" font-size="21" font-weight="700">1 — Aynı hybrid top-20 üzerinde reranker</text>
+    <g transform="translate(60,210)">
+      <rect width="1480" height="62" fill="#111"/>
+      <text x="22" y="39" fill="#fff" font-size="17" font-weight="700">METRİK</text>
+      <text x="760" y="30" fill="#fff" text-anchor="middle" font-size="17" font-weight="700">RAW HYBRID</text>
+      <text x="760" y="50" fill="#d8d8d8" text-anchor="middle" font-size="13">reranker yok</text>
+      <text x="1080" y="30" fill="#fff" text-anchor="middle" font-size="17" font-weight="700">JEV BATCH</text>
+      <text x="1080" y="50" fill="#d8d8d8" text-anchor="middle" font-size="13">TypeSafe Jev 1.13</text>
+      <text x="1350" y="30" fill="#fff" text-anchor="middle" font-size="17" font-weight="700">COHERE</text>
+      <text x="1350" y="50" fill="#d8d8d8" text-anchor="middle" font-size="13">Rerank 3.5</text>
+
+      <rect y="62" width="1480" height="58" class="alt"/>
+      <text x="22" y="99" font-size="18" font-weight="700">Recall@5</text><text x="260" y="99" class="muted" font-size="15">Doğru kaynak ilk 5’te mi?</text><text x="760" y="99" text-anchor="middle" font-size="20">%97,61</text><text x="1080" y="99" text-anchor="middle" font-size="20" font-weight="700">%99,43</text><text x="1350" y="99" text-anchor="middle" font-size="20">%99,43</text>
+      <rect y="120" width="1480" height="58" fill="#fff"/>
+      <text x="22" y="157" font-size="18" font-weight="700">nDCG@10</text><text x="260" y="157" class="muted" font-size="15">Doğru kaynak ne kadar yukarıda?</text><text x="760" y="157" text-anchor="middle" font-size="20">%94,31</text><text x="1080" y="157" text-anchor="middle" font-size="20" font-weight="700">%98,10</text><text x="1350" y="157" text-anchor="middle" font-size="20">%98,63</text>
+      <rect y="178" width="1480" height="58" class="alt"/>
+      <text x="22" y="215" font-size="18" font-weight="700">MRR</text><text x="260" y="215" class="muted" font-size="15">İlk doğru sonucun sırası</text><text x="760" y="215" text-anchor="middle" font-size="20">%93,19</text><text x="1080" y="215" text-anchor="middle" font-size="20" font-weight="700">%97,64</text><text x="1350" y="215" text-anchor="middle" font-size="20">%98,35</text>
+      <rect y="236" width="1480" height="58" fill="#fff"/>
+      <text x="22" y="273" font-size="18" font-weight="700">Rerank p50</text><text x="260" y="273" class="muted" font-size="15">Medyan ek sıralama süresi</text><text x="760" y="273" text-anchor="middle" font-size="20">—</text><text x="1080" y="273" text-anchor="middle" font-size="20">532 ms</text><text x="1350" y="273" text-anchor="middle" font-size="20">466 ms</text>
+      <rect y="294" width="1480" height="58" class="alt"/>
+      <text x="22" y="331" font-size="18" font-weight="700">Toplam maliyet</text><text x="260" y="331" class="muted" font-size="15">1.044 sorgunun rerank maliyeti</text><text x="760" y="331" text-anchor="middle" font-size="20">$0</text><text x="1080" y="331" text-anchor="middle" font-size="20" font-weight="700">$0,411</text><text x="1350" y="331" text-anchor="middle" font-size="20">$1,044</text>
+
+      <rect width="1480" height="352" fill="none" stroke="#111" stroke-width="2"/>
+      <line x1="610" y1="0" x2="610" y2="352" class="line"/><line x1="910" y1="0" x2="910" y2="352" class="line"/><line x1="1230" y1="0" x2="1230" y2="352" class="line"/>
+      <line x1="0" y1="120" x2="1480" y2="120" class="line"/><line x1="0" y1="178" x2="1480" y2="178" class="line"/><line x1="0" y1="236" x2="1480" y2="236" class="line"/><line x1="0" y1="294" x2="1480" y2="294" class="line"/>
+    </g>
+
+    <text x="60" y="608" font-size="21" font-weight="700">2 — Aynı dondurulmuş Jev bağlamları üzerinde cevap modeli</text>
+    <g transform="translate(60,628)">
+      <rect width="1480" height="62" fill="#111"/>
+      <text x="22" y="39" fill="#fff" font-size="17" font-weight="700">METRİK</text>
+      <text x="930" y="30" fill="#fff" text-anchor="middle" font-size="17" font-weight="700">GEMINI 3.8 FLASH</text>
+      <text x="930" y="50" fill="#d8d8d8" text-anchor="middle" font-size="13">OpenRouter</text>
+      <text x="1320" y="30" fill="#fff" text-anchor="middle" font-size="17" font-weight="700">DEEPSEEK V4.1 FLASH</text>
+      <text x="1320" y="50" fill="#d8d8d8" text-anchor="middle" font-size="13">OpenRouter</text>
+
+      <rect y="62" width="1480" height="52" class="alt"/>
+      <text x="22" y="95" font-size="17" font-weight="700">Başarılı cevap</text><text x="330" y="95" class="muted" font-size="15">F1 ≥ 0,5</text><text x="930" y="95" text-anchor="middle" font-size="19">163 / %15,61</text><text x="1320" y="95" text-anchor="middle" font-size="19" font-weight="700">194 / %18,58</text>
+      <rect y="114" width="1480" height="52" fill="#fff"/>
+      <text x="22" y="147" font-size="17" font-weight="700">Ortalama F1</text><text x="330" y="147" class="muted" font-size="15">Altın cevapla token örtüşmesi</text><text x="930" y="147" text-anchor="middle" font-size="19">%27,27</text><text x="1320" y="147" text-anchor="middle" font-size="19" font-weight="700">%29,19</text>
+      <rect y="166" width="1480" height="52" class="alt"/>
+      <text x="22" y="199" font-size="17" font-weight="700">Geçerli atıf</text><text x="330" y="199" class="muted" font-size="15">Atıf seçilen kaynaklardan biri mi?</text><text x="930" y="199" text-anchor="middle" font-size="19">%93,87</text><text x="1320" y="199" text-anchor="middle" font-size="19" font-weight="700">%95,69</text>
+      <rect y="218" width="1480" height="52" fill="#fff"/>
+      <text x="22" y="251" font-size="17" font-weight="700">Üretim p50 / p95</text><text x="330" y="251" class="muted" font-size="15">Yanıt üretme süresi</text><text x="930" y="251" text-anchor="middle" font-size="19">3,13 / 13,11 sn</text><text x="1320" y="251" text-anchor="middle" font-size="19">7,64 / 46,54 sn</text>
+      <rect y="270" width="1480" height="52" class="alt"/>
+      <text x="22" y="303" font-size="17" font-weight="700">Üretim maliyeti</text><text x="330" y="303" class="muted" font-size="15">1.044 sorgu</text><text x="930" y="303" text-anchor="middle" font-size="19">$2,457</text><text x="1320" y="303" text-anchor="middle" font-size="19" font-weight="700">$0,659</text>
+      <rect y="322" width="1480" height="52" fill="#fff"/>
+      <text x="22" y="355" font-size="17" font-weight="700">Jev dahil toplam</text><text x="330" y="355" class="muted" font-size="15">Rerank + cevap üretimi</text><text x="930" y="355" text-anchor="middle" font-size="19">$2,868</text><text x="1320" y="355" text-anchor="middle" font-size="19" font-weight="700">$1,070</text>
+
+      <rect width="1480" height="374" fill="none" stroke="#111" stroke-width="2"/>
+      <line x1="700" y1="0" x2="700" y2="374" class="line"/><line x1="1130" y1="0" x2="1130" y2="374" class="line"/>
+      <line x1="0" y1="114" x2="1480" y2="114" class="line"/><line x1="0" y1="166" x2="1480" y2="166" class="line"/><line x1="0" y1="218" x2="1480" y2="218" class="line"/><line x1="0" y1="270" x2="1480" y2="270" class="line"/><line x1="0" y1="322" x2="1480" y2="322" class="line"/>
+    </g>
+
+    <g transform="translate(60,1032)">
+      <text x="0" y="0" font-size="18" font-weight="700">Kısa yorum:</text><text x="118" y="0" font-size="18">DeepSeek 31 ek başarılı cevap ve %62,7 düşük toplam maliyet sağladı; fakat medyanda 2,44× daha yavaş.</text>
+      <text x="0" y="30" font-size="18" font-weight="700">Doğrulama:</text><text x="112" y="30" class="muted" font-size="17">100 soruluk örneklemde finaldeki 104/104 iddia-kaynak çifti doğrulandı; toplam maliyet yalnızca %3,7 arttı.</text>
+      <text x="0" y="60" font-size="18" font-weight="700">Önemli:</text><text x="91" y="60" class="muted" font-size="17">%99,43 cevap doğruluğu değil, doğru kaynağın ilk 5 bağlama girme oranıdır.</text>
+    </g>
+
+    <line x1="60" y1="1130" x2="1540" y2="1130" class="line"/>
+    <text x="60" y="1164" class="muted" font-size="15">github.com/erendikmenn/jev-rag-benchmark</text>
+    <text x="800" y="1164" text-anchor="middle" class="muted" font-size="15">Rapor: docs/benchmark-2026-09-20.md</text>
+    <text x="1540" y="1164" text-anchor="end" class="muted" font-size="15">Dataset: google/xquad • Türkçe split</text>
+  </g>
+</svg>
