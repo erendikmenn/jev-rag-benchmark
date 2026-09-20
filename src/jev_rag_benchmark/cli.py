@@ -17,7 +17,7 @@ from .manifest import build_manifest, write_manifest
 from .models import Document
 from .metrics import ndcg_at_k, recall_at_k
 from .report import generate_report
-from .retrieval import BM25Index
+from .retrieval import BM25Index, create_retrieval_index
 from .rerankers import BudgetLedger, IdentityReranker, JevReranker
 
 app = typer.Typer(help="Reproducible Jev RAG benchmark")
@@ -139,8 +139,10 @@ def retrieval_audit(
     dataset: str = "xquad-tr",
     candidate_ks: str = "5,10,20,50,100,240",
     split: str | None = "test",
+    config_path: Path = DEFAULT_CONFIG,
 ) -> None:
-    """Measure the first-stage BM25 ceiling without making provider calls."""
+    """Measure the configured first-stage retrieval ceiling."""
+    config = load_config(config_path)
     documents_path, queries_path = _dataset_paths(dataset)
     documents = [Document(**row) for row in read_jsonl(documents_path)]
     queries = read_jsonl(queries_path)
@@ -159,12 +161,27 @@ def retrieval_audit(
     if not requested or requested[0] <= 0:
         raise typer.BadParameter("candidate-ks must contain positive integers")
 
-    index = BM25Index(documents)
+    embedding_model = config["retrieval"].get("embedding", {}).get("model", "none")
+    cache_name = "".join(
+        char if char.isalnum() or char in "_.-" else "-" for char in embedding_model
+    )
+    index = create_retrieval_index(
+        documents,
+        config["retrieval"],
+        cache_path=documents_path.parent / f"embeddings.{cache_name}.json",
+    )
     max_k = min(max(requested), len(documents))
-    rankings = {
-        row["query_id"]: [item.document.doc_id for item in index.retrieve(row["text"], max_k)]
-        for row in unique_queries
-    }
+    if hasattr(index, "retrieve_many"):
+        batches = index.retrieve_many([row["text"] for row in unique_queries], max_k)
+        rankings = {
+            row["query_id"]: [item.document.doc_id for item in items]
+            for row, items in zip(unique_queries, batches)
+        }
+    else:
+        rankings = {
+            row["query_id"]: [item.document.doc_id for item in index.retrieve(row["text"], max_k)]
+            for row in unique_queries
+        }
     results = []
     for k in requested:
         effective_k = min(k, len(documents))
@@ -187,7 +204,20 @@ def retrieval_audit(
                 "ndcg_at_10": sum(ndcgs) / max(1, len(ndcgs)),
             }
         )
-    typer.echo(json.dumps({"dataset": dataset, "backend": "bm25", "results": results}, indent=2))
+    typer.echo(
+        json.dumps(
+            {
+                "dataset": dataset,
+                "backend": config["retrieval"].get("backend", "bm25"),
+                "embedding_model": (
+                    embedding_model if config["retrieval"].get("backend") != "bm25" else None
+                ),
+                "embedding_index_cost_usd": getattr(index, "index_cost_usd", 0.0),
+                "results": results,
+            },
+            indent=2,
+        )
+    )
 
 
 @app.command()

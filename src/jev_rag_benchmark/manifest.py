@@ -47,12 +47,15 @@ def build_manifest(
         "platform": platform.platform(),
         "dependencies": package_versions(),
         "dataset_files": {
-            str(path.relative_to(root)): sha256_file(path) for path in dataset_paths if path.exists()
+            str(path.relative_to(root)): sha256_file(path)
+            for path in dataset_paths
+            if path.exists()
         },
         "models": {
             "generator_requested": config["generator"]["model"],
             "jev_requested": config["rerankers"]["jev"]["model"],
             "cross_encoder_requested": config["rerankers"]["cross_encoder"]["model"],
+            "embedding_requested": config["retrieval"].get("embedding", {}).get("model"),
         },
         "prices": {
             "jev_input_usd_per_million_tokens": config["rerankers"]["jev"][
@@ -66,6 +69,12 @@ def build_manifest(
             ),
             "jev_verified_on": str(config["rerankers"]["jev"]["price_verified_on"]),
             "generator_verified_on": str(config["generator"].get("price_verified_on")),
+            "embedding_input_usd_per_million_tokens": config["retrieval"]
+            .get("embedding", {})
+            .get("input_usd_per_million_tokens"),
+            "embedding_verified_on": str(
+                config["retrieval"].get("embedding", {}).get("price_verified_on")
+            ),
         },
         "seed": config["run"]["seed"],
         "prompt_versions": {

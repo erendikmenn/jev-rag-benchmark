@@ -17,12 +17,21 @@ from .rerankers import (
     IdentityReranker,
     JevReranker,
 )
-from .retrieval import BM25Index
+from .retrieval import create_retrieval_index
 
 
 def load_dataset(documents_path: Path, queries_path: Path, split: str | None = None):
     documents = [Document(**row) for row in read_jsonl(documents_path)]
-    queries = [Query(**{**row, "relevant_doc_ids": tuple(row.get("relevant_doc_ids", ())), "answers": tuple(row.get("answers", ()))}) for row in read_jsonl(queries_path)]
+    queries = [
+        Query(
+            **{
+                **row,
+                "relevant_doc_ids": tuple(row.get("relevant_doc_ids", ())),
+                "answers": tuple(row.get("answers", ())),
+            }
+        )
+        for row in read_jsonl(queries_path)
+    ]
     if split:
         queries = [query for query in queries if query.split == split]
     return documents, queries
@@ -64,7 +73,13 @@ def run_benchmark(
     if limit and len(queries) > limit:
         queries = rng.sample(queries, limit)
     index_started = time.perf_counter()
-    index = BM25Index(documents)
+    embedding_model = config["retrieval"].get("embedding", {}).get("model", "none")
+    cache_name = re.sub(r"[^a-zA-Z0-9_.-]+", "-", embedding_model)
+    index = create_retrieval_index(
+        documents,
+        config["retrieval"],
+        cache_path=documents_path.parent / f"embeddings.{cache_name}.json",
+    )
     index_ms = (time.perf_counter() - index_started) * 1000
 
     candidate_k = config["retrieval"]["candidate_k"]
@@ -103,7 +118,11 @@ def run_benchmark(
         retrieval_started = time.perf_counter()
         candidates = index.retrieve(query.text, candidate_k)
         retrieval_ms = (time.perf_counter() - retrieval_started) * 1000
-        ordered_branches = branches[query_idx % len(branches) :] + branches[: query_idx % len(branches)]
+        retrieval_cost = float(getattr(index, "last_query_cost_usd", 0.0))
+        retrieval_input_tokens = int(getattr(index, "last_query_input_tokens", 0))
+        ordered_branches = (
+            branches[query_idx % len(branches) :] + branches[: query_idx % len(branches)]
+        )
         for branch in ordered_branches:
             contexts, telemetry = rerankers[branch].rerank(query.text, candidates, context_k)
             answer = ""
@@ -132,11 +151,15 @@ def run_benchmark(
             cited = _citations(answer)
             answer_text = _answer_text(answer)
             context_ids = set(ranked_ids)
-            support = any(
-                reference.casefold() in item.document.text.casefold()
-                for reference in query.answers
-                for item in contexts
-            ) if query.answers else None
+            support = (
+                any(
+                    reference.casefold() in item.document.text.casefold()
+                    for reference in query.answers
+                    for item in contexts
+                )
+                if query.answers
+                else None
+            )
             row = {
                 "query_id": query.query_id,
                 "query": query.text,
@@ -172,6 +195,18 @@ def run_benchmark(
                 ),
                 "index_ms_once": index_ms if query_idx == 0 and branch == branches[0] else None,
                 "retrieval_ms": retrieval_ms,
+                "retrieval_input_tokens": retrieval_input_tokens,
+                "retrieval_cost_usd": retrieval_cost,
+                "embedding_index_input_tokens_once": (
+                    int(getattr(index, "index_input_tokens", 0))
+                    if query_idx == 0 and branch == branches[0]
+                    else None
+                ),
+                "embedding_index_cost_usd_once": (
+                    float(getattr(index, "index_cost_usd", 0.0))
+                    if query_idx == 0 and branch == branches[0]
+                    else None
+                ),
                 "rerank_ms": telemetry.latency_ms,
                 "generation_ms": generation_ms,
                 "end_to_end_ms": retrieval_ms + telemetry.latency_ms + generation_ms,
@@ -184,7 +219,8 @@ def run_benchmark(
                 "generator_completion_tokens": completion_tokens,
                 "reranker_cost_usd": telemetry.estimated_cost_usd,
                 "generator_cost_usd": generated.cost_usd if not skip_generation else 0.0,
-                "online_cost_usd": telemetry.estimated_cost_usd
+                "online_cost_usd": retrieval_cost
+                + telemetry.estimated_cost_usd
                 + (generated.cost_usd if not skip_generation else 0.0),
                 "fallback": telemetry.fallback,
                 "retry_count": telemetry.retry_count,
@@ -198,7 +234,12 @@ def run_benchmark(
             print(f"progress: {completed}/{len(queries)} queries", flush=True)
     write_jsonl(output_path, rows)
     flat_rows = [
-        {**row, "candidate_ids": "|".join(row["candidate_ids"]), "context_ids": "|".join(row["context_ids"]), "references": "|".join(row["references"])}
+        {
+            **row,
+            "candidate_ids": "|".join(row["candidate_ids"]),
+            "context_ids": "|".join(row["context_ids"]),
+            "references": "|".join(row["references"]),
+        }
         for row in rows
     ]
     write_csv(output_path.with_suffix(".csv"), flat_rows)

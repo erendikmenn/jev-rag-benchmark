@@ -1,0 +1,16 @@
+extends: default.yaml
+
+run:
+  max_budget_usd: 20.0
+
+retrieval:
+  backend: hybrid
+  candidate_k: 50
+  context_k: 5
+  embedding:
+    provider: openrouter
+    model: baai/bge-m3
+    input_usd_per_million_tokens: 0.01
+  hybrid:
+    source_k: 100
+
