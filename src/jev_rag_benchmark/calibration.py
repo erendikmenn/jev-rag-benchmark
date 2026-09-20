@@ -56,6 +56,14 @@ def query_gate_metrics(points: list[CalibrationPoint], threshold: float) -> dict
     no_relevant = [items for items in grouped.values() if not any(item.relevant for item in items)]
     answerable = [items for items in grouped.values() if any(item.relevant for item in items)]
     empty_correct = sum(not any(item.score >= threshold for item in items) for items in no_relevant)
+    counterfactual_empty = [
+        [item for item in items if not item.relevant]
+        for items in grouped.values()
+        if any(not item.relevant for item in items)
+    ]
+    counterfactual_empty_correct = sum(
+        not any(item.score >= threshold for item in items) for items in counterfactual_empty
+    )
     answer_found = sum(
         any(item.relevant and item.score >= threshold for item in items) for items in answerable
     )
@@ -65,4 +73,7 @@ def query_gate_metrics(points: list[CalibrationPoint], threshold: float) -> dict
         "no_relevant_candidate_queries": len(no_relevant),
         "answerable_recall": answer_found / max(1, len(answerable)),
         "empty_result_correctness": empty_correct / max(1, len(no_relevant)),
+        "counterfactual_empty_queries": len(counterfactual_empty),
+        "counterfactual_empty_result_correctness": counterfactual_empty_correct
+        / max(1, len(counterfactual_empty)),
     }

@@ -1,0 +1,7 @@
+extends: openrouter-hybrid.yaml
+
+rerankers:
+  jev:
+    threshold: 0.50
+    threshold_source: dev
+    calibration_report: reports/calibration/jev-threshold-xquad-tr-hybrid.json

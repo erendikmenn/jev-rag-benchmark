@@ -26,3 +26,4 @@ def test_query_gate_metrics_counts_empty_candidate_sets():
     result = query_gate_metrics(points, 0.5)
     assert result["answerable_recall"] == 1.0
     assert result["empty_result_correctness"] == 1.0
+    assert result["counterfactual_empty_result_correctness"] == 1.0
