@@ -124,7 +124,9 @@ class OpenRouterGenerator:
 
         client = self.client or httpx.Client(timeout=self.timeout_seconds)
         try:
-            response = None
+            total_prompt_tokens = 0
+            total_completion_tokens = 0
+            total_cost = 0.0
             for attempt in range(self.max_retries + 1):
                 request_body = {
                     "model": self.model,
@@ -147,39 +149,43 @@ class OpenRouterGenerator:
                     },
                     json=request_body,
                 )
-                if response.status_code < 400:
-                    break
-                retryable = response.status_code == 429 or response.status_code >= 500
-                if not retryable or attempt >= self.max_retries:
-                    response.raise_for_status()
-                delay = min(float(response.headers.get("retry-after", 2**attempt)), 10.0)
-                time.sleep(delay)
-            assert response is not None
-            response.raise_for_status()
-            payload = response.json()
-            usage = payload.get("usage") or {}
-            prompt_tokens = usage.get("prompt_tokens")
-            completion_tokens = usage.get("completion_tokens")
-            measured_cost = (
-                float(usage.get("cost", 0.0))
-                or (
-                    ((prompt_tokens or 0) * self.input_price)
-                    + ((completion_tokens or 0) * self.output_price)
+                if response.status_code >= 400:
+                    retryable = response.status_code == 429 or response.status_code >= 500
+                    if not retryable or attempt >= self.max_retries:
+                        response.raise_for_status()
+                    delay = min(float(response.headers.get("retry-after", 2**attempt)), 10.0)
+                    time.sleep(delay)
+                    continue
+
+                payload = response.json()
+                usage = payload.get("usage") or {}
+                prompt_tokens = int(usage.get("prompt_tokens") or 0)
+                completion_tokens = int(usage.get("completion_tokens") or 0)
+                measured_cost = (
+                    float(usage.get("cost", 0.0))
+                    or (
+                        (prompt_tokens * self.input_price) + (completion_tokens * self.output_price)
+                    )
+                    / 1_000_000
                 )
-                / 1_000_000
-            )
-            self.budget_ledger.charge(measured_cost)
-            content = payload["choices"][0]["message"].get("content") or ""
-            return GenerationResult(
-                answer=content.strip(),
-                latency_ms=(time.perf_counter() - started) * 1000,
-                model=payload.get("model", self.model),
-                prompt_tokens=prompt_tokens,
-                completion_tokens=completion_tokens,
-                cost_usd=measured_cost,
-                error=None if content else "OpenRouter returned empty content",
-                finish_reason=payload["choices"][0].get("finish_reason"),
-            )
+                total_prompt_tokens += prompt_tokens
+                total_completion_tokens += completion_tokens
+                total_cost += measured_cost
+                content = payload["choices"][0]["message"].get("content") or ""
+                if content or attempt >= self.max_retries:
+                    self.budget_ledger.charge(total_cost)
+                    return GenerationResult(
+                        answer=content.strip(),
+                        latency_ms=(time.perf_counter() - started) * 1000,
+                        model=payload.get("model", self.model),
+                        prompt_tokens=total_prompt_tokens,
+                        completion_tokens=total_completion_tokens,
+                        cost_usd=total_cost,
+                        error=None if content else "OpenRouter returned empty content",
+                        finish_reason=payload["choices"][0].get("finish_reason"),
+                    )
+                time.sleep(min(2**attempt, 10.0))
+            raise RuntimeError("generator retry loop exited unexpectedly")
         except Exception as exc:
             return GenerationResult(
                 answer="",

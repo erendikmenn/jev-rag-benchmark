@@ -49,3 +49,41 @@ def test_openrouter_generation_sends_reasoning_effort():
         client=client,
     ).generate("prompt")
     assert result.answer == "Ankara [d1]"
+
+
+def test_openrouter_generation_retries_empty_content_and_counts_usage(monkeypatch):
+    attempts = 0
+
+    def handler(request: httpx.Request):
+        nonlocal attempts
+        attempts += 1
+        content = "" if attempts == 1 else "Ankara [d1]"
+        return httpx.Response(
+            200,
+            json={
+                "model": "google/gemini-3.8-flash",
+                "choices": [
+                    {
+                        "message": {"content": content},
+                        "finish_reason": "error" if not content else "stop",
+                    }
+                ],
+                "usage": {"prompt_tokens": 40, "completion_tokens": 5, "cost": 0.0001},
+            },
+        )
+
+    monkeypatch.setattr("jev_rag_benchmark.generation.time.sleep", lambda _: None)
+    result = OpenRouterGenerator(
+        "google/gemini-3.8-flash",
+        api_key="test",
+        max_budget_usd=1,
+        max_retries=1,
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+    ).generate("prompt")
+
+    assert attempts == 2
+    assert result.answer == "Ankara [d1]"
+    assert result.prompt_tokens == 80
+    assert result.completion_tokens == 10
+    assert result.cost_usd == 0.0002
+    assert result.error is None
