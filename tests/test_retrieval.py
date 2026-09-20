@@ -1,8 +1,15 @@
 from pathlib import Path
 
+import httpx
+
 from jev_rag_benchmark.io import read_jsonl
 from jev_rag_benchmark.models import Document
-from jev_rag_benchmark.retrieval import BM25Index, DenseIndex, HybridIndex
+from jev_rag_benchmark.retrieval import (
+    BM25Index,
+    DenseIndex,
+    HybridIndex,
+    OpenRouterEmbeddings,
+)
 
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -46,3 +53,29 @@ def test_dense_and_hybrid_retrieve_semantic_match(tmp_path):
     selected = hybrid.retrieve("Türkiye Ankara", 2)
     assert selected[0].document.doc_id == "d1"
     assert [item.retrieval_rank for item in selected] == [1, 2]
+
+
+def test_openrouter_embeddings_retries_transport_errors():
+    calls = 0
+
+    def handler(request: httpx.Request):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise httpx.ConnectError("temporary reset", request=request)
+        return httpx.Response(
+            200,
+            json={
+                "model": "baai/bge-m3",
+                "data": [{"index": 0, "embedding": [1.0, 0.0]}],
+                "usage": {"prompt_tokens": 2, "cost": 0.000001},
+            },
+        )
+
+    embedder = OpenRouterEmbeddings(
+        api_key="test",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+        max_retries=1,
+    )
+    assert embedder.embed(["query"]) == [[1.0, 0.0]]
+    assert calls == 2

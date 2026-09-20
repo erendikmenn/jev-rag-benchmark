@@ -123,15 +123,21 @@ class OpenRouterEmbeddings:
                     body["input_type"] = input_type
                 response = None
                 for attempt in range(self.max_retries + 1):
-                    response = client.post(
-                        self.endpoint,
-                        headers={
-                            "Authorization": f"Bearer {self.api_key}",
-                            "HTTP-Referer": "https://github.com/erendikmenn/jev-rag-benchmark",
-                            "X-OpenRouter-Title": "jev-rag-benchmark",
-                        },
-                        json=body,
-                    )
+                    try:
+                        response = client.post(
+                            self.endpoint,
+                            headers={
+                                "Authorization": f"Bearer {self.api_key}",
+                                "HTTP-Referer": "https://github.com/erendikmenn/jev-rag-benchmark",
+                                "X-OpenRouter-Title": "jev-rag-benchmark",
+                            },
+                            json=body,
+                        )
+                    except httpx.TransportError:
+                        if attempt >= self.max_retries:
+                            raise
+                        time.sleep(min(2**attempt, 10.0))
+                        continue
                     if response.status_code < 400:
                         break
                     retryable = response.status_code == 429 or response.status_code >= 500
