@@ -20,6 +20,7 @@ from .metrics import ndcg_at_k, recall_at_k
 from .report import generate_report
 from .retrieval import BM25Index, create_retrieval_index
 from .rerankers import BudgetLedger, IdentityReranker, JevReranker
+from .stability import spearman, top_k_jaccard
 
 app = typer.Typer(help="Reproducible Jev RAG benchmark")
 data_app = typer.Typer(help="Download and normalize benchmark datasets")
@@ -300,6 +301,105 @@ def calibrate_jev(
         "minimum_recall": minimum_recall,
         "selected": selected,
         "query_gate": query_gate_metrics(points, float(selected["threshold"])),
+        "cost_usd": ledger.spent_usd,
+        "traces": traces,
+    }
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    typer.echo(json.dumps({**result, "traces": f"{len(traces)} rows"}, indent=2))
+
+
+@app.command("jev-stability")
+def jev_stability(
+    dataset: str = "xquad-tr",
+    config_path: Path = ROOT / "configs/openrouter-hybrid.yaml",
+    limit: int = 50,
+    permutations: int = 5,
+    top_k: int = 5,
+    output: Path = ROOT / "reports/stability/jev-order-stability.json",
+) -> None:
+    """Measure Jev batch-score sensitivity to candidate serialization order."""
+    if limit <= 0 or permutations < 2 or top_k <= 0:
+        raise typer.BadParameter("limit/top-k must be positive and permutations must be >= 2")
+    config = load_config(config_path)
+    documents_path, queries_path = _dataset_paths(dataset)
+    documents = [Document(**row) for row in read_jsonl(documents_path)]
+    queries = [row for row in read_jsonl(queries_path) if row.get("split") == "test"]
+    unique = []
+    seen = set()
+    for query in sorted(queries, key=lambda row: row["query_id"]):
+        normalized = " ".join(query["text"].casefold().split())
+        if normalized not in seen:
+            unique.append(query)
+            seen.add(normalized)
+    unique = unique[:limit]
+
+    embedding_model = config["retrieval"].get("embedding", {}).get("model", "none")
+    cache_name = "".join(
+        char if char.isalnum() or char in "_.-" else "-" for char in embedding_model
+    )
+    index = create_retrieval_index(
+        documents,
+        config["retrieval"],
+        cache_path=documents_path.parent / f"embeddings.{cache_name}.json",
+    )
+    jev_cfg = config["rerankers"]["jev"]
+    ledger = BudgetLedger(config["run"]["max_budget_usd"])
+    reranker = JevReranker(
+        model=jev_cfg["model"],
+        timeout_seconds=jev_cfg["timeout_seconds"],
+        input_usd_per_million_tokens=jev_cfg["input_usd_per_million_tokens"],
+        max_budget_usd=config["run"]["max_budget_usd"],
+        budget_ledger=ledger,
+        max_retries=jev_cfg["max_retries"],
+        strategy="batch",
+    )
+    rng = random.Random(config["run"]["seed"])
+    traces = []
+    all_correlations = []
+    all_jaccards = []
+    gold_flip_count = 0
+    for query_number, query in enumerate(unique, start=1):
+        candidates = index.retrieve(query["text"], config["retrieval"]["candidate_k"])
+        score_runs = []
+        gold_hits = []
+        relevant = set(query.get("relevant_doc_ids", ()))
+        for permutation in range(permutations):
+            ordered = list(candidates)
+            if permutation:
+                rng.shuffle(ordered)
+            _, telemetry = reranker.rerank(query["text"], ordered, len(ordered))
+            if telemetry.fallback:
+                raise RuntimeError(f"Jev stability call failed: {telemetry.error}")
+            scores = {key: float(value) for key, value in telemetry.details["scores"].items()}
+            score_runs.append(scores)
+            top_ids = sorted(scores, key=lambda key: (-scores[key], key))[:top_k]
+            gold_hits.append(bool(set(top_ids) & relevant))
+        correlations = [spearman(score_runs[0], run) for run in score_runs[1:]]
+        jaccards = [top_k_jaccard(score_runs[0], run, top_k) for run in score_runs[1:]]
+        all_correlations.extend(correlations)
+        all_jaccards.extend(jaccards)
+        gold_flip_count += int(len(set(gold_hits)) > 1)
+        traces.append(
+            {
+                "query_id": query["query_id"],
+                "spearman": correlations,
+                "top_k_jaccard": jaccards,
+                "gold_in_top_k": gold_hits,
+            }
+        )
+        if query_number % 10 == 0 or query_number == len(unique):
+            typer.echo(f"progress: {query_number}/{len(unique)} stability queries", err=True)
+
+    result = {
+        "dataset": dataset,
+        "queries": len(unique),
+        "permutations": permutations,
+        "candidate_k": config["retrieval"]["candidate_k"],
+        "top_k": top_k,
+        "mean_spearman": sum(all_correlations) / max(1, len(all_correlations)),
+        "mean_top_k_jaccard": sum(all_jaccards) / max(1, len(all_jaccards)),
+        "gold_membership_flip_queries": gold_flip_count,
         "cost_usd": ledger.spent_usd,
         "traces": traces,
     }
