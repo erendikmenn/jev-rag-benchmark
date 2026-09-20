@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <style>
+    .t { font-family: Arial, Helvetica, sans-serif; fill: #111; }
+    .muted { fill: #555; }
+    .line { stroke: #c8c8c8; stroke-width: 1.5; }
+  </style>
+  <rect width="1600" height="900" fill="#fff"/>
+  <g class="t">
+    <text x="70" y="70" font-size="20" font-weight="700">JEV RAG BENCHMARK</text>
+    <text x="70" y="128" font-size="46" font-weight="700">Doğru kaynağı kaçıran soru sayısı</text>
+    <text x="70" y="166" class="muted" font-size="21">1.044 Türkçe XQuAD sorusu • İlk 5 bağlam • Daha düşük daha iyi</text>
+
+    <g transform="translate(70,230)">
+      <line x1="370" y1="0" x2="370" y2="390" stroke="#111" stroke-width="2"/>
+      <line x1="370" y1="390" x2="1370" y2="390" stroke="#111" stroke-width="2"/>
+      <line x1="647" y1="0" x2="647" y2="390" class="line" stroke-dasharray="6 8"/>
+      <line x1="924" y1="0" x2="924" y2="390" class="line" stroke-dasharray="6 8"/>
+      <line x1="1201" y1="0" x2="1201" y2="390" class="line" stroke-dasharray="6 8"/>
+
+      <text x="0" y="59" font-size="23" font-weight="700">Klasik BM25</text>
+      <text x="0" y="88" class="muted" font-size="18">Doğru kaynak ilk 5’te: %93,77</text>
+      <rect x="370" y="18" width="900" height="78" fill="#111"/>
+      <text x="1292" y="69" font-size="30" font-weight="700">65</text>
+
+      <text x="0" y="189" font-size="23" font-weight="700">Hybrid retrieval</text>
+      <text x="0" y="218" class="muted" font-size="18">Doğru kaynak ilk 5’te: %97,61</text>
+      <rect x="370" y="148" width="346" height="78" fill="#777"/>
+      <text x="738" y="199" font-size="30" font-weight="700">25</text>
+
+      <text x="0" y="319" font-size="23" font-weight="700">Hybrid + Jev</text>
+      <text x="0" y="348" class="muted" font-size="18">Doğru kaynak ilk 5’te: %99,43</text>
+      <rect x="370" y="278" width="83" height="78" fill="#fff" stroke="#111" stroke-width="4"/>
+      <text x="475" y="329" font-size="30" font-weight="700">6</text>
+
+      <text x="370" y="425" class="muted" text-anchor="middle" font-size="16">0</text>
+      <text x="647" y="425" class="muted" text-anchor="middle" font-size="16">20</text>
+      <text x="924" y="425" class="muted" text-anchor="middle" font-size="16">40</text>
+      <text x="1201" y="425" class="muted" text-anchor="middle" font-size="16">60</text>
+    </g>
+
+    <g transform="translate(70,700)">
+      <rect width="1460" height="100" fill="#f4f4f4" stroke="#111" stroke-width="2"/>
+      <text x="28" y="42" font-size="21" font-weight="700">SONUÇ</text>
+      <text x="150" y="42" font-size="28" font-weight="700">65 → 6 hata</text>
+      <text x="350" y="42" font-size="21">Klasik BM25’e göre kaynak bulma hatası %90,8 azaldı.</text>
+      <text x="28" y="75" class="muted" font-size="17">Jev, aynı hybrid aday havuzunda kaçırılan 25 sorunun 19’unu geri kazandı.</text>
+    </g>
+
+    <line x1="70" y1="842" x2="1530" y2="842" class="line"/>
+    <text x="70" y="875" class="muted" font-size="15">github.com/erendikmenn/jev-rag-benchmark</text>
+    <text x="1530" y="875" text-anchor="end" class="muted" font-size="15">Dataset: google/xquad • Türkçe split</text>
+  </g>
+</svg>

@@ -34,5 +34,6 @@ Orijinal kaynak: https://github.com/google-deepmind/xquad
 
 ## Eklenecek görseller
 
-1. `benchmark-summary.png`
-2. `benchmark-details.png`
+1. `benchmark-bars.png`
+2. `benchmark-summary.png`
+3. `benchmark-details.png`
