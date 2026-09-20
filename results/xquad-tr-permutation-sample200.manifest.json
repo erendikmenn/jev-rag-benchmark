@@ -1,0 +1,335 @@
+{
+  "schema_version": 1,
+  "run_kind": "merged-real-shards",
+  "rows": 200,
+  "shards": [
+    "results/xquad-tr-s.shard-0-of-2.jsonl",
+    "results/xquad-tr-s.shard-1-of-2.jsonl"
+  ],
+  "source_manifests": [
+    {
+      "schema_version": 1,
+      "created_at": "2026-09-20T09:00:27.488290+00:00",
+      "run_kind": "real",
+      "git_commit": "92118e0ea413e4031952429acabf6b0877eee136",
+      "python": "3.12.12",
+      "platform": "macOS-27.0-arm64-arm-64bit",
+      "dependencies": {
+        "httpx": "0.28.1",
+        "numpy": "2.5.3",
+        "pydantic": "2.13.5",
+        "PyYAML": "6.0.3",
+        "typer": "0.27.2"
+      },
+      "dataset_files": {
+        "data/processed/xquad-tr/documents.jsonl": "0dc0c9cddd57e891798bd2a1083e4138e1eff19d05e2cdf5f0197499729c87b5",
+        "data/processed/xquad-tr/queries.jsonl": "a6e61439d824f3791a8e43f0144a5d9946cfbd731591dd5b822dce21892e1dce"
+      },
+      "models": {
+        "generator_requested": "qwen/qwen3.7-flash",
+        "jev_requested": "typesafe/jev-1.13",
+        "cross_encoder_requested": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+        "hosted_reranker_requested": "cohere/rerank-v3.5",
+        "embedding_requested": "baai/bge-m3",
+        "generator_resolved": [],
+        "reranker_resolved": [
+          "typesafe/jev-1.13-20260917"
+        ]
+      },
+      "prices": {
+        "jev_input_usd_per_million_tokens": 0.042,
+        "generator_input_usd_per_million_tokens": 0.03,
+        "generator_output_usd_per_million_tokens": 0.13,
+        "jev_verified_on": "2026-09-19",
+        "generator_verified_on": "2026-09-19",
+        "embedding_input_usd_per_million_tokens": 0.01,
+        "embedding_verified_on": "2026-09-20",
+        "hosted_reranker_usd_per_search_unit": 0.001,
+        "hosted_reranker_verified_on": "2026-09-20"
+      },
+      "seed": 20260919,
+      "prompt_versions": {
+        "answer": "answer-v3",
+        "jev": "relevance-noul-v1"
+      },
+      "cache": "warm",
+      "concurrency": 1,
+      "config": {
+        "run": {
+          "seed": 20260919,
+          "concurrency": 1,
+          "cache": "warm",
+          "max_budget_usd": 20.0,
+          "latency_repetitions": 3,
+          "deduplicate_queries": true
+        },
+        "retrieval": {
+          "candidate_k": 20,
+          "context_k": 5,
+          "context_char_budget": 6000,
+          "backend": "hybrid",
+          "embedding": {
+            "provider": "openrouter",
+            "model": "baai/bge-m3",
+            "batch_size": 64,
+            "timeout_seconds": 120,
+            "max_retries": 2,
+            "input_usd_per_million_tokens": 0.01,
+            "price_verified_on": "2026-09-20"
+          },
+          "hybrid": {
+            "rrf_k": 60,
+            "bm25_weight": 1.0,
+            "dense_weight": 1.0,
+            "source_k": 240
+          }
+        },
+        "generator": {
+          "provider": "openrouter",
+          "model": "qwen/qwen3.7-flash",
+          "temperature": 0.0,
+          "timeout_seconds": 60,
+          "max_output_tokens": 128,
+          "max_retries": 2,
+          "input_usd_per_million_tokens": 0.03,
+          "output_usd_per_million_tokens": 0.13,
+          "price_verified_on": "2026-09-19",
+          "prompt_version": "answer-v3"
+        },
+        "rerankers": {
+          "hosted": {
+            "provider": "openrouter",
+            "model": "cohere/rerank-v3.5",
+            "usd_per_search_unit": 0.001,
+            "price_verified_on": "2026-09-20",
+            "timeout_seconds": 60,
+            "max_retries": 2
+          },
+          "cross_encoder": {
+            "model": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+            "device": "cpu"
+          },
+          "jev": {
+            "provider": "openrouter",
+            "model": "typesafe/jev-1.13",
+            "threshold": 0.5,
+            "threshold_source": "uncalibrated",
+            "timeout_seconds": 60,
+            "max_retries": 2,
+            "max_concurrency": 12,
+            "prompt_version": "relevance-noul-v1",
+            "input_usd_per_million_tokens": 0.042,
+            "price_verified_on": "2026-09-19",
+            "evidence_router": {
+              "relevant_min": 0.45,
+              "evidence_min": 0.55,
+              "contradiction_min": 0.7,
+              "injection_max": 0.7
+            },
+            "hierarchical": {
+              "shard_size": 30,
+              "shard_top_k": 5
+            },
+            "permutation_ensemble": {
+              "permutations": 3,
+              "seed": 20260919
+            }
+          },
+          "small_llm": {
+            "provider": "openrouter",
+            "model": "qwen/qwen3.7-flash"
+          }
+        },
+        "policies": {
+          "no_document": "original_top_k",
+          "jev_error": "original_order",
+          "answer_abstention_text": "Kaynaklarda bu soruyu yanıtlamak için yeterli kanıt yok."
+        },
+        "verification": {
+          "enabled_branches": [
+            "V"
+          ],
+          "auto_accept_confidence": 0.8,
+          "regenerate_once": true,
+          "prompt_version": "citation-check-v1"
+        },
+        "datasets": {
+          "scifact": {
+            "version": "beir-scifact-1.0.0",
+            "split": "test"
+          },
+          "xquad_en": {
+            "version": "google-deepmind/xquad@master",
+            "language": "en"
+          },
+          "xquad_tr": {
+            "version": "google-deepmind/xquad@master",
+            "language": "tr"
+          }
+        }
+      }
+    },
+    {
+      "schema_version": 1,
+      "created_at": "2026-09-20T09:00:30.145765+00:00",
+      "run_kind": "real",
+      "git_commit": "92118e0ea413e4031952429acabf6b0877eee136",
+      "python": "3.12.12",
+      "platform": "macOS-27.0-arm64-arm-64bit",
+      "dependencies": {
+        "httpx": "0.28.1",
+        "numpy": "2.5.3",
+        "pydantic": "2.13.5",
+        "PyYAML": "6.0.3",
+        "typer": "0.27.2"
+      },
+      "dataset_files": {
+        "data/processed/xquad-tr/documents.jsonl": "0dc0c9cddd57e891798bd2a1083e4138e1eff19d05e2cdf5f0197499729c87b5",
+        "data/processed/xquad-tr/queries.jsonl": "a6e61439d824f3791a8e43f0144a5d9946cfbd731591dd5b822dce21892e1dce"
+      },
+      "models": {
+        "generator_requested": "qwen/qwen3.7-flash",
+        "jev_requested": "typesafe/jev-1.13",
+        "cross_encoder_requested": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+        "hosted_reranker_requested": "cohere/rerank-v3.5",
+        "embedding_requested": "baai/bge-m3",
+        "generator_resolved": [],
+        "reranker_resolved": [
+          "typesafe/jev-1.13-20260917"
+        ]
+      },
+      "prices": {
+        "jev_input_usd_per_million_tokens": 0.042,
+        "generator_input_usd_per_million_tokens": 0.03,
+        "generator_output_usd_per_million_tokens": 0.13,
+        "jev_verified_on": "2026-09-19",
+        "generator_verified_on": "2026-09-19",
+        "embedding_input_usd_per_million_tokens": 0.01,
+        "embedding_verified_on": "2026-09-20",
+        "hosted_reranker_usd_per_search_unit": 0.001,
+        "hosted_reranker_verified_on": "2026-09-20"
+      },
+      "seed": 20260919,
+      "prompt_versions": {
+        "answer": "answer-v3",
+        "jev": "relevance-noul-v1"
+      },
+      "cache": "warm",
+      "concurrency": 1,
+      "config": {
+        "run": {
+          "seed": 20260919,
+          "concurrency": 1,
+          "cache": "warm",
+          "max_budget_usd": 20.0,
+          "latency_repetitions": 3,
+          "deduplicate_queries": true
+        },
+        "retrieval": {
+          "candidate_k": 20,
+          "context_k": 5,
+          "context_char_budget": 6000,
+          "backend": "hybrid",
+          "embedding": {
+            "provider": "openrouter",
+            "model": "baai/bge-m3",
+            "batch_size": 64,
+            "timeout_seconds": 120,
+            "max_retries": 2,
+            "input_usd_per_million_tokens": 0.01,
+            "price_verified_on": "2026-09-20"
+          },
+          "hybrid": {
+            "rrf_k": 60,
+            "bm25_weight": 1.0,
+            "dense_weight": 1.0,
+            "source_k": 240
+          }
+        },
+        "generator": {
+          "provider": "openrouter",
+          "model": "qwen/qwen3.7-flash",
+          "temperature": 0.0,
+          "timeout_seconds": 60,
+          "max_output_tokens": 128,
+          "max_retries": 2,
+          "input_usd_per_million_tokens": 0.03,
+          "output_usd_per_million_tokens": 0.13,
+          "price_verified_on": "2026-09-19",
+          "prompt_version": "answer-v3"
+        },
+        "rerankers": {
+          "hosted": {
+            "provider": "openrouter",
+            "model": "cohere/rerank-v3.5",
+            "usd_per_search_unit": 0.001,
+            "price_verified_on": "2026-09-20",
+            "timeout_seconds": 60,
+            "max_retries": 2
+          },
+          "cross_encoder": {
+            "model": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+            "device": "cpu"
+          },
+          "jev": {
+            "provider": "openrouter",
+            "model": "typesafe/jev-1.13",
+            "threshold": 0.5,
+            "threshold_source": "uncalibrated",
+            "timeout_seconds": 60,
+            "max_retries": 2,
+            "max_concurrency": 12,
+            "prompt_version": "relevance-noul-v1",
+            "input_usd_per_million_tokens": 0.042,
+            "price_verified_on": "2026-09-19",
+            "evidence_router": {
+              "relevant_min": 0.45,
+              "evidence_min": 0.55,
+              "contradiction_min": 0.7,
+              "injection_max": 0.7
+            },
+            "hierarchical": {
+              "shard_size": 30,
+              "shard_top_k": 5
+            },
+            "permutation_ensemble": {
+              "permutations": 3,
+              "seed": 20260919
+            }
+          },
+          "small_llm": {
+            "provider": "openrouter",
+            "model": "qwen/qwen3.7-flash"
+          }
+        },
+        "policies": {
+          "no_document": "original_top_k",
+          "jev_error": "original_order",
+          "answer_abstention_text": "Kaynaklarda bu soruyu yanıtlamak için yeterli kanıt yok."
+        },
+        "verification": {
+          "enabled_branches": [
+            "V"
+          ],
+          "auto_accept_confidence": 0.8,
+          "regenerate_once": true,
+          "prompt_version": "citation-check-v1"
+        },
+        "datasets": {
+          "scifact": {
+            "version": "beir-scifact-1.0.0",
+            "split": "test"
+          },
+          "xquad_en": {
+            "version": "google-deepmind/xquad@master",
+            "language": "en"
+          },
+          "xquad_tr": {
+            "version": "google-deepmind/xquad@master",
+            "language": "tr"
+          }
+        }
+      }
+    }
+  ]
+}
