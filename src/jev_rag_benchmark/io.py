@@ -19,6 +19,10 @@ def read_jsonl(path: str | Path) -> list[dict[str, Any]]:
         return [json.loads(line) for line in handle if line.strip()]
 
 
+def select_shard(rows: list[Any], shard_index: int, shard_count: int) -> list[Any]:
+    return [row for position, row in enumerate(rows) if position % shard_count == shard_index]
+
+
 def write_jsonl(path: str | Path, rows: Iterable[Any]) -> None:
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)

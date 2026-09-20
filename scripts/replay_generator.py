@@ -8,7 +8,7 @@ from pathlib import Path
 
 from jev_rag_benchmark.config import load_config
 from jev_rag_benchmark.generation import build_prompt, create_generator
-from jev_rag_benchmark.io import read_jsonl, sha256_file, write_csv, write_jsonl
+from jev_rag_benchmark.io import read_jsonl, select_shard, sha256_file, write_csv, write_jsonl
 from jev_rag_benchmark.metrics import exact_match, token_f1
 from jev_rag_benchmark.models import Candidate, Document
 from jev_rag_benchmark.rerankers import BudgetLedger
@@ -33,14 +33,27 @@ def main() -> None:
     parser.add_argument("--source-branch", default="D")
     parser.add_argument("--target-branch", default="G")
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--shard-index", type=int, default=0)
+    parser.add_argument("--shard-count", type=int, default=1)
+    parser.add_argument(
+        "--target-only",
+        action="store_true",
+        help="Write only replayed target rows so independently generated shards can be merged.",
+    )
     parser.add_argument("--retry-completion-tokens-at-least", type=int)
     parser.add_argument("--retry-finish-reason")
     args = parser.parse_args()
+
+    if args.shard_count < 1:
+        parser.error("--shard-count must be at least 1")
+    if not 0 <= args.shard_index < args.shard_count:
+        parser.error("--shard-index must be between 0 and shard-count - 1")
 
     source_rows = read_jsonl(args.source)
     frozen = [row for row in source_rows if row["branch"] == args.source_branch]
     if args.limit:
         frozen = frozen[: args.limit]
+    frozen = select_shard(frozen, args.shard_index, args.shard_count)
     documents = {row["doc_id"]: Document(**row) for row in read_jsonl(args.documents)}
     config = load_config(args.config)
     ledger = BudgetLedger(config["run"]["max_budget_usd"])
@@ -56,7 +69,10 @@ def main() -> None:
             threshold = args.retry_completion_tokens_at_least
             if threshold and int(row.get("generator_completion_tokens") or 0) >= threshold:
                 continue
-            if args.retry_finish_reason and row.get("generation_finish_reason") == args.retry_finish_reason:
+            if (
+                args.retry_finish_reason
+                and row.get("generation_finish_reason") == args.retry_finish_reason
+            ):
                 continue
             completed[row["query_id"]] = row
         ledger.spent_usd = sum(
@@ -88,9 +104,7 @@ def main() -> None:
             "answer_em": exact_match(cleaned, original["references"]),
             "answer_f1": token_f1(cleaned, original["references"]),
             "citation_validity": (
-                len(cited & context_ids) / len(cited)
-                if cited
-                else (0.0 if result.answer else None)
+                len(cited & context_ids) / len(cited) if cited else (0.0 if result.answer else None)
             ),
             "abstained": abstention_text in result.answer,
             "wrong_answer": bool(
@@ -101,9 +115,7 @@ def main() -> None:
             ),
             "generation_ms": result.latency_ms,
             "end_to_end_ms": (
-                float(original["retrieval_ms"])
-                + float(original["rerank_ms"])
-                + result.latency_ms
+                float(original["retrieval_ms"]) + float(original["rerank_ms"]) + result.latency_ms
             ),
             "generator_model": result.model,
             "generator_prompt_tokens": result.prompt_tokens,
@@ -117,7 +129,8 @@ def main() -> None:
         generated_rows[original["query_id"]] = row
 
         if index % 10 == 0 or index == len(frozen) or result.error:
-            combined = source_rows + [generated_rows[key] for key in sorted(generated_rows)]
+            target_rows = [generated_rows[key] for key in sorted(generated_rows)]
+            combined = target_rows if args.target_only else source_rows + target_rows
             write_jsonl(args.output, combined)
             print(
                 f"progress: {len(generated_rows)}/{len(frozen)}; "
@@ -125,7 +138,8 @@ def main() -> None:
                 flush=True,
             )
 
-    combined = source_rows + [generated_rows[key] for key in sorted(generated_rows)]
+    target_rows = [generated_rows[key] for key in sorted(generated_rows)]
+    combined = target_rows if args.target_only else source_rows + target_rows
     write_jsonl(args.output, combined)
     flat_rows = [
         {
@@ -173,6 +187,9 @@ def main() -> None:
             "frozen_contexts": True,
             "adaptive_max_output_tokens": config["generator"].get("retry_token_caps"),
             "rows": len(generated_rows),
+            "target_only": args.target_only,
+            "shard_index": args.shard_index,
+            "shard_count": args.shard_count,
         },
     }
     args.output.with_suffix(".manifest.json").write_text(
