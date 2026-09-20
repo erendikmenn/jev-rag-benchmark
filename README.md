@@ -4,25 +4,120 @@ Reproducible, vendor-neutral experiments for measuring whether TypeSafe Jev impr
 small RAG system. “Jev wins” is not an assumption: quality, latency, and cost can improve,
 stay flat, or get worse.
 
-## Locked XQuAD-TR result (2026-09-20)
+## Benchmark status — XQuAD-TR (2026-09-20)
 
-The current full run contains 1,044 unique Turkish XQuAD questions. Published model calls
-use OpenRouter; no local LLM or local embedding model is used.
+The locked full benchmark contains **1,044 unique Turkish XQuAD questions** and a corpus of
+240 passages. Published model and embedding calls use OpenRouter; no local LLM or local
+embedding model is used. The first stage fuses BM25 with `baai/bge-m3`, exposes the same 20
+candidates to every reranker, and gives the answer model the best five passages. The Jev
+request was `typesafe/jev-1.13`; OpenRouter resolved it to
+`typesafe/jev-1.13-20260917`.
 
-| Stage / model | Main result | Observed cost |
+### 1. Candidate retrieval ceiling
+
+This table answers the first prerequisite question: *was the gold passage available to the
+reranker at all?* A reranker cannot recover a passage outside its candidate pool.
+
+| Candidate source | Candidate depth | Gold passage found | Candidate recall |
+|---|---:|---:|---:|
+| BM25 | top-5 | 979 / 1,044 | 93.774% |
+| BM25 | top-20 | 1,009 / 1,044 | 96.648% |
+| BM25 | top-50 | 1,020 / 1,044 | 97.701% |
+| BM25 | top-100 | 1,028 / 1,044 | 98.467% |
+| BM25 | all 240 | 1,044 / 1,044 | 100.000% |
+| Hybrid BM25 + BGE-M3 | top-5 | 1,019 / 1,044 | 97.605% |
+| Hybrid BM25 + BGE-M3 | top-20 | 1,039 / 1,044 | **99.521%** |
+| Hybrid BM25 + BGE-M3 | top-50 | 1,044 / 1,044 | **100.000%** |
+
+Full-depth hybrid fusion raises the top-20 ceiling by **2.873 percentage points** over BM25
+alone, from 1,009 to 1,039 answer-bearing candidate sets.
+
+### 2. Full reranker benchmark
+
+Generation is disabled here, so the table isolates passage selection. All three rows use
+the same 1,044 questions and the same frozen hybrid top-20 candidates.
+
+| Reranking method | Recall@5 | Gold in top-5 | nDCG@10 | MRR@10 | Rerank p50 | Total rerank cost | Status |
+|---|---:|---:|---:|---:|---:|---:|---|
+| No reranker; hybrid order | 97.605% | 1,019 / 1,044 | 94.314% | 93.194% | 0.0 ms | $0.000000 | Full |
+| **Jev 1.13 batch Noul** | **99.425%** | **1,038 / 1,044** | 98.097% | 97.637% | 532.0 ms | **$0.410866** | Full |
+| Cohere Rerank 3.5 | **99.425%** | **1,038 / 1,044** | **98.626%** | **98.348%** | **466.1 ms** | $1.044000 | Full |
+
+Jev and Cohere recover exactly the same number of gold passages into top-5. Jev costs
+**60.6% less**, while Cohere leads Jev by 0.529 nDCG points and 65.9 ms at the median. Jev
+adds **19 top-5 recoveries** and 3.783 nDCG points over the raw hybrid order, with zero API
+fallbacks.
+
+Raw rows: [`results/xquad-tr-hybrid-fullfusion20-a-d-o.jsonl`](results/xquad-tr-hybrid-fullfusion20-a-d-o.jsonl) ·
+Report: [`reports/generated/xquad-tr-hybrid-fullfusion20-a-d-o/`](reports/generated/xquad-tr-hybrid-fullfusion20-a-d-o/)
+
+### 3. Frozen-context answer generation
+
+Both generators receive the **exact same frozen Jev top-5 context IDs**, so retrieval and
+reranking variation cannot influence this comparison. “Successful answer” means token F1
+>= 0.5 after citation markers are removed.
+
+| Metric | Jev + Gemini 3.8 Flash | Jev + DeepSeek V4.1 Flash |
 |---|---:|---:|
-| Hybrid BM25 + BGE-M3 candidate recall@20 | 1,039/1,044 (99.521%) | query embedding included below |
-| Hybrid order, Recall@5 / nDCG@10 | 97.605% / 94.314% | $0 reranking |
-| Jev 1.13, Recall@5 / nDCG@10 | 99.425% / 98.097% | $0.410866 / 1,044 queries |
-| Cohere Rerank 3.5, Recall@5 / nDCG@10 | 99.425% / 98.626% | $1.044000 / 1,044 queries |
-| Jev + Gemini 3.8 Flash successful answers | 163/1,044 (15.61%) | $2.868223 total |
-| Jev + DeepSeek V4.1 Flash successful answers | 194/1,044 (18.58%) | $1.070110 total |
+| Evaluation status | Full, 1,044 / 1,044 | Full, 1,044 / 1,044 |
+| Resolved model | `google/gemini-3.8-flash` | `deepseek/deepseek-v4.1-flash` |
+| Mean answer F1 | 27.274% | **29.191%** |
+| Exact match | 0.096% | **0.862%** |
+| Successful answers | 163 / 1,044 (**15.61%**) | **194 / 1,044 (18.58%)** |
+| Valid citation IDs | 93.87% | **95.69%** |
+| Abstention rate | 6.13% | **4.21%** |
+| Wrong-answer flag | 78.26% | **77.20%** |
+| Generation p50 / p95 | **3.128 s / 13.114 s** | 7.641 s / 46.537 s |
+| Generation-only cost | $2.457358 | **$0.659245** |
+| Jev + generation total | $2.868223 | **$1.070110** |
+| Cost per successful answer | $0.017596 | **$0.005516** |
 
-DeepSeek produced 31 more successful answers and cost 62.7% less end to end than Gemini,
-but its observed median generation latency was 7.64 s versus Gemini's 3.13 s. Jev matched
-Cohere's Recall@5 at 60.6% lower reranking cost. Retrieval success and answer success are
-different metrics; the detailed interpretation, confidence intervals, ablations, and raw
-artifact links are in [`docs/benchmark-2026-09-20.md`](docs/benchmark-2026-09-20.md).
+On paired questions, DeepSeek improves mean F1 by **1.91 points** (95% bootstrap CI +1.03
+to +2.86) and success rate by **2.97 points** (95% CI +0.96 to +5.08). It produces 31 more
+successful answers, lowers end-to-end cost by **62.7%**, and lowers generation-only cost by
+**73.2%**. The trade-off is latency: its observed median generation time is 2.44x Gemini's
+and its p95 is 3.55x Gemini's.
+
+Paired report: [`reports/generated/gemini-vs-deepseek.md`](reports/generated/gemini-vs-deepseek.md)
+
+### 4. Jev strategy ablations
+
+These experiments test whether a more elaborate use of Jev improves the default batch
+reranker. Sample results are explicitly marked and are not presented as full-set scores.
+
+| Experiment | Scope | Recall@5 | nDCG@10 | Main effect | Decision |
+|---|---:|---:|---:|---|---|
+| Batch Noul reference | 200 questions | 99.00% | 97.893% | 529.2 ms p50; $0.078964 | **Default** |
+| Pointwise Jev | 200 questions | 99.00% | 97.008% | No recovery; +80.8% latency; +56.5% cost | Do not use by default |
+| 3-order permutation ensemble | 200 questions | 99.00% | 98.131% | +0.238 nDCG points; +10.9% latency; 3x cost | Optional stability mode |
+| Multi-signal evidence router | 200 questions | 93.00% | 92.381% | Over-filtered evidence; 10 fallbacks; about 2x latency/cost | Security mode; recalibrate first |
+| Full-corpus hierarchical Jev | 100 questions | 76.00% | 61.21% | Worse than BM25 top-5 at 97% Recall; $0.005061/query | Rejected as retriever replacement |
+| Jev citation verification | 100 questions | 99.00% | 97.693% | All final cited claims verified; one regeneration; +3.7% total cost | Optional high-assurance mode |
+
+The candidate-order audit used 50 questions and five permutations. Mean Spearman rank
+correlation was 0.262, mean top-5 Jaccard was 0.288, and gold top-5 membership changed for
+3/50 questions. The ensemble reduces this sensitivity, but the small quality gain does not
+justify tripling default reranking cost on this dataset.
+
+### 5. Current recommendation
+
+- **Best measured quality/cost:** hybrid full-depth top-20 -> Jev batch top-5 -> DeepSeek
+  V4.1 Flash.
+- **Lower interactive latency:** the same retrieval/Jev path -> Gemini 3.8 Flash.
+- **High-assurance output:** add Jev claim/source citation verification after generation.
+- **Do not use Jev as the first-stage retriever:** BM25 + BGE-M3 should create a strong,
+  bounded candidate pool first.
+- **Do not enable evidence filtering globally:** calibrate its thresholds on the target
+  corpus, especially for no-answer and adversarial documents.
+
+Recall/nDCG and answer F1 measure different stages: **99.425% Recall@5 does not mean 99.425%
+correct generated answers**. XQuAD references are short extractive answers, while the
+generator can produce two sourced sentences; exact match is therefore deliberately harsh.
+The wrong-answer flag is an automatic `non-abstaining F1 < 0.5` proxy, not human factuality
+adjudication. Latency is observed OpenRouter route latency, not a universal TPS guarantee.
+
+The complete methodology, interpretation limits, confidence intervals, and artifact map
+are also preserved in [`docs/benchmark-2026-09-20.md`](docs/benchmark-2026-09-20.md).
 
 The project is based on LlamaIndex's MIT-licensed local FastAPI/Ollama RAG example at
 commit `f475afd8a9bbda84f252567e045d89d07b5701b3`; see
