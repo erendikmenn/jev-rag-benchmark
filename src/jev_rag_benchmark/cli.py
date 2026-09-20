@@ -15,6 +15,7 @@ from .generation import build_prompt, create_generator
 from .io import read_jsonl
 from .manifest import build_manifest, write_manifest
 from .models import Document
+from .metrics import ndcg_at_k, recall_at_k
 from .report import generate_report
 from .retrieval import BM25Index
 from .rerankers import BudgetLedger, IdentityReranker, JevReranker
@@ -124,15 +125,69 @@ def estimate(
                 "candidate_k": candidate_k,
                 "jev_branches": jev_branches,
                 "estimated_input_tokens": total_tokens,
-                "price_usd_per_million_input_tokens": jev_cfg[
-                    "input_usd_per_million_tokens"
-                ],
+                "price_usd_per_million_input_tokens": jev_cfg["input_usd_per_million_tokens"],
                 "estimated_cost_usd": round(total_cost, 6),
                 "calls_made": 0,
             },
             indent=2,
         )
     )
+
+
+@app.command("retrieval-audit")
+def retrieval_audit(
+    dataset: str = "xquad-tr",
+    candidate_ks: str = "5,10,20,50,100,240",
+    split: str | None = "test",
+) -> None:
+    """Measure the first-stage BM25 ceiling without making provider calls."""
+    documents_path, queries_path = _dataset_paths(dataset)
+    documents = [Document(**row) for row in read_jsonl(documents_path)]
+    queries = read_jsonl(queries_path)
+    if split:
+        queries = [row for row in queries if row.get("split") == split]
+
+    unique_queries = []
+    seen_texts = set()
+    for query in sorted(queries, key=lambda row: row["query_id"]):
+        normalized = " ".join(query["text"].casefold().split())
+        if normalized not in seen_texts:
+            unique_queries.append(query)
+            seen_texts.add(normalized)
+
+    requested = sorted({int(value.strip()) for value in candidate_ks.split(",") if value.strip()})
+    if not requested or requested[0] <= 0:
+        raise typer.BadParameter("candidate-ks must contain positive integers")
+
+    index = BM25Index(documents)
+    max_k = min(max(requested), len(documents))
+    rankings = {
+        row["query_id"]: [item.document.doc_id for item in index.retrieve(row["text"], max_k)]
+        for row in unique_queries
+    }
+    results = []
+    for k in requested:
+        effective_k = min(k, len(documents))
+        recalls = []
+        ndcgs = []
+        hits = 0
+        for row in unique_queries:
+            relevant = set(row.get("relevant_doc_ids", ()))
+            ranked = rankings[row["query_id"]]
+            recall = recall_at_k(ranked, relevant, effective_k)
+            recalls.append(recall)
+            ndcgs.append(ndcg_at_k(ranked, relevant, min(10, effective_k)))
+            hits += int(recall > 0)
+        results.append(
+            {
+                "k": effective_k,
+                "queries": len(unique_queries),
+                "queries_with_relevant": hits,
+                "candidate_recall": sum(recalls) / max(1, len(recalls)),
+                "ndcg_at_10": sum(ndcgs) / max(1, len(ndcgs)),
+            }
+        )
+    typer.echo(json.dumps({"dataset": dataset, "backend": "bm25", "results": results}, indent=2))
 
 
 @app.command()
@@ -166,10 +221,22 @@ def ask(
     )
     result = create_generator(config["generator"], ledger).generate(prompt)
     typer.echo(result.answer or result.error)
-    typer.echo(json.dumps({"sources": [c.document.doc_id for c in contexts], "reranker": telemetry.__dict__}, ensure_ascii=False))
+    typer.echo(
+        json.dumps(
+            {"sources": [c.document.doc_id for c in contexts], "reranker": telemetry.__dict__},
+            ensure_ascii=False,
+        )
+    )
 
 
-def _run(dataset: str, config_path: Path, branches: str, limit: int | None, fixture_jev: bool, skip_generation: bool):
+def _run(
+    dataset: str,
+    config_path: Path,
+    branches: str,
+    limit: int | None,
+    fixture_jev: bool,
+    skip_generation: bool,
+):
     config = load_config(config_path)
     documents_path, queries_path = _dataset_paths(dataset)
     missing = [path for path in (documents_path, queries_path) if not path.exists()]
@@ -194,7 +261,9 @@ def _run(dataset: str, config_path: Path, branches: str, limit: int | None, fixt
         fixture_jev=fixture_jev,
         skip_generation=skip_generation,
     )
-    manifest = build_manifest(ROOT, config, [documents_path, queries_path], run_kind="fixture" if fixture_jev else "real")
+    manifest = build_manifest(
+        ROOT, config, [documents_path, queries_path], run_kind="fixture" if fixture_jev else "real"
+    )
     manifest["models"]["generator_resolved"] = sorted(
         {row["generator_model"] for row in rows if row.get("generator_model")}
     )
