@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import random
 import re
 import time
@@ -19,6 +20,7 @@ from .rerankers import (
     JevReranker,
 )
 from .retrieval import create_retrieval_index
+from .verification import JevCitationVerifier
 
 
 def load_dataset(documents_path: Path, queries_path: Path, split: str | None = None):
@@ -154,8 +156,30 @@ def run_benchmark(
             max_concurrency=jev_cfg.get("max_concurrency", 12),
             **jev_cfg.get("evidence_router", {}),
         ),
+        "V": FixtureJevReranker()
+        if fixture_jev
+        else JevEvidenceRouter(
+            model=jev_cfg["model"],
+            timeout_seconds=jev_cfg["timeout_seconds"],
+            input_usd_per_million_tokens=jev_cfg["input_usd_per_million_tokens"],
+            max_budget_usd=config["run"]["max_budget_usd"],
+            budget_ledger=budget_ledger,
+            max_retries=jev_cfg["max_retries"],
+            max_concurrency=jev_cfg.get("max_concurrency", 12),
+            **jev_cfg.get("evidence_router", {}),
+        ),
     }
     generator = create_generator(config["generator"], budget_ledger)
+    verification_cfg = config.get("verification", {})
+    verifier = JevCitationVerifier(
+        model=jev_cfg["model"],
+        auto_accept_confidence=verification_cfg.get("auto_accept_confidence", 0.8),
+        timeout_seconds=jev_cfg["timeout_seconds"],
+        input_usd_per_million_tokens=jev_cfg["input_usd_per_million_tokens"],
+        max_budget_usd=config["run"]["max_budget_usd"],
+        budget_ledger=budget_ledger,
+        max_retries=jev_cfg["max_retries"],
+    )
     rows = []
     for query_idx, query in enumerate(queries):
         retrieval_started = time.perf_counter()
@@ -174,6 +198,14 @@ def run_benchmark(
             generation_error = None
             prompt_tokens = None
             completion_tokens = None
+            generation_cost = 0.0
+            verification_ms = 0.0
+            verification_cost = 0.0
+            verification_input_tokens = 0
+            verification_output_tokens = 0
+            verification_passed = None
+            verification_checks = []
+            regeneration_count = 0
             if not skip_generation:
                 prompt = build_prompt(
                     query.text,
@@ -188,6 +220,55 @@ def run_benchmark(
                 generation_error = generated.error
                 prompt_tokens = generated.prompt_tokens
                 completion_tokens = generated.completion_tokens
+                generation_cost = generated.cost_usd
+                if branch in verification_cfg.get("enabled_branches", []):
+                    verified = verifier.verify(
+                        answer,
+                        contexts,
+                        config["policies"]["answer_abstention_text"],
+                    )
+                    verification_ms += verified.latency_ms
+                    verification_cost += verified.cost_usd
+                    verification_input_tokens += verified.input_tokens
+                    verification_output_tokens += verified.output_tokens
+                    verification_passed = verified.passed
+                    verification_checks = verified.checks
+                    if (
+                        not verified.passed
+                        and not verified.error
+                        and verification_cfg.get("regenerate_once", True)
+                    ):
+                        feedback = json.dumps(verified.checks, ensure_ascii=False)
+                        corrective_prompt = (
+                            prompt
+                            + "\n\nPREVIOUS ANSWER\n"
+                            + answer
+                            + "\n\nCITATION VERIFICATION FAILURES\n"
+                            + feedback
+                            + "\nRewrite the answer once. Remove unsupported claims and use only citations that directly support each factual sentence."
+                        )
+                        regenerated = generator.generate(corrective_prompt)
+                        regeneration_count = 1
+                        answer = regenerated.answer
+                        generation_ms += regenerated.latency_ms
+                        generation_model = regenerated.model
+                        generation_error = regenerated.error
+                        prompt_tokens = (prompt_tokens or 0) + (regenerated.prompt_tokens or 0)
+                        completion_tokens = (completion_tokens or 0) + (
+                            regenerated.completion_tokens or 0
+                        )
+                        generation_cost += regenerated.cost_usd
+                        reverified = verifier.verify(
+                            answer,
+                            contexts,
+                            config["policies"]["answer_abstention_text"],
+                        )
+                        verification_ms += reverified.latency_ms
+                        verification_cost += reverified.cost_usd
+                        verification_input_tokens += reverified.input_tokens
+                        verification_output_tokens += reverified.output_tokens
+                        verification_passed = reverified.passed
+                        verification_checks = reverified.checks
             ranked_ids = [item.document.doc_id for item in contexts]
             candidate_ids = [item.document.doc_id for item in candidates]
             relevant = set(query.relevant_doc_ids)
@@ -254,7 +335,10 @@ def run_benchmark(
                 ),
                 "rerank_ms": telemetry.latency_ms,
                 "generation_ms": generation_ms,
-                "end_to_end_ms": retrieval_ms + telemetry.latency_ms + generation_ms,
+                "verification_ms": verification_ms,
+                "end_to_end_ms": (
+                    retrieval_ms + telemetry.latency_ms + generation_ms + verification_ms
+                ),
                 "reranker_requested_model": telemetry.requested_model,
                 "reranker_resolved_model": telemetry.resolved_model,
                 "generator_model": generation_model,
@@ -262,11 +346,24 @@ def run_benchmark(
                 "reranker_output_tokens": telemetry.output_tokens,
                 "generator_prompt_tokens": prompt_tokens,
                 "generator_completion_tokens": completion_tokens,
+                "verification_input_tokens": verification_input_tokens,
+                "verification_output_tokens": verification_output_tokens,
                 "reranker_cost_usd": telemetry.estimated_cost_usd,
-                "generator_cost_usd": generated.cost_usd if not skip_generation else 0.0,
+                "generator_cost_usd": generation_cost,
+                "verification_cost_usd": verification_cost,
                 "online_cost_usd": retrieval_cost
                 + telemetry.estimated_cost_usd
-                + (generated.cost_usd if not skip_generation else 0.0),
+                + generation_cost
+                + verification_cost,
+                "citation_verification_passed": verification_passed,
+                "citation_support_fraction": (
+                    sum(check["verdict"] == "verified" for check in verification_checks)
+                    / len(verification_checks)
+                    if verification_checks
+                    else None
+                ),
+                "verification_checks": verification_checks,
+                "regeneration_count": regeneration_count,
                 "fallback": telemetry.fallback,
                 "retry_count": telemetry.retry_count,
                 "reranker_error": telemetry.error,
@@ -287,6 +384,7 @@ def run_benchmark(
             "context_routes": "|".join(row["context_routes"]),
             "context_signals": str(row["context_signals"]),
             "reranker_details": str(row["reranker_details"]),
+            "verification_checks": str(row["verification_checks"]),
             "references": "|".join(row["references"]),
         }
         for row in rows

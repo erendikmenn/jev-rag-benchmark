@@ -66,6 +66,12 @@ policies:
   jev_error: original_order
   answer_abstention_text: "Kaynaklarda bu soruyu yanıtlamak için yeterli kanıt yok."
 
+verification:
+  enabled_branches: [V]
+  auto_accept_confidence: 0.80
+  regenerate_once: true
+  prompt_version: citation-check-v1
+
 datasets:
   scifact:
     version: beir-scifact-1.0.0
