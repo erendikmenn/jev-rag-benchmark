@@ -18,7 +18,7 @@
       <text x="760" y="30" fill="#fff" text-anchor="middle" font-size="17" font-weight="700">RAW HYBRID</text>
       <text x="760" y="50" fill="#d8d8d8" text-anchor="middle" font-size="13">reranker yok</text>
       <text x="1080" y="30" fill="#fff" text-anchor="middle" font-size="17" font-weight="700">JEV BATCH</text>
-      <text x="1080" y="50" fill="#d8d8d8" text-anchor="middle" font-size="13">TypeSafe Jev 1.13</text>
+      <text x="1080" y="50" fill="#d8d8d8" text-anchor="middle" font-size="13">Jev 1.13 • OpenRouter</text>
       <text x="1350" y="30" fill="#fff" text-anchor="middle" font-size="17" font-weight="700">COHERE</text>
       <text x="1350" y="50" fill="#d8d8d8" text-anchor="middle" font-size="13">Rerank 3.5</text>
 
