@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import os
+import random
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from dataclasses import replace
+from hashlib import sha256
 from typing import Protocol
 
 import httpx
@@ -703,6 +705,99 @@ class JevHierarchicalReranker(JevReranker):
                     "shard_size": self.shard_size,
                     "finalists": len(finalists),
                     "scores": {item.document.doc_id: item.rerank_score for item in final_scored},
+                },
+            )
+        except Exception as exc:
+            return self._fallback(candidates, top_k, started, f"{type(exc).__name__}: {exc}")
+        finally:
+            if self.client is None:
+                client.close()
+
+
+class JevPermutationEnsembleReranker(JevReranker):
+    """Average absolute Noul scores over deterministic candidate permutations."""
+
+    def __init__(self, *, permutations: int = 3, seed: int = 20260919, **kwargs):
+        super().__init__(strategy="permutation_ensemble", **kwargs)
+        if permutations < 2:
+            raise ValueError("permutations must be at least 2")
+        self.permutations = permutations
+        self.seed = seed
+
+    def rerank(self, query: str, candidates: list[Candidate], top_k: int):
+        started = time.perf_counter()
+        if not self.api_key:
+            return self._fallback(candidates, top_k, started, "OPENROUTER_API_KEY is not set")
+        if self.budget_ledger.limit_usd <= 0:
+            return self._fallback(
+                candidates, top_k, started, "paid calls require max_budget_usd > 0"
+            )
+        estimated_cost = self.estimate_cost(query, candidates) * self.permutations
+        if estimated_cost > self.budget_ledger.remaining_usd:
+            return self._fallback(
+                candidates, top_k, started, "estimated cost exceeds remaining budget"
+            )
+
+        seed_material = f"{self.seed}:{query}".encode("utf-8")
+        rng = random.Random(int.from_bytes(sha256(seed_material).digest()[:8], "big"))
+        orders = [list(candidates)]
+        for _ in range(1, self.permutations):
+            shuffled = list(candidates)
+            rng.shuffle(shuffled)
+            orders.append(shuffled)
+
+        client = self.client or httpx.Client(timeout=self.timeout_seconds)
+        try:
+            runs = []
+            with ThreadPoolExecutor(
+                max_workers=min(self.max_concurrency, self.permutations)
+            ) as pool:
+                futures = [pool.submit(self._score_batch, client, query, order) for order in orders]
+                for future in as_completed(futures):
+                    runs.append(future.result())
+            score_lists: dict[str, list[float]] = {}
+            candidate_by_id = {item.document.doc_id: item for item in candidates}
+            payloads = []
+            responses = []
+            retries = 0
+            input_tokens = 0
+            output_tokens = 0
+            measured_cost = 0.0
+            for scored, run_payloads, run_responses, run_retries, usage in runs:
+                for item in scored:
+                    score_lists.setdefault(item.document.doc_id, []).append(
+                        float(item.rerank_score or 0.0)
+                    )
+                payloads.extend(run_payloads)
+                responses.extend(run_responses)
+                retries += run_retries
+                input_tokens += usage[0]
+                output_tokens += usage[1]
+                measured_cost += usage[2]
+            averaged = [
+                replace(candidate_by_id[doc_id], rerank_score=sum(values) / len(values))
+                for doc_id, values in score_lists.items()
+            ]
+            averaged.sort(key=lambda item: (-(item.rerank_score or 0.0), item.retrieval_rank))
+            self.budget_ledger.charge(measured_cost)
+            return averaged[:top_k], RerankTelemetry(
+                method="jev_permutation_ensemble",
+                latency_ms=(time.perf_counter() - started) * 1000,
+                requested_model=self.model,
+                resolved_model=payloads[0].get("model") if payloads else None,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                estimated_cost_usd=measured_cost,
+                request_id=(
+                    payloads[0].get("id") or responses[0].headers.get("x-request-id")
+                    if payloads
+                    else None
+                ),
+                retry_count=retries,
+                details={
+                    "strategy": "permutation_ensemble",
+                    "permutations": self.permutations,
+                    "scores": {item.document.doc_id: item.rerank_score for item in averaged},
                 },
             )
         except Exception as exc:

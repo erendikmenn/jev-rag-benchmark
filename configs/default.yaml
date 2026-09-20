@@ -67,6 +67,9 @@ rerankers:
     hierarchical:
       shard_size: 30
       shard_top_k: 5
+    permutation_ensemble:
+      permutations: 3
+      seed: 20260919
   small_llm:
     provider: openrouter
     model: qwen/qwen3.7-flash

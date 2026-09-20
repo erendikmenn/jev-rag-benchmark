@@ -18,6 +18,7 @@ from .rerankers import (
     IdentityReranker,
     JevEvidenceRouter,
     JevHierarchicalReranker,
+    JevPermutationEnsembleReranker,
     JevReranker,
     OpenRouterReranker,
 )
@@ -195,6 +196,18 @@ def run_benchmark(
             max_retries=jev_cfg["max_retries"],
             max_concurrency=jev_cfg.get("max_concurrency", 12),
             **jev_cfg.get("hierarchical", {}),
+        ),
+        "S": FixtureJevReranker()
+        if fixture_jev
+        else JevPermutationEnsembleReranker(
+            model=jev_cfg["model"],
+            timeout_seconds=jev_cfg["timeout_seconds"],
+            input_usd_per_million_tokens=jev_cfg["input_usd_per_million_tokens"],
+            max_budget_usd=config["run"]["max_budget_usd"],
+            budget_ledger=budget_ledger,
+            max_retries=jev_cfg["max_retries"],
+            max_concurrency=jev_cfg.get("max_concurrency", 12),
+            **jev_cfg.get("permutation_ensemble", {}),
         ),
     }
     generator = create_generator(config["generator"], budget_ledger)

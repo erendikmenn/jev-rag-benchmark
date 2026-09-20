@@ -4,6 +4,7 @@ from jev_rag_benchmark.models import Candidate, Document
 from jev_rag_benchmark.rerankers import (
     JevEvidenceRouter,
     JevHierarchicalReranker,
+    JevPermutationEnsembleReranker,
     JevReranker,
 )
 
@@ -134,3 +135,42 @@ def test_hierarchical_jev_scores_shards_then_finalists():
     assert selected[0].document.doc_id == "d3"
     assert telemetry.details["shards"] == 2
     assert telemetry.details["finalists"] == 2
+
+
+def test_permutation_ensemble_averages_multiple_batch_scores():
+    request_count = 0
+
+    def handler(request: httpx.Request):
+        nonlocal request_count
+        request_count += 1
+        payload = __import__("json").loads(request.content)
+        answers = {
+            f"candidate_{index}": {
+                "type": "noul",
+                "noul": 0.9 if candidate["id"] == "d1" else 0.1,
+            }
+            for index, candidate in enumerate(payload["state"]["candidates"])
+        }
+        return httpx.Response(
+            200,
+            json={
+                "id": f"ensemble-{request_count}",
+                "model": "typesafe/jev-1.13-test",
+                "answers": answers,
+                "usage": {"input_tokens": 20, "output_tokens": 2, "cost": 0.000001},
+            },
+        )
+
+    reranker = JevPermutationEnsembleReranker(
+        api_key="test",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+        max_budget_usd=1,
+        permutations=3,
+    )
+    selected, telemetry = reranker.rerank("capital Türkiye", candidates(), 1)
+    assert selected[0].document.doc_id == "d1"
+    assert telemetry.method == "jev_permutation_ensemble"
+    assert telemetry.input_tokens == 60
+    assert telemetry.estimated_cost_usd == 0.000003
+    assert telemetry.details["permutations"] == 3
+    assert request_count == 3
