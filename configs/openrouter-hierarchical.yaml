@@ -1,0 +1,16 @@
+extends: openrouter-hybrid.yaml
+
+run:
+  max_budget_usd: 50.0
+
+retrieval:
+  backend: bm25
+  candidate_k: 240
+  context_k: 5
+
+rerankers:
+  jev:
+    max_concurrency: 8
+    hierarchical:
+      shard_size: 30
+      shard_top_k: 5

@@ -57,6 +57,9 @@ rerankers:
       evidence_min: 0.55
       contradiction_min: 0.70
       injection_max: 0.70
+    hierarchical:
+      shard_size: 30
+      shard_top_k: 5
   small_llm:
     provider: openrouter
     model: qwen/qwen3.7-flash

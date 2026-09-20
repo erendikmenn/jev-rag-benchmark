@@ -507,6 +507,101 @@ class JevEvidenceRouter(JevReranker):
                 client.close()
 
 
+class JevHierarchicalReranker(JevReranker):
+    """Score corpus shards independently, then rerank their finalists globally."""
+
+    def __init__(self, *, shard_size: int = 30, shard_top_k: int = 5, **kwargs):
+        super().__init__(strategy="hierarchical", **kwargs)
+        if shard_size <= 0 or shard_top_k <= 0:
+            raise ValueError("shard_size and shard_top_k must be positive")
+        self.shard_size = shard_size
+        self.shard_top_k = shard_top_k
+
+    def rerank(self, query: str, candidates: list[Candidate], top_k: int):
+        started = time.perf_counter()
+        if not self.api_key:
+            return self._fallback(candidates, top_k, started, "OPENROUTER_API_KEY is not set")
+        if self.budget_ledger.limit_usd <= 0:
+            return self._fallback(
+                candidates, top_k, started, "paid calls require max_budget_usd > 0"
+            )
+        shards = [
+            candidates[start : start + self.shard_size]
+            for start in range(0, len(candidates), self.shard_size)
+        ]
+        estimated_cost = self.estimate_cost(query, candidates) * 2
+        if estimated_cost > self.budget_ledger.remaining_usd:
+            return self._fallback(
+                candidates, top_k, started, "estimated cost exceeds remaining budget"
+            )
+
+        client = self.client or httpx.Client(timeout=self.timeout_seconds)
+        try:
+            shard_results = []
+            with ThreadPoolExecutor(max_workers=min(self.max_concurrency, len(shards))) as pool:
+                futures = [pool.submit(self._score_batch, client, query, shard) for shard in shards]
+                for future in as_completed(futures):
+                    shard_results.append(future.result())
+
+            finalists = []
+            payloads = []
+            responses = []
+            retry_count = 0
+            input_tokens = 0
+            output_tokens = 0
+            measured_cost = 0.0
+            for scored, batch_payloads, batch_responses, retries, usage in shard_results:
+                scored.sort(key=lambda item: (-(item.rerank_score or 0.0), item.retrieval_rank))
+                finalists.extend(scored[: self.shard_top_k])
+                payloads.extend(batch_payloads)
+                responses.extend(batch_responses)
+                retry_count += retries
+                input_tokens += usage[0]
+                output_tokens += usage[1]
+                measured_cost += usage[2]
+
+            final_scored, final_payloads, final_responses, retries, usage = self._score_batch(
+                client, query, finalists
+            )
+            payloads.extend(final_payloads)
+            responses.extend(final_responses)
+            retry_count += retries
+            input_tokens += usage[0]
+            output_tokens += usage[1]
+            measured_cost += usage[2]
+            final_scored.sort(key=lambda item: (-(item.rerank_score or 0.0), item.retrieval_rank))
+            selected = final_scored[:top_k]
+            self.budget_ledger.charge(measured_cost)
+            return selected, RerankTelemetry(
+                method="jev_hierarchical",
+                latency_ms=(time.perf_counter() - started) * 1000,
+                requested_model=self.model,
+                resolved_model=payloads[0].get("model") if payloads else None,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                estimated_cost_usd=measured_cost,
+                fallback=False,
+                request_id=(
+                    payloads[0].get("id") or responses[0].headers.get("x-request-id")
+                    if payloads
+                    else None
+                ),
+                retry_count=retry_count,
+                details={
+                    "strategy": "hierarchical",
+                    "shards": len(shards),
+                    "shard_size": self.shard_size,
+                    "finalists": len(finalists),
+                    "scores": {item.document.doc_id: item.rerank_score for item in final_scored},
+                },
+            )
+        except Exception as exc:
+            return self._fallback(candidates, top_k, started, f"{type(exc).__name__}: {exc}")
+        finally:
+            if self.client is None:
+                client.close()
+
+
 class FixtureJevReranker:
     """Deterministic infrastructure fixture. Never label its output as a real Jev run."""
 

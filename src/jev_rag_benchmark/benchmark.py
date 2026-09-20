@@ -17,6 +17,7 @@ from .rerankers import (
     FixtureJevReranker,
     IdentityReranker,
     JevEvidenceRouter,
+    JevHierarchicalReranker,
     JevReranker,
 )
 from .retrieval import create_retrieval_index
@@ -167,6 +168,18 @@ def run_benchmark(
             max_retries=jev_cfg["max_retries"],
             max_concurrency=jev_cfg.get("max_concurrency", 12),
             **jev_cfg.get("evidence_router", {}),
+        ),
+        "H": FixtureJevReranker()
+        if fixture_jev
+        else JevHierarchicalReranker(
+            model=jev_cfg["model"],
+            timeout_seconds=jev_cfg["timeout_seconds"],
+            input_usd_per_million_tokens=jev_cfg["input_usd_per_million_tokens"],
+            max_budget_usd=config["run"]["max_budget_usd"],
+            budget_ledger=budget_ledger,
+            max_retries=jev_cfg["max_retries"],
+            max_concurrency=jev_cfg.get("max_concurrency", 12),
+            **jev_cfg.get("hierarchical", {}),
         ),
     }
     generator = create_generator(config["generator"], budget_ledger)

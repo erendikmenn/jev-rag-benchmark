@@ -1,7 +1,11 @@
 import httpx
 
 from jev_rag_benchmark.models import Candidate, Document
-from jev_rag_benchmark.rerankers import JevEvidenceRouter, JevReranker
+from jev_rag_benchmark.rerankers import (
+    JevEvidenceRouter,
+    JevHierarchicalReranker,
+    JevReranker,
+)
 
 
 def candidates():
@@ -94,3 +98,39 @@ def test_evidence_router_drops_injection_and_keeps_conflict():
     selected, telemetry = router.rerank("capital Türkiye", candidates(), 2)
     assert [item.route for item in selected] == ["evidence", "conflict"]
     assert telemetry.details["route_counts"] == {"evidence": 1, "conflict": 1}
+
+
+def test_hierarchical_jev_scores_shards_then_finalists():
+    def handler(request: httpx.Request):
+        payload = __import__("json").loads(request.content)
+        answers = {}
+        for index, candidate in enumerate(payload["state"]["candidates"]):
+            score = 0.9 if candidate["id"] in {"d1", "d3"} else 0.1
+            if len(payload["state"]["candidates"]) == 2 and candidate["id"] == "d3":
+                score = 0.99
+            answers[f"candidate_{index}"] = {"type": "noul", "noul": score}
+        return httpx.Response(
+            200,
+            json={
+                "id": "hierarchical",
+                "model": "typesafe/jev-1.13-test",
+                "answers": answers,
+                "usage": {"input_tokens": 20, "output_tokens": 2, "cost": 0.000001},
+            },
+        )
+
+    docs = [
+        Candidate(Document(f"d{index}", f"passage {index}"), 1.0 / index, index)
+        for index in range(1, 5)
+    ]
+    reranker = JevHierarchicalReranker(
+        api_key="test",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+        max_budget_usd=1,
+        shard_size=2,
+        shard_top_k=1,
+    )
+    selected, telemetry = reranker.rerank("query", docs, 1)
+    assert selected[0].document.doc_id == "d3"
+    assert telemetry.details["shards"] == 2
+    assert telemetry.details["finalists"] == 2
