@@ -29,6 +29,12 @@ def main() -> None:
     rows = read_jsonl(args.results)
     gemini = {row["query_id"]: row for row in rows if row["branch"] == args.gemini_branch}
     deepseek = {row["query_id"]: row for row in rows if row["branch"] == args.deepseek_branch}
+    if set(gemini) != set(deepseek):
+        raise ValueError("generator query coverage differs")
+    for qid in gemini:
+        for field in ("context_ids", "references", "query", "candidate_pool_sha256", "scoring_version"):
+            if gemini[qid].get(field) != deepseek[qid].get(field):
+                raise ValueError(f"generator comparison differs: {qid} {field}")
     shared = sorted(set(gemini) & set(deepseek))
     if not shared:
         raise SystemExit("no paired Gemini/DeepSeek rows found")

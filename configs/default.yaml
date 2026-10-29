@@ -35,7 +35,7 @@ generator:
   input_usd_per_million_tokens: 0.03
   output_usd_per_million_tokens: 0.13
   price_verified_on: "2026-09-19"
-  prompt_version: answer-v3
+  prompt_version: extractive-v1
 
 rerankers:
   hosted:

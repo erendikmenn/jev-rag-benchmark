@@ -1,68 +1,578 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
-  <style>
-    .t { font-family: Arial, Helvetica, sans-serif; fill: #111; }
-    .muted { fill: #555; }
-    .grid { stroke: #d0d0d0; stroke-width: 1.5; stroke-dasharray: 6 8; }
-  </style>
-  <rect width="1600" height="1200" fill="#fff"/>
-  <g class="t">
-    <text x="70" y="66" font-size="20" font-weight="700">XQUAD-TR • SAME FROZEN HYBRID TOP-20</text>
-    <text x="70" y="122" font-size="44" font-weight="700">Reranker quality and cost</text>
-    <text x="70" y="158" class="muted" font-size="20">Every method receives the same 20 candidates and returns five passages</text>
-
-    <g transform="translate(70,205)">
-      <text x="0" y="0" font-size="20" font-weight="700">1 — RECALL@5 (%)</text>
-      <text x="240" y="0" class="muted" font-size="16">Gold passage appears in the final top five • higher is better</text>
-      <text x="0" y="50" font-size="18" font-weight="700">Raw hybrid</text>
-      <text x="0" y="108" font-size="18" font-weight="700">Jev batch</text>
-      <text x="0" y="166" font-size="18" font-weight="700">Cohere 3.5</text>
-      <line x1="280" y1="24" x2="280" y2="194" stroke="#111" stroke-width="2"/>
-      <line x1="280" y1="194" x2="1380" y2="194" stroke="#111" stroke-width="2"/>
-      <line x1="830" y1="24" x2="830" y2="194" class="grid"/>
-      <line x1="1380" y1="24" x2="1380" y2="194" class="grid"/>
-      <rect x="280" y="28" width="837" height="34" fill="#aaa"/><text x="1133" y="54" font-size="18">97.61%</text>
-      <rect x="280" y="86" width="1037" height="34" fill="#111"/><text x="1333" y="112" font-size="18" font-weight="700">99.43%</text>
-      <rect x="280" y="144" width="1037" height="34" fill="#777"/><text x="1333" y="170" font-size="18">99.43%</text>
-      <text x="280" y="222" text-anchor="middle" class="muted" font-size="15">90%</text><text x="830" y="222" text-anchor="middle" class="muted" font-size="15">95%</text><text x="1380" y="222" text-anchor="middle" class="muted" font-size="15">100%</text>
-      <text x="830" y="250" text-anchor="middle" font-size="15" font-weight="700">X AXIS — RECALL@5, ZOOMED TO 90–100%</text>
-    </g>
-
-    <g transform="translate(70,500)">
-      <text x="0" y="0" font-size="20" font-weight="700">2 — nDCG@10 (%)</text>
-      <text x="240" y="0" class="muted" font-size="16">Ranks better placements of the gold passage more highly • higher is better</text>
-      <text x="0" y="50" font-size="18" font-weight="700">Raw hybrid</text>
-      <text x="0" y="108" font-size="18" font-weight="700">Jev batch</text>
-      <text x="0" y="166" font-size="18" font-weight="700">Cohere 3.5</text>
-      <line x1="280" y1="24" x2="280" y2="194" stroke="#111" stroke-width="2"/>
-      <line x1="280" y1="194" x2="1380" y2="194" stroke="#111" stroke-width="2"/>
-      <line x1="830" y1="24" x2="830" y2="194" class="grid"/>
-      <line x1="1380" y1="24" x2="1380" y2="194" class="grid"/>
-      <rect x="280" y="28" width="475" height="34" fill="#aaa"/><text x="771" y="54" font-size="18">94.31%</text>
-      <rect x="280" y="86" width="891" height="34" fill="#111"/><text x="1187" y="112" font-size="18" font-weight="700">98.10%</text>
-      <rect x="280" y="144" width="949" height="34" fill="#777"/><text x="1245" y="170" font-size="18">98.63%</text>
-      <text x="280" y="222" text-anchor="middle" class="muted" font-size="15">90%</text><text x="830" y="222" text-anchor="middle" class="muted" font-size="15">95%</text><text x="1380" y="222" text-anchor="middle" class="muted" font-size="15">100%</text>
-      <text x="830" y="250" text-anchor="middle" font-size="15" font-weight="700">X AXIS — nDCG@10, ZOOMED TO 90–100%</text>
-    </g>
-
-    <g transform="translate(70,795)">
-      <text x="0" y="0" font-size="20" font-weight="700">3 — TOTAL RERANK COST (USD)</text>
-      <text x="355" y="0" class="muted" font-size="16">Cost for all 1,044 questions • lower is better</text>
-      <text x="0" y="50" font-size="18" font-weight="700">Raw hybrid</text>
-      <text x="0" y="108" font-size="18" font-weight="700">Jev batch</text>
-      <text x="0" y="166" font-size="18" font-weight="700">Cohere 3.5</text>
-      <line x1="280" y1="24" x2="280" y2="194" stroke="#111" stroke-width="2"/>
-      <line x1="280" y1="194" x2="1380" y2="194" stroke="#111" stroke-width="2"/>
-      <line x1="780" y1="24" x2="780" y2="194" class="grid"/>
-      <line x1="1280" y1="24" x2="1280" y2="194" class="grid"/>
-      <text x="295" y="54" font-size="18">$0.000</text>
-      <rect x="280" y="86" width="374" height="34" fill="#111"/><text x="670" y="112" font-size="18" font-weight="700">$0.411</text>
-      <rect x="280" y="144" width="949" height="34" fill="#777"/><text x="1245" y="170" font-size="18">$1.044</text>
-      <text x="280" y="222" text-anchor="middle" class="muted" font-size="15">$0.0</text><text x="780" y="222" text-anchor="middle" class="muted" font-size="15">$0.55</text><text x="1280" y="222" text-anchor="middle" class="muted" font-size="15">$1.10</text>
-      <text x="830" y="250" text-anchor="middle" font-size="15" font-weight="700">X AXIS — TOTAL RERANK COST IN USD</text>
-    </g>
-
-    <rect x="70" y="1090" width="1460" height="66" fill="#f4f4f4" stroke="#111" stroke-width="2"/>
-    <text x="94" y="1131" font-size="19"><tspan font-weight="700">Result:</tspan> Jev matches Cohere's 99.43% Recall@5 at 60.6% lower cost; Cohere leads nDCG by 0.53 points.</text>
-    <text x="70" y="1183" class="muted" font-size="14">github.com/erendikmenn/jev-rag-benchmark</text>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1152pt" height="835.2pt" viewBox="0 0 1152 835.2" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-29</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 835.2
+L 1152 835.2
+L 1152 0
+L 0 0
+z
+" style="fill: #ffffff"/>
   </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 264.96 260.768
+L 1059.84 260.768
+L 1059.84 125.28
+L 264.96 125.28
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <path d="M 264.96 260.768
+L 264.96 125.28
+" clip-path="url(#p45918f4091)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_2">
+      <defs>
+       <path id="m28c843591a" d="M 0 0
+L 0 3.5
+" style="stroke: #000000; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m28c843591a" x="264.96" y="260.768" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="264.96" y="276.126281" transform="rotate(-0 264.96 276.126281)">0</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_3">
+      <path d="M 409.483636 260.768
+L 409.483636 125.28
+" clip-path="url(#p45918f4091)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m28c843591a" x="409.483636" y="260.768" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="409.483636" y="276.126281" transform="rotate(-0 409.483636 276.126281)">20</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_5">
+      <path d="M 554.007273 260.768
+L 554.007273 125.28
+" clip-path="url(#p45918f4091)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m28c843591a" x="554.007273" y="260.768" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="554.007273" y="276.126281" transform="rotate(-0 554.007273 276.126281)">40</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_7">
+      <path d="M 698.530909 260.768
+L 698.530909 125.28
+" clip-path="url(#p45918f4091)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m28c843591a" x="698.530909" y="260.768" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="698.530909" y="276.126281" transform="rotate(-0 698.530909 276.126281)">60</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_9">
+      <path d="M 843.054545 260.768
+L 843.054545 125.28
+" clip-path="url(#p45918f4091)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m28c843591a" x="843.054545" y="260.768" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="843.054545" y="276.126281" transform="rotate(-0 843.054545 276.126281)">80</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_11">
+      <path d="M 987.578182 260.768
+L 987.578182 125.28
+" clip-path="url(#p45918f4091)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m28c843591a" x="987.578182" y="260.768" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="987.578182" y="276.126281" transform="rotate(-0 987.578182 276.126281)">100</text>
+     </g>
+    </g>
+    <g id="text_7">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="662.4" y="290.772219" transform="rotate(-0 662.4 290.772219)">Percent (zero-based axis)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_13"/>
+     <g id="text_8">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="147.934777" transform="rotate(-0 261.46 147.934777)">Hybrid baseline</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_14"/>
+     <g id="text_9">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="197.203141" transform="rotate(-0 261.46 197.203141)">Jev 1.13</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_15"/>
+     <g id="text_10">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="246.471504" transform="rotate(-0 261.46 246.471504)">Cohere 3.5</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 264.96 131.438545
+L 970.274107 131.438545
+L 970.274107 156.072727
+L 264.96 156.072727
+z
+" clip-path="url(#p45918f4091)" style="fill: #777777"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 264.96 180.706909
+L 983.425204 180.706909
+L 983.425204 205.341091
+L 264.96 205.341091
+z
+" clip-path="url(#p45918f4091)" style="fill: #111111"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 264.96 229.975273
+L 983.425204 229.975273
+L 983.425204 254.609455
+L 264.96 254.609455
+z
+" clip-path="url(#p45918f4091)" style="fill: #aaaaaa"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 264.96 260.768
+L 1059.84 260.768
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="979.812667" y="147.066886" transform="rotate(-0 979.812667 147.066886)">97.61</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="992.963764" y="196.33525" transform="rotate(-0 992.963764 196.33525)">99.43</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="992.963764" y="245.603614" transform="rotate(-0 992.963764 245.603614)">99.43</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 700; font-size: 13.2px; font-family: 'DejaVu Sans'; text-anchor: start" x="264.96" y="108.28" transform="rotate(-0 264.96 108.28)">RECALL@5 — HIGHER IS BETTER</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_7">
+    <path d="M 264.96 497.872
+L 1059.84 497.872
+L 1059.84 362.384
+L 264.96 362.384
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_7">
+     <g id="line2d_16">
+      <path d="M 264.96 497.872
+L 264.96 362.384
+" clip-path="url(#p9678385b44)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#m28c843591a" x="264.96" y="497.872" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_15">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="264.96" y="513.230281" transform="rotate(-0 264.96 513.230281)">0</text>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_18">
+      <path d="M 409.483636 497.872
+L 409.483636 362.384
+" clip-path="url(#p9678385b44)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_19">
+      <g>
+       <use xlink:href="#m28c843591a" x="409.483636" y="497.872" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_16">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="409.483636" y="513.230281" transform="rotate(-0 409.483636 513.230281)">20</text>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_20">
+      <path d="M 554.007273 497.872
+L 554.007273 362.384
+" clip-path="url(#p9678385b44)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_21">
+      <g>
+       <use xlink:href="#m28c843591a" x="554.007273" y="497.872" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_17">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="554.007273" y="513.230281" transform="rotate(-0 554.007273 513.230281)">40</text>
+     </g>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_22">
+      <path d="M 698.530909 497.872
+L 698.530909 362.384
+" clip-path="url(#p9678385b44)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_23">
+      <g>
+       <use xlink:href="#m28c843591a" x="698.530909" y="497.872" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_18">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="698.530909" y="513.230281" transform="rotate(-0 698.530909 513.230281)">60</text>
+     </g>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_24">
+      <path d="M 843.054545 497.872
+L 843.054545 362.384
+" clip-path="url(#p9678385b44)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_25">
+      <g>
+       <use xlink:href="#m28c843591a" x="843.054545" y="497.872" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_19">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="843.054545" y="513.230281" transform="rotate(-0 843.054545 513.230281)">80</text>
+     </g>
+    </g>
+    <g id="xtick_12">
+     <g id="line2d_26">
+      <path d="M 987.578182 497.872
+L 987.578182 362.384
+" clip-path="url(#p9678385b44)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_27">
+      <g>
+       <use xlink:href="#m28c843591a" x="987.578182" y="497.872" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_20">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="987.578182" y="513.230281" transform="rotate(-0 987.578182 513.230281)">100</text>
+     </g>
+    </g>
+    <g id="text_21">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="662.4" y="527.876219" transform="rotate(-0 662.4 527.876219)">Percent (zero-based axis)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_4">
+     <g id="line2d_28"/>
+     <g id="text_22">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="385.038777" transform="rotate(-0 261.46 385.038777)">Hybrid baseline</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_29"/>
+     <g id="text_23">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="434.307141" transform="rotate(-0 261.46 434.307141)">Jev 1.13</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_30"/>
+     <g id="text_24">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="483.575504" transform="rotate(-0 261.46 483.575504)">Cohere 3.5</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_8">
+    <path d="M 264.96 368.542545
+L 946.488951 368.542545
+L 946.488951 393.176727
+L 264.96 393.176727
+z
+" clip-path="url(#p9678385b44)" style="fill: #777777"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 264.96 417.810909
+L 974.21804 417.810909
+L 974.21804 442.445091
+L 264.96 442.445091
+z
+" clip-path="url(#p9678385b44)" style="fill: #111111"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 264.96 467.079273
+L 977.650129 467.079273
+L 977.650129 491.713455
+L 264.96 491.713455
+z
+" clip-path="url(#p9678385b44)" style="fill: #aaaaaa"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 264.96 497.872
+L 1059.84 497.872
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="956.027511" y="384.170886" transform="rotate(-0 956.027511 384.170886)">94.31</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="983.7566" y="433.43925" transform="rotate(-0 983.7566 433.43925)">98.15</text>
+   </g>
+   <g id="text_27">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="987.188689" y="482.707614" transform="rotate(-0 987.188689 482.707614)">98.63</text>
+   </g>
+   <g id="text_28">
+    <text style="font-weight: 700; font-size: 13.2px; font-family: 'DejaVu Sans'; text-anchor: start" x="264.96" y="345.384" transform="rotate(-0 264.96 345.384)">nDCG@5 — HIGHER IS BETTER</text>
+   </g>
+  </g>
+  <g id="axes_3">
+   <g id="patch_12">
+    <path d="M 264.96 734.976
+L 1059.84 734.976
+L 1059.84 599.488
+L 264.96 599.488
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_5">
+    <g id="xtick_13">
+     <g id="line2d_31">
+      <path d="M 264.96 734.976
+L 264.96 599.488
+" clip-path="url(#pdf29f739b0)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_32">
+      <g>
+       <use xlink:href="#m28c843591a" x="264.96" y="734.976" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_29">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="264.96" y="750.334281" transform="rotate(-0 264.96 750.334281)">0.0</text>
+     </g>
+    </g>
+    <g id="xtick_14">
+     <g id="line2d_33">
+      <path d="M 392.1408 734.976
+L 392.1408 599.488
+" clip-path="url(#pdf29f739b0)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_34">
+      <g>
+       <use xlink:href="#m28c843591a" x="392.1408" y="734.976" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_30">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="392.1408" y="750.334281" transform="rotate(-0 392.1408 750.334281)">0.2</text>
+     </g>
+    </g>
+    <g id="xtick_15">
+     <g id="line2d_35">
+      <path d="M 519.3216 734.976
+L 519.3216 599.488
+" clip-path="url(#pdf29f739b0)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_36">
+      <g>
+       <use xlink:href="#m28c843591a" x="519.3216" y="734.976" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_31">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="519.3216" y="750.334281" transform="rotate(-0 519.3216 750.334281)">0.4</text>
+     </g>
+    </g>
+    <g id="xtick_16">
+     <g id="line2d_37">
+      <path d="M 646.5024 734.976
+L 646.5024 599.488
+" clip-path="url(#pdf29f739b0)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_38">
+      <g>
+       <use xlink:href="#m28c843591a" x="646.5024" y="734.976" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_32">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="646.5024" y="750.334281" transform="rotate(-0 646.5024 750.334281)">0.6</text>
+     </g>
+    </g>
+    <g id="xtick_17">
+     <g id="line2d_39">
+      <path d="M 773.6832 734.976
+L 773.6832 599.488
+" clip-path="url(#pdf29f739b0)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_40">
+      <g>
+       <use xlink:href="#m28c843591a" x="773.6832" y="734.976" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_33">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="773.6832" y="750.334281" transform="rotate(-0 773.6832 750.334281)">0.8</text>
+     </g>
+    </g>
+    <g id="xtick_18">
+     <g id="line2d_41">
+      <path d="M 900.864 734.976
+L 900.864 599.488
+" clip-path="url(#pdf29f739b0)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_42">
+      <g>
+       <use xlink:href="#m28c843591a" x="900.864" y="734.976" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_34">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="900.864" y="750.334281" transform="rotate(-0 900.864 750.334281)">1.0</text>
+     </g>
+    </g>
+    <g id="xtick_19">
+     <g id="line2d_43">
+      <path d="M 1028.0448 734.976
+L 1028.0448 599.488
+" clip-path="url(#pdf29f739b0)" style="fill: none; stroke-dasharray: 3.2,4; stroke-dashoffset: 0; stroke: #d0d0d0; stroke-width: 0.8"/>
+     </g>
+     <g id="line2d_44">
+      <g>
+       <use xlink:href="#m28c843591a" x="1028.0448" y="734.976" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_35">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="1028.0448" y="750.334281" transform="rotate(-0 1028.0448 750.334281)">1.2</text>
+     </g>
+    </g>
+    <g id="text_36">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle" x="662.4" y="764.980219" transform="rotate(-0 662.4 764.980219)">USD / 1,044 queries</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_6">
+    <g id="ytick_7">
+     <g id="line2d_45"/>
+     <g id="text_37">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="622.142777" transform="rotate(-0 261.46 622.142777)">Hybrid baseline</text>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_46"/>
+     <g id="text_38">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="671.411141" transform="rotate(-0 261.46 671.411141)">Jev 1.13</text>
+     </g>
+    </g>
+    <g id="ytick_9">
+     <g id="line2d_47"/>
+     <g id="text_39">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="720.679504" transform="rotate(-0 261.46 720.679504)">Cohere 3.5</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_13">
+    <path d="M 264.96 605.646545
+L 264.96 605.646545
+L 264.96 630.280727
+L 264.96 630.280727
+z
+" clip-path="url(#pdf29f739b0)" style="fill: #777777"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 264.96 654.914909
+L 526.231071 654.914909
+L 526.231071 679.549091
+L 264.96 679.549091
+z
+" clip-path="url(#pdf29f739b0)" style="fill: #111111"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 264.96 704.183273
+L 928.843776 704.183273
+L 928.843776 728.817455
+L 264.96 728.817455
+z
+" clip-path="url(#pdf29f739b0)" style="fill: #aaaaaa"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 264.96 734.976
+L 1059.84 734.976
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_40">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="274.49856" y="621.274886" transform="rotate(-0 274.49856 621.274886)">0.00</text>
+   </g>
+   <g id="text_41">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="535.769631" y="670.54325" transform="rotate(-0 535.769631 670.54325)">0.41</text>
+   </g>
+   <g id="text_42">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="938.382336" y="719.811614" transform="rotate(-0 938.382336 719.811614)">1.04</text>
+   </g>
+   <g id="text_43">
+    <text style="font-weight: 700; font-size: 13.2px; font-family: 'DejaVu Sans'; text-anchor: start" x="264.96" y="582.488" transform="rotate(-0 264.96 582.488)">RERANKING COST — LOWER IS BETTER</text>
+   </g>
+  </g>
+  <g id="text_44">
+   <text style="font-weight: 700; font-size: 27px; font-family: 'DejaVu Sans'; text-anchor: start" x="69.12" y="49.747781" transform="rotate(-0 69.12 49.747781)">Reranker quality and cost</text>
+  </g>
+  <g id="text_45">
+   <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #555555" x="69.12" y="70.992" transform="rotate(-0 69.12 70.992)">XQUAD-TR  •  29 OCT 2026  •  1,044 QUESTIONS  •  FROZEN HYBRID TOP-20</text>
+  </g>
+  <g id="text_46">
+   <g id="patch_17">
+    <path d="M 59.11 818.265656
+L 750.68 818.265656
+L 750.68 787.599719
+L 59.11 787.599719
+z
+" style="fill: #f4f4f4; stroke: #111111; stroke-linejoin: miter"/>
+   </g>
+   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #333333" x="69.12" y="805.968" transform="rotate(-0 69.12 805.968)">Same candidate texts and order for all methods. Retrieval preprocessing and pilot overhead excluded from method costs.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p45918f4091">
+   <rect x="264.96" y="125.28" width="794.88" height="135.488"/>
+  </clipPath>
+  <clipPath id="p9678385b44">
+   <rect x="264.96" y="362.384" width="794.88" height="135.488"/>
+  </clipPath>
+  <clipPath id="pdf29f739b0">
+   <rect x="264.96" y="599.488" width="794.88" height="135.488"/>
+  </clipPath>
+ </defs>
 </svg>

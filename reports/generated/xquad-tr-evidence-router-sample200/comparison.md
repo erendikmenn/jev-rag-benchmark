@@ -1,3 +1,5 @@
+> **LEGACY / SUPERSEDED:** Not the current leaderboard. Candidate parity, metric labels and answer-format issues affect these results. See the repository README and `results/fair-2026-10-29/`. Do not interpret token-F1 flags as factual correctness.
+
 # Jev evidence router comparison
 
 The comparison uses the same 200 Turkish XQuAD questions and the same hybrid

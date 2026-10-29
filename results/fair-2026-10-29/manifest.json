@@ -1,0 +1,38 @@
+{
+  "protocol": "extractive-v1",
+  "date": "2026-10-29",
+  "questions": 1044,
+  "candidate_k": 20,
+  "context_k": 5,
+  "context_char_budget": 6000,
+  "temperature": 0,
+  "seed": 20260919,
+  "reasoning_effort": "medium",
+  "max_output_tokens": 4096,
+  "max_retries_per_request": 0,
+  "concurrency": [
+    4,
+    16
+  ],
+  "candidate_origin": "A branch of results/xquad-tr-hybrid-fullfusion20-a-d-o.jsonl; no new retrieval",
+  "corpus_sha256": "0dc0c9cddd57e891798bd2a1083e4138e1eff19d05e2cdf5f0197499729c87b5",
+  "pool_sha256": "1b9cf3982de0d2b3278a68ed5d3de72903e4eb24c43d6117c3fcc6cac5eeecea",
+  "results_sha256": "36a899fbf51b8399e4b6cff7e1855cd1b8d097d415e0213528f8d867795a8c5d",
+  "budget": {
+    "complete": 1044,
+    "spent_usd": 5.0523800013600155,
+    "total": 1044,
+    "failed": false,
+    "recorded_api_spend_usd": 4.5523800013600155,
+    "uncertain_call_reserve_usd": 0.5
+  },
+  "notes": [
+    "Frozen historical baseline candidate order, with downloaded corpus texts.",
+    "Answer EM/F1 evaluate short extractive answers, not human factual correctness.",
+    "Reasoning medium, max output 4096, no retries.",
+    "Four-way pilot then sixteen-way execution; latency is descriptive, not a controlled speed ranking.",
+    "No embedding or live retrieval in online timing.",
+    "Interrupted requests have a conservative $0.50 budget reserve; final bill is not independently reconciled.",
+    "Incomplete queries during interrupted runs were rerun; their prior charges remain in the budget ledger. No answer-quality-based retries were used."
+  ]
+}

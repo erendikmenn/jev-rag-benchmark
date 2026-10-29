@@ -541,6 +541,8 @@ def merge_results(output: Path, inputs: str) -> None:
     keys = [(row["query_id"], row["branch"]) for row in rows]
     if len(keys) != len(set(keys)):
         raise typer.BadParameter("duplicate query/branch rows found across shards")
+    from .fairness import validate_comparison
+    validate_comparison(rows)
     rows.sort(key=lambda row: (row["query_id"], row["branch"]))
     write_jsonl(output, rows)
 

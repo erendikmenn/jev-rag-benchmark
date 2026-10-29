@@ -1,0 +1,80 @@
+{
+  "completed": 1044,
+  "expected": 1044,
+  "reranking": {
+    "Baseline": {
+      "recall_at_5": 0.9760536398467433,
+      "ndcg_at_5": 0.9431383934917194,
+      "mrr_at_5": 0.9319444444444445,
+      "cost_usd": 0
+    },
+    "Jev": {
+      "recall_at_5": 0.9942528735632183,
+      "ndcg_at_5": 0.9815114788734483,
+      "mrr_at_5": 0.9771232439335887,
+      "cost_usd": 0.410865588
+    },
+    "Cohere": {
+      "recall_at_5": 0.9942528735632183,
+      "ndcg_at_5": 0.9862609984375366,
+      "mrr_at_5": 0.9834770114942529,
+      "cost_usd": 1.044
+    }
+  },
+  "generation": {
+    "Gemini": {
+      "f1": 0.7705824368114811,
+      "em": 0.5756704980842912,
+      "f1_ge_05": 0.8371647509578544,
+      "cost_usd": 2.53902525,
+      "latency_p50_ms": 3641.064083501078,
+      "errors": 0,
+      "truncated": 0
+    },
+    "DeepSeek": {
+      "f1": 0.706343083307896,
+      "em": 0.44731800766283525,
+      "f1_ge_05": 0.789272030651341,
+      "cost_usd": 0.45901876636,
+      "latency_p50_ms": 1675.8067294986176,
+      "errors": 6,
+      "truncated": 6
+    }
+  },
+  "limitations": [
+    "Frozen historical baseline candidate order, with downloaded corpus texts.",
+    "Answer EM/F1 evaluate short extractive answers, not human factual correctness.",
+    "Reasoning medium, max output 4096, no retries.",
+    "Four-way pilot then sixteen-way execution; latency is descriptive, not a controlled speed ranking.",
+    "No embedding or live retrieval in online timing.",
+    "Interrupted requests have a conservative $0.50 budget reserve; final bill is not independently reconciled.",
+    "Incomplete queries during interrupted runs were rerun; their prior charges remain in the budget ledger. No answer-quality-based retries were used."
+  ],
+  "deepseek_minus_gemini_f1_ci": [
+    -0.06423935350358512,
+    -0.07986933755396816,
+    -0.04806020874392275
+  ],
+  "budget_status": {
+    "complete": 1044,
+    "spent_usd": 5.0523800013600155,
+    "total": 1044,
+    "failed": false,
+    "recorded_api_spend_usd": 4.5523800013600155,
+    "uncertain_call_reserve_usd": 0.5
+  },
+  "integrity": {
+    "unique_questions": 1044,
+    "candidate_mismatches": 0,
+    "same_prompt_for_both_generators": true,
+    "corpus_sha256": "0dc0c9cddd57e891798bd2a1083e4138e1eff19d05e2cdf5f0197499729c87b5",
+    "resolved_generators": {
+      "Gemini": [
+        "google/gemini-3.8-flash"
+      ],
+      "DeepSeek": [
+        "deepseek/deepseek-v4.1-flash"
+      ]
+    }
+  }
+}

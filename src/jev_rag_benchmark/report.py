@@ -5,6 +5,7 @@ from collections import defaultdict
 from pathlib import Path
 from statistics import mean
 
+from .fairness import validate_comparison
 from .io import read_jsonl
 from .metrics import paired_bootstrap_ci, percentile
 
@@ -15,6 +16,7 @@ def _fmt(value: float | None, digits: int = 3) -> str:
 
 def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
     rows = read_jsonl(results_path)
+    validate_comparison(rows)
     output_dir.mkdir(parents=True, exist_ok=True)
     grouped = defaultdict(list)
     for row in rows:
@@ -26,7 +28,7 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
         "",
         "## Özet",
         "",
-        "| Dil | Kol | n | nDCG@10 bağlam | Recall@k | EM | F1 | Başarı | p50 ms | p95 ms | USD/sorgu | Fallback |",
+        "| Dil | Kol | n | nDCG@5 bağlam | Recall@k | EM | F1 | Başarı | p50 ms | p95 ms | USD/sorgu | Fallback |",
         "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     summary = []
@@ -38,7 +40,7 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
             "language": language,
             "branch": branch,
             "n": len(items),
-            "ndcg": mean(item["ndcg_10_context"] for item in items),
+            "ndcg": mean(item["ndcg_5_context"] for item in items),
             "recall": mean(item["recall_context_k"] for item in items),
             "em": mean(valid_em) if valid_em else None,
             "f1": mean(valid_f1) if valid_f1 else None,
@@ -68,7 +70,7 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
     sample_note = (
         "- Küçük smoke örneği kesin sonuç değildir."
         if max((record["n"] for record in summary), default=0) < 100
-        else "- Bu koşu seçilen test kümesinin tamamını kapsar; başka alanlara otomatik genellenmemelidir."
+        else "- Örnek sayısı tam test kapsamını kanıtlamaz; kapsam manifest ile doğrulanmalıdır."
     )
     lines.extend(
         [
@@ -136,11 +138,11 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
             common = sorted(set(branches["A"]) & set(branches[branch]))
             if not common:
                 continue
-            baseline = [branches["A"][qid]["ndcg_10_context"] for qid in common]
-            treatment = [branches[branch][qid]["ndcg_10_context"] for qid in common]
+            baseline = [branches["A"][qid]["ndcg_5_context"] for qid in common]
+            treatment = [branches[branch][qid]["ndcg_5_context"] for qid in common]
             delta, low, high = paired_bootstrap_ci(baseline, treatment, seed=seed)
             lines.append(
-                f"- `{language}` A→{branch} nDCG@10 farkı: **{delta:+.3f}** (GA {low:+.3f}, {high:+.3f}; n={len(common)})."
+                f"- `{language}` A→{branch} nDCG@5 farkı: **{delta:+.3f}** (GA {low:+.3f}, {high:+.3f}; n={len(common)})."
             )
             baseline_f1 = [branches["A"][qid]["answer_f1"] for qid in common]
             treatment_f1 = [branches[branch][qid]["answer_f1"] for qid in common]
@@ -191,7 +193,7 @@ def generate_report(results_path: Path, output_dir: Path, seed: int) -> Path:
             f'<text x="{x + 24}" y="{y - 7:.1f}" text-anchor="middle" font-size="12">{item["ndcg"]:.3f}</text>'
         )
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
-<rect width="100%" height="100%" fill="white"/><text x="32" y="32" font-size="20" font-family="sans-serif">Bağlam nDCG@10</text>
+<rect width="100%" height="100%" fill="white"/><text x="32" y="32" font-size="20" font-family="sans-serif">Bağlam nDCG@5</text>
 <line x1="35" y1="290" x2="890" y2="290" stroke="#333"/>{''.join(bars)}</svg>'''
     (output_dir / "ndcg-context.svg").write_text(svg, encoding="utf-8")
     latency_bars = []

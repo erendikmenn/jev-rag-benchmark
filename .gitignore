@@ -10,3 +10,5 @@ data/processed/
 data/index/
 *.egg-info/
 .DS_Store
+
+work/

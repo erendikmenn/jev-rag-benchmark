@@ -3,10 +3,10 @@ from __future__ import annotations
 import json
 import random
 import re
-import time
 from pathlib import Path
 from typing import Any
 
+from .fairness import fingerprint, freeze_candidates
 from .generation import build_prompt, create_generator
 from .io import read_jsonl, write_csv, write_jsonl
 from .metrics import exact_match, mrr_at_k, ndcg_at_k, recall_at_k, token_f1
@@ -82,16 +82,19 @@ def run_benchmark(
         queries = rng.sample(queries, limit)
     if shard_count <= 0 or shard_index < 0 or shard_index >= shard_count:
         raise ValueError("shard_index must be in [0, shard_count)")
-    queries = [query for index, query in enumerate(queries) if index % shard_count == shard_index]
-    index_started = time.perf_counter()
-    embedding_model = config["retrieval"].get("embedding", {}).get("model", "none")
-    cache_name = re.sub(r"[^a-zA-Z0-9_.-]+", "-", embedding_model)
-    index = create_retrieval_index(
-        documents,
-        config["retrieval"],
-        cache_path=documents_path.parent / f"embeddings.{cache_name}.json",
+    retrieval_config = dict(config["retrieval"])
+    pool_path = Path(retrieval_config.pop("frozen_pool_path", str(documents_path.parent / "frozen-candidates.json")))
+    pools, pool_digest = freeze_candidates(
+        pool_path, documents, queries, retrieval_config,
+        lambda: create_retrieval_index(documents, retrieval_config,
+                                      cache_path=documents_path.parent / "fair-embeddings.json"),
     )
-    index_ms = (time.perf_counter() - index_started) * 1000
+    protocol_id = fingerprint({"pool": pool_digest, "generator": config["generator"],
+                               "rerankers": config["rerankers"], "policies": config["policies"],
+                               "fixture": fixture_jev, "skip_generation": skip_generation,
+                               "scoring": "extractive-v1"})
+    index_ms = 0.0
+    queries = [query for index, query in enumerate(queries) if index % shard_count == shard_index]
 
     candidate_k = config["retrieval"]["candidate_k"]
     context_k = config["retrieval"]["context_k"]
@@ -224,11 +227,10 @@ def run_benchmark(
     )
     rows = []
     for query_idx, query in enumerate(queries):
-        retrieval_started = time.perf_counter()
-        candidates = index.retrieve(query.text, candidate_k)
-        retrieval_ms = (time.perf_counter() - retrieval_started) * 1000
-        retrieval_cost = float(getattr(index, "last_query_cost_usd", 0.0))
-        retrieval_input_tokens = int(getattr(index, "last_query_input_tokens", 0))
+        candidates = pools[query.query_id]
+        retrieval_ms = 0.0  # Offline frozen retrieval; excluded from online timing.
+        retrieval_cost = 0.0
+        retrieval_input_tokens = 0
         ordered_branches = (
             branches[query_idx % len(branches) :] + branches[: query_idx % len(branches)]
         )
@@ -328,6 +330,10 @@ def run_benchmark(
             )
             row = {
                 "query_id": query.query_id,
+                "protocol_id": protocol_id,
+                "scoring_version": "extractive-v1",
+                "candidate_pool_sha256": pool_digest,
+                "retrieval_mode": "frozen-offline",
                 "query": query.text,
                 "language": query.language,
                 "split": query.split,
@@ -345,8 +351,8 @@ def run_benchmark(
                 "ndcg_10_candidates": ndcg_at_k(candidate_ids, relevant, 10),
                 "mrr_10_candidates": mrr_at_k(candidate_ids, relevant, 10),
                 "recall_candidate_k": recall_at_k(candidate_ids, relevant, candidate_k),
-                "ndcg_10_context": ndcg_at_k(ranked_ids, relevant, 10),
-                "mrr_10_context": mrr_at_k(ranked_ids, relevant, 10),
+                "ndcg_5_context": ndcg_at_k(ranked_ids, relevant, 5),
+                "mrr_5_context": mrr_at_k(ranked_ids, relevant, 5),
                 "recall_context_k": recall_at_k(ranked_ids, relevant, context_k),
                 "answer_em": (
                     exact_match(answer_text, query.answers)
@@ -374,12 +380,12 @@ def run_benchmark(
                 "retrieval_input_tokens": retrieval_input_tokens,
                 "retrieval_cost_usd": retrieval_cost,
                 "embedding_index_input_tokens_once": (
-                    int(getattr(index, "index_input_tokens", 0))
+                    int(0)
                     if query_idx == 0 and branch == branches[0]
                     else None
                 ),
                 "embedding_index_cost_usd_once": (
-                    float(getattr(index, "index_cost_usd", 0.0))
+                    float(0.0)
                     if query_idx == 0 and branch == branches[0]
                     else None
                 ),

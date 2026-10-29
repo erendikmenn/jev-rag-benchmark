@@ -1,3 +1,5 @@
+> **LEGACY / SUPERSEDED:** Not the current leaderboard. Candidate parity, metric labels and answer-format issues affect these results. See the repository README and `results/fair-2026-10-29/`. Do not interpret token-F1 flags as factual correctness.
+
 # Gemini 3.8 Flash vs DeepSeek V4.1 Flash
 
 - Eşleştirilmiş soru: **1044**

@@ -8,8 +8,8 @@ def test_merge_results_sorts_and_rejects_no_rows(tmp_path):
     first = tmp_path / "first.jsonl"
     second = tmp_path / "second.jsonl"
     output = tmp_path / "merged.jsonl"
-    write_jsonl(first, [{"query_id": "q2", "branch": "D", "context_ids": ["d2"]}])
-    write_jsonl(second, [{"query_id": "q1", "branch": "D", "context_ids": ["d1"]}])
+    write_jsonl(first, [{"query_id": "q2", "branch": "D", "protocol_id": "test", "context_ids": ["d2"]}])
+    write_jsonl(second, [{"query_id": "q1", "branch": "D", "protocol_id": "test", "context_ids": ["d1"]}])
 
     result = CliRunner().invoke(app, ["merge-results", str(output), f"{first},{second}"])
 

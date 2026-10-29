@@ -1,3 +1,5 @@
+> **LEGACY / SUPERSEDED:** Not the current leaderboard. Candidate parity, metric labels and answer-format issues affect these results. See the repository README and `results/fair-2026-10-29/`. Do not interpret token-F1 flags as factual correctness.
+
 # Full-corpus hierarchical Jev comparison
 
 This 100-query ablation gives Jev access to all 240 XQuAD Turkish passages.

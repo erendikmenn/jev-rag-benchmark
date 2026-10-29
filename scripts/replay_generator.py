@@ -7,6 +7,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
+from jev_rag_benchmark.fairness import fingerprint, validate_comparison
 from jev_rag_benchmark.config import load_config
 from jev_rag_benchmark.generation import build_prompt, create_generator
 from jev_rag_benchmark.io import read_jsonl, select_shard, sha256_file, write_csv, write_jsonl
@@ -58,16 +59,20 @@ def main() -> None:
     if args.limit:
         frozen = frozen[: args.limit]
     frozen = select_shard(frozen, args.shard_index, args.shard_count)
+    validate_comparison(frozen)
     documents = {row["doc_id"]: Document(**row) for row in read_jsonl(args.documents)}
     config = load_config(args.config)
     ledger = BudgetLedger(config["run"]["max_budget_usd"])
     generator = create_generator(config["generator"], ledger)
     abstention_text = config["policies"]["answer_abstention_text"]
 
+    replay_identity = fingerprint({"source": sha256_file(args.source), "documents": sha256_file(args.documents), "config": config, "source_branch": args.source_branch, "target_branch": args.target_branch, "shard": [args.shard_index, args.shard_count], "limit": args.limit, "prompt": "extractive-v1"})
     completed: dict[str, dict] = {}
     if args.output.exists():
         completed = {}
         for row in read_jsonl(args.output):
+            if row.get("replay_identity") != replay_identity:
+                raise ValueError("cannot resume replay with different source, documents or settings")
             if row["branch"] != args.target_branch or row.get("generation_error"):
                 continue
             threshold = args.retry_completion_tokens_at_least
@@ -103,6 +108,8 @@ def main() -> None:
         return {
             **original,
             "branch": args.target_branch,
+            "replay_identity": replay_identity,
+            "scoring_version": "extractive-v1",
             "answer": result.answer,
             "answer_em": exact_match(cleaned, original["references"]),
             "answer_f1": token_f1(cleaned, original["references"]),
@@ -124,7 +131,7 @@ def main() -> None:
             "generator_prompt_tokens": result.prompt_tokens,
             "generator_completion_tokens": result.completion_tokens,
             "generator_cost_usd": result.cost_usd,
-            "online_cost_usd": float(original["reranker_cost_usd"]) + result.cost_usd,
+            "online_cost_usd": float(original["reranker_cost_usd"]) + float(original.get("retrieval_cost_usd", 0)) + result.cost_usd,
             "replay_incremental_cost_usd": result.cost_usd,
             "generation_error": result.error,
             "generation_finish_reason": result.finish_reason,
