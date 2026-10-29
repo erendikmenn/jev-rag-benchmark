@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-29",
+  "requested_model": "typesafe/jev-1.14",
+  "resolved_model": "typesafe/jev-1.14-20261014",
+  "provider": "TypeSafe",
+  "price_usd_per_million_input_tokens": 0.042,
+  "project_cap_usd": 7,
+  "previous_project_conservative_usd": 5.507848008360016,
+  "notes": [
+    "All 1044 questions in both batch and pointwise; no prior pilot scores reused.",
+    "Exact original Jev 1.13 batch prompt retained for version comparison.",
+    "Exact Clef Flash pointwise prompt retained for same-strategy comparison.",
+    "Same frozen candidates and original-order tie-break. No retrieval or answer-generation rerun.",
+    "After 4092 completed calls, added rate pacing and shared reset cooldown. No prompt change; all attempts retained.",
+    "Latency not compared due operational changes and differing request counts.",
+    "No experimental image or long-context flags enabled."
+  ],
+  "sha256": {
+    "calls.jsonl.gz": "5e7e957dc3277a78374032181b44a21ac51ae720e4021225faab5a8242c5b882",
+    "results.jsonl": "2a4253adb90768c11ca7604065df5067fa7ce530e88f00a052cd67e94f8c6ea4",
+    "summary.json": "d775edad9f009aff5311ae5c689a3f8429553c9fafd632ab82b92e6bf04c0ccf",
+    "protocol.json": "b5d04be2b40a1604833d0c2565f609f9e4616d25f9da2f2900a898ce29d7b74c"
+  },
+  "model_documentation": "https://docs.typesafe.ai/models",
+  "release_note": "https://typesafe.ai/blog/jev-1-14"
+}

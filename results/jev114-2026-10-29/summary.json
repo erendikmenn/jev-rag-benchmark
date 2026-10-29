@@ -1,0 +1,64 @@
+{
+  "model": "typesafe/jev-1.14-20261014",
+  "provider": "TypeSafe",
+  "batch_vs_pointwise": {
+    "pointwise_better_gold_rank": 15,
+    "batch_better_gold_rank": 23
+  },
+  "modes": {
+    "batch": {
+      "questions": 1044,
+      "gold_rank_1_hits": 1004,
+      "hits": 1038,
+      "recall_at_5": 0.9942528735632183,
+      "ndcg_at_5": 0.9806716442214269,
+      "mrr_at_5": 0.9760057471264367,
+      "cost_usd": 0.410865588,
+      "paired_hits": {
+        "Jev 1.13 batch": {
+          "jev114_only_hit": 1,
+          "comparator_only_hit": 1
+        },
+        "Cohere": {
+          "jev114_only_hit": 1,
+          "comparator_only_hit": 1
+        },
+        "Clef Flash pointwise": {
+          "jev114_only_hit": 0,
+          "comparator_only_hit": 1
+        }
+      }
+    },
+    "pointwise": {
+      "questions": 1044,
+      "gold_rank_1_hits": 999,
+      "hits": 1036,
+      "recall_at_5": 0.9923371647509579,
+      "ndcg_at_5": 0.9772845689143799,
+      "mrr_at_5": 0.9721264367816091,
+      "cost_usd": 0.643917708,
+      "paired_hits": {
+        "Jev 1.13 batch": {
+          "jev114_only_hit": 1,
+          "comparator_only_hit": 3
+        },
+        "Cohere": {
+          "jev114_only_hit": 1,
+          "comparator_only_hit": 3
+        },
+        "Clef Flash pointwise": {
+          "jev114_only_hit": 0,
+          "comparator_only_hit": 3
+        }
+      }
+    }
+  },
+  "attempts": 22064,
+  "failed_attempts": 140,
+  "pilot_cost_usd": 0.00297024,
+  "charged_or_reserved_usd": 1.057753536,
+  "project_total_conservative_usd": 6.565601544360016,
+  "project_cap_usd": 7,
+  "gold_present_in_top20": 1039,
+  "note": "Same reused evaluation set. Batch compares versions at fixed prompt; pointwise compares models at fixed prompt. No new retrieval or generation."
+}

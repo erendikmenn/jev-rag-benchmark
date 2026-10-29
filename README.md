@@ -12,7 +12,7 @@ This is a short-answer benchmark on a small corpus, not a general-purpose RAG le
 - Jev, Cohere and Clef Flash receive identical candidate **texts and order** for every question.
 - All rerankers return five passages. The baseline retains the original hybrid order.
 - Clef Flash is reported separately for 20-question batch and one-passage-per-request
-  scoring; Jev is the original batch run, and Cohere uses its native rerank endpoint.
+  scoring; Jev 1.13 is the original batch run, Jev 1.14 has both modes, and Cohere uses its native rerank endpoint.
 - Gemini and DeepSeek receive the **same Jev top-five context and exact prompt**, capped at
   6,000 context characters. They must return a short answer span with a source citation.
 - Both use temperature 0, seed 20260919, medium reasoning and a 4,096 output-token limit.
@@ -28,27 +28,65 @@ Generation is excluded from this comparison. All metrics use the final **five** 
 
 | Method | Recall@5 ↑ | Gold in top-5 | nDCG@5 ↑ | MRR@5 ↑ | Reranking cost |
 |---|---:|---:|---:|---:|---:|
-| Hybrid baseline | 97.605% | 1,019 / 1,044 | 94.314% | 93.194% | $0 API reranking |
+| Hybrid baseline | 97.605% | 1,019 / 1,044 | 94.314% | 93.194% | $0.000000 |
 | Jev 1.13 — batch | 99.425% | 1,038 / 1,044 | 98.151% | 97.712% | $0.410866 |
-| Cohere Rerank 3.5 — native API | 99.425% | 1,038 / 1,044 | **98.626%** | **98.348%** | $1.044000 |
-| Clef Flash — batch, DeepInfra FP8 | 94.444% | 986 / 1,044 | 92.567% | 91.935% | **$0.168440** |
-| Clef Flash — pointwise, DeepInfra FP8 | **99.521%** | **1,039 / 1,044** | 98.270% | 97.840% | $0.195843 |
+| Jev 1.14 — batch | 99.425% | 1,038 / 1,044 | 98.067% | 97.601% | $0.410866 |
+| Jev 1.14 — pointwise | 99.234% | 1,036 / 1,044 | 97.728% | 97.213% | $0.643918 |
+| Cohere Rerank 3.5 — native API | 99.425% | 1,038 / 1,044 | 98.626% | 98.348% | $1.044000 |
+| Clef Flash — batch, DeepInfra FP8 | 94.444% | 986 / 1,044 | 92.567% | 91.935% | $0.168440 |
+| Clef Flash — pointwise, DeepInfra FP8 | 99.521% | 1,039 / 1,044 | 98.270% | 97.840% | $0.195843 |
 
-Clef Flash pointwise reaches the frozen candidate pool's recall ceiling: all 1,039 questions
-whose annotated gold passage is present in the top 20. The other five cannot be recovered by
-any reranker on this pool. It recovers 53 batch misses without losing any batch hits, and one
-additional hit relative to each of Jev and Cohere. Cohere retains the highest nDCG/MRR.
 
-Pointwise Flash costs 52.3% less than the existing Jev batch run and 81.2% less than Cohere,
-but sends 20 requests per query. This comparison varies both model and scoring strategy:
-Jev pointwise was only audited on a small sample, not rerun across the full set. A one-question
-recall advantage is not evidence of general model superiority. The dataset was reused after
-exploratory diagnosis; these are not independent model-selection test results.
+Jev 1.14 is pinned to `typesafe/jev-1.14-20261014` through TypeSafe on OpenRouter.
+Its batch run finds **1,038 / 1,044** gold passages in the top five, versus
+**1,038** for Jev 1.13 at the same batch prompt. Its pointwise run finds **1,036**,
+versus **1,039** for Clef Flash with the same one-passage relevance question.
+
+The candidate pool contains the annotated gold passage for only 1,039 questions; that is
+the recall ceiling for every method here. Pointwise methods issue 20 calls per query.
+Compare Jev versions within batch, or Jev 1.14 and Flash within pointwise, to avoid conflating
+model and strategy changes. Small differences on this near-ceiling, 240-passage dataset do
+not establish general superiority. This is a reused evaluation set, not an independent
+model-selection test.
 
 ![Reranker recall, nDCG at five, and cost](assets/benchmark/reranker-comparison.png)
 
 ![Questions missing the gold passage in the top five](assets/benchmark/retrieval-errors.png)
 
+
+### Jev 1.14 extension
+
+Both modes ran on all 1,044 frozen queries: 1,044 batch calls and 20,880 pointwise calls.
+The model version and TypeSafe provider were pinned, with provider fallbacks disabled.
+Batch retained the original 1.13 prompt (including its known target-reference ambiguity)
+to isolate the version change. Pointwise used the exact Flash prompt. No pilot observations
+were reused as full-run results.
+
+| Fixed-strategy comparison | nDCG@5 change | Recall@5 change |
+|---|---:|---:|
+| Jev 1.14 batch minus Jev 1.13 batch | -0.084 percentage points | +0.000 percentage points |
+| Jev 1.14 pointwise minus Flash pointwise | -0.541 percentage points | -0.287 percentage points |
+
+The 63-call preflight cost $0.002970. Full-run successful calls cost
+$1.054783. Including preflight and any recorded/reserved failed attempts,
+this extension accounts for **$1.057754**. The approved total project
+cap was increased to **$7**; conservative cumulative accounting is
+**$6.565602**.
+
+All 21,924 required inferences eventually returned valid scores. The 140 unsuccessful
+attempts were HTTP 429 rate-limit rejections. Initial OpenRouter rate
+limits stopped the run after 4,092 successful calls; adding 25-request/second pacing and
+shared cooldown resumed missing work without redoing successful calls. All attempts are
+journaled; retries were transport-related, never selected on answer quality. These runtime
+changes preclude a controlled latency comparison. Billing is telemetry/reserve accounting,
+not an independently reconciled invoice.
+
+[Raw calls, both-mode rankings, protocol and costs](results/jev114-2026-10-29/) are committed.
+Recompute without API calls:
+
+```bash
+uv run python scripts/analyze_jev114.py
+```
 
 ### Clef Flash extension
 
@@ -126,7 +164,7 @@ are committed. Recompute the diagnostic table without API calls:
 uv run python scripts/analyze_clef_diagnostics.py
 ```
 
-### Full-set pointwise rerun and Jev/Cohere audit
+### Full-set Flash pointwise rerun and Jev 1.13/Cohere audit
 
 The pointwise rerun scored all 20 passages separately for each of the 1,044 questions:
 **20,880 successful calls**. No diagnostic scores were reused. The same relevance question,
@@ -139,6 +177,7 @@ The 12 previously probed questions scored 12/12; the other 1,032 scored 1,027/1,
 (99.516% Recall@5). This split is descriptive: revisiting the same evaluation dataset after
 diagnosis is not equivalent to a new independent test set.
 
+This audit concerns Jev **1.13**, not the later 1.14 extension.
 We checked **all 1,044 original Jev/Cohere records**: all 20 candidate scores were present,
 and score-to-document mapping plus top-five selection matched the saved outputs.
 There was no indexing or sorting bug. Cohere receives a query and document list through
@@ -162,8 +201,8 @@ problem in this sample, not a proof that Cohere is universally order-invariant.
 [Pointwise requests, ranks and accounting](results/clef-pointwise-2026-10-29/) and
 [the Jev/Cohere audit](results/reranker-audit-2026-10-29/) are available for inspection.
 The audit cost $0.075348. Cumulative Clef Flash accounting is $0.380120, below its $0.60 cap.
-Total project accounting including earlier uncertainty reserves and this audit is $5.507848,
-below the original $6 cap. These amounts are telemetry/reserve accounting, not reconciled invoices.
+At that stage, total project accounting including earlier uncertainty reserves and this audit
+was $5.507848, below the original $6 cap. The later Jev 1.14 extension uses the approved $7 cap. These amounts are telemetry/reserve accounting, not reconciled invoices.
 
 Recompute without API calls:
 

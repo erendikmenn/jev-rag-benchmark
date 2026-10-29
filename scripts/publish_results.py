@@ -141,7 +141,13 @@ def draw(path, title, subtitle, panels, footer):
         }
     )
     fig, axes = plt.subplots(
-        len(panels), 1, figsize=(16, max(7.5, 3.1 * len(panels) + 2.3)), squeeze=False
+        len(panels),
+        1,
+        figsize=(
+            16,
+            max(7.5, (3.7 if max(len(p[1]) for p in panels) > 5 else 3.1) * len(panels) + 2.3),
+        ),
+        squeeze=False,
     )
     fig.patch.set_facecolor("white")
     fig.suptitle(title, x=0.06, y=0.965, ha="left", fontsize=27, fontweight="bold")
@@ -150,7 +156,7 @@ def draw(path, title, subtitle, panels, footer):
         ax.barh(
             labels,
             values,
-            color=["#777", "#111", "#aaa", "#bbb", "#444"][: len(labels)],
+            color=["#aaa", "#777", "#444", "#111", "#999", "#ccc", "#555"][: len(labels)],
             height=0.5,
         )
         ax.invert_yaxis()
@@ -197,14 +203,23 @@ def main():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     r["Clef Flash pointwise"] = module.analyze()[1]
+    spec = importlib.util.spec_from_file_location(
+        "jev114_analysis", ROOT / "scripts/analyze_jev114.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    jev114 = module.analyze()[1]["modes"]
+    r = {
+        "Hybrid baseline": r["Baseline"],
+        "Jev 1.13 batch": r["Jev"],
+        "Jev 1.14 batch": jev114["batch"],
+        "Jev 1.14 pointwise": jev114["pointwise"],
+        "Cohere 3.5": r["Cohere"],
+        "Clef Flash batch": r["Clef Flash batch"],
+        "Clef Flash pointwise": r["Clef Flash pointwise"],
+    }
     g = s["generation"]
-    labels = [
-        "Hybrid baseline",
-        "Jev 1.13 batch",
-        "Cohere 3.5",
-        "Clef Flash batch",
-        "Clef Flash pointwise",
-    ]
+    labels = list(r)
     rerank = [
         (
             "RECALL@5 — HIGHER IS BETTER",

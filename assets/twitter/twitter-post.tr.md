@@ -1,31 +1,23 @@
 # Güncel paylaşım taslağı — yayımlanmadı
 
-1.044 Türkçe XQuAD sorusu, aynı sabit 20 aday pasaj:
+1.044 Türkçe XQuAD sorusu, aynı sabit 20 aday pasaj.
 
-| Yapılandırma | Recall@5 | nDCG@5 | Reranking maliyeti |
-|---|---:|---:|---:|
-| Hybrid baseline | %97,605 | %94,314 | $0 ek reranking |
-| Jev 1.13 — batch | %99,425 | %98,151 | $0,411 |
-| Cohere 3.5 — native rerank | %99,425 | %98,626 | $1,044 |
-| Clef Flash — batch | %94,444 | %92,567 | $0,168 |
-| Clef Flash — ayrı pasaj puanlama | %99,521 | %98,270 | $0,196 |
+| Method | Recall@5 ↑ | Gold in top-5 | nDCG@5 ↑ | MRR@5 ↑ | Reranking cost |
+|---|---:|---:|---:|---:|---:|
+| Hybrid baseline | 97.605% | 1,019 / 1,044 | 94.314% | 93.194% | $0.000000 |
+| Jev 1.13 — batch | 99.425% | 1,038 / 1,044 | 98.151% | 97.712% | $0.410866 |
+| Jev 1.14 — batch | 99.425% | 1,038 / 1,044 | 98.067% | 97.601% | $0.410866 |
+| Jev 1.14 — pointwise | 99.234% | 1,036 / 1,044 | 97.728% | 97.213% | $0.643918 |
+| Cohere Rerank 3.5 — native API | 99.425% | 1,038 / 1,044 | 98.626% | 98.348% | $1.044000 |
+| Clef Flash — batch, DeepInfra FP8 | 94.444% | 986 / 1,044 | 92.567% | 91.935% | $0.168440 |
+| Clef Flash — pointwise, DeepInfra FP8 | 99.521% | 1,039 / 1,044 | 98.270% | 97.840% | $0.195843 |
 
-Clef Flash'ı her pasajı ayrı puanlayarak çalıştırmak 53 batch hatasını düzeltti.
-Doğru pasajı aday havuzunda bulunan 1.039 sorunun tamamında ilk beşe ulaştı.
-Diğer beş sorunun cevabı havuzda yoktu.
+Jev sürümleri batch altında, Jev 1.14 ve Flash ise pointwise altında karşılaştırılabilir.
+Model ve yöntem birlikte değişiyorsa farkı yalnızca modele atfetmemek gerekir.
 
-Jev'e göre bir ek doğru erişim ve %52,3 daha düşük kullanım maliyeti;
-Cohere sıralama kalitesinde hâlâ önde. Model ile birlikte çalıştırma stratejisi de
-değişiyor: Jev pointwise tüm sette tekrar çalıştırılmadı. Bir soruluk fark,
-genel model üstünlüğü iddiası için yeterli değil.
+240 pasajlık küçük ve tekrar kullanılan değerlendirme seti; genel liderlik iddiası değil.
+Aday havuzunda doğru pasajı olan soru sayısı 1.039; Recall@5 tavanı %99,521.
+Pointwise yöntemler sorgu başına 20 API isteği yapıyor.
+Clef Flash: DeepInfra FP8; Jev: TypeSafe. Maliyetler başarılı tam koşu çağrılarına ait.
 
-Jev'de de küçük tanı örnekleminde sıra/çalıştırma biçimi hassasiyeti var.
-Cohere'in 18 kontrolünde belge sırasını çevirmek ilk beş kümesini değiştirmedi.
-Tüm 1.044 eski kayıtta Jev/Cohere puan-belge eşleşmeleri ve sıralama doğrulandı.
-
-Clef Flash rotası: OpenRouter → DeepInfra FP8.
-Küçük, 240 pasajlık veri seti; tanıdan sonra aynı değerlendirme seti tekrar kullanıldı.
-Tablo maliyetleri başarılı tam-koşu çağrılarını içerir; rezerv ve tanı maliyetlerini içermez.
-Cevap üretimi tekrar çalıştırılmadı. Ayrı pasaj yöntemi sorgu başına 20 API isteği yapıyor.
-
-Kaynak: https://github.com/erendikmenn/jev-rag-benchmark
+https://github.com/erendikmenn/jev-rag-benchmark

@@ -87,3 +87,20 @@ def test_jev_cohere_audit_mappings_and_variants():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     assert module.analyze() == json.loads((module.DATA / "summary.json").read_text())
+
+
+def test_jev114_pinned_versions_and_both_full_set_modes():
+    import json
+
+    root = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location(
+        "jev114_analysis", root / "scripts/analyze_jev114.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    rows, summary = module.analyze()
+    assert len(rows) == 1044
+    assert summary == json.loads((module.DATA / "summary.json").read_text())
+    saved_rows = [json.loads(s) for s in (module.DATA / "results.jsonl").read_text().splitlines()]
+    assert rows == saved_rows
+    assert summary["project_total_conservative_usd"] < summary["project_cap_usd"] == 7

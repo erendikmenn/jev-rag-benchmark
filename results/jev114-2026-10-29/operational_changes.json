@@ -1,0 +1,1 @@
+{"change": "After 4092 successful calls, added global pacing at 25 requests/second and shared cooldown honoring provider reset timestamps after HTTP429. Preserved successful calls; no prompt or scoring change.", "previous_rejected_429_attempts": 140}
