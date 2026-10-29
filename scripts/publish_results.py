@@ -156,7 +156,9 @@ def draw(path, title, subtitle, panels, footer):
         ax.barh(
             labels,
             values,
-            color=["#aaa", "#777", "#444", "#111", "#999", "#ccc", "#555"][: len(labels)],
+            color=["#aaa", "#777", "#444", "#111", "#999", "#ccc", "#555", "#222", "#888"][
+                : len(labels)
+            ],
             height=0.5,
         )
         ax.invert_yaxis()
@@ -218,7 +220,16 @@ def main():
         "Clef Flash batch": r["Clef Flash batch"],
         "Clef Flash pointwise": r["Clef Flash pointwise"],
     }
-    g = s["generation"]
+    spec = importlib.util.spec_from_file_location(
+        "luna_analysis", ROOT / "scripts/analyze_luna_haiku.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    extension = module.analyze()[1]
+    for mode in ("batch", "pointwise"):
+        r[f"Luna Decisions {mode}"] = extension["reranking"][mode]
+    g = {**s["generation"], **extension["generation"]}
+    gen_labels = ["Gemini 3.8 Flash", "DeepSeek V4.1 Flash", "GPT-6 Luna", "Haiku 5.5"]
     labels = list(r)
     rerank = [
         (
@@ -240,27 +251,27 @@ def main():
             labels,
             [r[k]["cost_usd"] for k in r],
             "USD / 1,044 queries",
-            1.25,
+            max(1.25, max(v["cost_usd"] for v in r.values()) * 1.2),
         ),
     ]
     gens = [
         (
             "SHORT-ANSWER TOKEN F1 — HIGHER IS BETTER",
-            ["Gemini 3.8 Flash", "DeepSeek V4.1 Flash"],
+            gen_labels,
             [g[k]["f1"] * 100 for k in g],
             "Mean F1 (%)",
             100,
         ),
         (
             "EXACT MATCH — HIGHER IS BETTER",
-            ["Gemini 3.8 Flash", "DeepSeek V4.1 Flash"],
+            gen_labels,
             [g[k]["em"] * 100 for k in g],
             "Exact match (%)",
             100,
         ),
         (
             "GENERATION-ONLY COST — LOWER IS BETTER",
-            ["Gemini 3.8 Flash", "DeepSeek V4.1 Flash"],
+            gen_labels,
             [g[k]["cost_usd"] for k in g],
             "USD / 1,044 queries",
             3.1,
@@ -289,7 +300,7 @@ def main():
             title,
             "XQUAD-TR  •  29 OCT 2026  •  1,044 QUESTIONS  •  FROZEN HYBRID TOP-20",
             panels,
-            "Same Jev top-5 context and prompt for both generators. Six DeepSeek failures score zero. F1 is not human factuality."
+            "Same Jev 1.13 top-5 context and prompt for all four generators. Empty/truncated answers score zero.\nHaiku cost includes $0.008 missing-usage reserve. Sampling controls differ; token F1 is not human factuality."
             if panels == gens
             else "Same frozen candidates; pointwise sends one passage per request. Clef Flash: DeepInfra FP8.\nCosts exclude preprocessing, pilots and uncertain timed-out calls; model and strategy both vary.",
         )

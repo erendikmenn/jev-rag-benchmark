@@ -104,3 +104,21 @@ def test_jev114_pinned_versions_and_both_full_set_modes():
     saved_rows = [json.loads(s) for s in (module.DATA / "results.jsonl").read_text().splitlines()]
     assert rows == saved_rows
     assert summary["project_total_conservative_usd"] < summary["project_cap_usd"] == 7
+
+
+def test_luna_haiku_full_set_prompt_identity_scores_and_budget():
+    import json
+
+    root = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location(
+        "luna_analysis", root / "scripts/analyze_luna_haiku.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    rows, summary = module.analyze()
+    assert len(rows) == 1044
+    assert summary == json.loads((module.DATA / "summary.json").read_text())
+    assert rows == [
+        json.loads(line) for line in (module.DATA / "results.jsonl").read_text().splitlines()
+    ]
+    assert summary["project_total_conservative_usd"] <= summary["project_cap_usd"] == 11

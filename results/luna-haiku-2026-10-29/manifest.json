@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-29",
+  "project_cap_usd": 11,
+  "incremental_cap_usd": 4.4,
+  "previous_project_conservative_usd": 6.565601544360016,
+  "rates_usd_per_million_tokens": {
+    "Luna Decisions": {
+      "input": 0.1,
+      "output": 0
+    },
+    "Luna": {
+      "input": 0.1,
+      "output": 0.5
+    },
+    "Haiku": {
+      "input": 0.1,
+      "output": 0.5
+    }
+  },
+  "notes": [
+    "All 1044 frozen queries: 1044 batch + 20880 pointwise decisions, and 1044 answers per generator.",
+    "Ten-query technical pilot retained in full results; no quality-selected retries.",
+    "Same old Jev 1.13 context and exact prompt for all four answer models; no reranker/generator cross-product.",
+    "Pinned provider, fallbacks disabled. Response aliases may be undated; endpoint snapshot dates are advertised versions, not verified immutable generator response IDs.",
+    "Nominal medium reasoning and 4096 output limit; temperature unsupported on both new generators, seed supported only on Luna.",
+    "Luna uses standard tier and explicit/no-breakpoint cache mode. No tools/search.",
+    "Failed transport attempts retained with conservative cost reserves when billing unknown; not a reconciled invoice."
+  ],
+  "sha256": {
+    "calls.jsonl.gz": "0c24eaab63dda5314025e9d9bffac1c038ab58816b0e2fde2d8568143bf36dd8",
+    "summary.json": "f9d0d6f505c91f1908830083015713ed378a0ff4bd964afe1a9f0dc378f74232",
+    "endpoint_metadata.json": "5da18af241ad2b6724006dd2c340c46eb6584203b851a0c1956aeb18731f4d2d",
+    "results.jsonl": "4c8a82849a76a2b600f49526a22bc23054438a7432acb0942b71541786405355",
+    "protocol.json": "18ac6954f9d9ee44181371db93aa163b3565112b61a7f42f30805dc87e6fc14a"
+  }
+}

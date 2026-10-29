@@ -1,0 +1,1229 @@
+{
+  "openai/gpt-6-luna-decisions": {
+    "data": {
+      "id": "openai/gpt-6-luna-decisions",
+      "name": "OpenAI: GPT-6 Luna Decisions",
+      "created": 1791321558,
+      "description": "GPT-6 Luna Decisions is [GPT-6 Luna](/openai/gpt-6-luna) served through OpenAI's Decisions API. Instead of generating text, it reads the content passed as `state` (text, JSON, or images) and returns typed, probabilistic...",
+      "architecture": {
+        "tokenizer": "GPT",
+        "instruct_type": null,
+        "modality": "text+image->decisions",
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "decisions"
+        ]
+      },
+      "endpoints": [
+        {
+          "name": "OpenAI | openai/gpt-6-luna-decisions-20261006",
+          "model_id": "openai/gpt-6-luna-decisions",
+          "model_name": "OpenAI: GPT-6 Luna Decisions",
+          "context_length": 1050000,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0",
+            "web_search": "0.01",
+            "input_cache_read": "0",
+            "input_cache_write": "0",
+            "discount": 0
+          },
+          "provider_name": "OpenAI",
+          "tag": "openai",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 945000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": true,
+            "function": true
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 99.93055555555556,
+          "supports_implicit_caching": false,
+          "native_tools": {},
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        }
+      ]
+    }
+  },
+  "openai/gpt-6-luna": {
+    "data": {
+      "id": "openai/gpt-6-luna",
+      "name": "OpenAI: GPT-6 Luna",
+      "created": 1790100786,
+      "description": "GPT-6 Luna is the fast, cost-efficient model in OpenAI's GPT-6 series, positioned below GPT-6 Sol. It is suited for high-volume and latency-sensitive workloads such as chat, classification, and lightweight agentic...",
+      "architecture": {
+        "tokenizer": "GPT",
+        "instruct_type": null,
+        "modality": "text+image+file->text",
+        "input_modalities": [
+          "file",
+          "image",
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ]
+      },
+      "endpoints": [
+        {
+          "name": "OpenAI | openai/gpt-6-luna-20260922",
+          "model_id": "openai/gpt-6-luna",
+          "model_name": "OpenAI: GPT-6 Luna",
+          "context_length": 1050000,
+          "pricing": {
+            "prompt": "0.00000005",
+            "completion": "0.00000025",
+            "web_search": "0.01",
+            "input_cache_read": "0.000000005",
+            "input_cache_write": "0.0000000625",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 272000,
+                "prompt": "0.0000001",
+                "completion": "0.000000375",
+                "input_cache_read": "0.00000001",
+                "input_cache_write": "0.000000125"
+              }
+            ]
+          },
+          "provider_name": "OpenAI",
+          "tag": "openai/flex",
+          "service_tier": "flex",
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": 922000,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "seed",
+            "max_tokens",
+            "response_format",
+            "structured_outputs",
+            "tools",
+            "tool_choice",
+            "verbosity",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": true,
+            "function": true
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 90.97222222222221,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:web_search": {
+              "type": "web_search"
+            },
+            "openrouter:apply_patch": {
+              "type": "apply_patch"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "OpenAI | openai/gpt-6-luna-20260922",
+          "model_id": "openai/gpt-6-luna",
+          "model_name": "OpenAI: GPT-6 Luna",
+          "context_length": 1050000,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0.0000005",
+            "web_search": "0.01",
+            "input_cache_read": "0.00000001",
+            "input_cache_write": "0.000000125",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 272000,
+                "prompt": "0.0000002",
+                "completion": "0.00000075",
+                "input_cache_read": "0.00000002",
+                "input_cache_write": "0.00000025"
+              }
+            ]
+          },
+          "provider_name": "OpenAI",
+          "tag": "openai",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": 922000,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "seed",
+            "max_tokens",
+            "response_format",
+            "structured_outputs",
+            "tools",
+            "tool_choice",
+            "verbosity",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": true,
+            "function": true
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 100,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:web_search": {
+              "type": "web_search"
+            },
+            "openrouter:apply_patch": {
+              "type": "apply_patch"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "Azure | openai/gpt-6-luna-20260922",
+          "model_id": "openai/gpt-6-luna",
+          "model_name": "OpenAI: GPT-6 Luna",
+          "context_length": 1050000,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0.0000005",
+            "web_search": "0.01",
+            "input_cache_read": "0.00000001",
+            "input_cache_write": "0.000000125",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 272000,
+                "prompt": "0.0000002",
+                "completion": "0.00000075",
+                "input_cache_read": "0.00000002",
+                "input_cache_write": "0.00000025"
+              }
+            ]
+          },
+          "provider_name": "Azure",
+          "tag": "azure",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": 922000,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "max_completion_tokens",
+            "tools",
+            "tool_choice",
+            "seed",
+            "response_format",
+            "structured_outputs",
+            "verbosity",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": true,
+            "function": true
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 100,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:web_search": {
+              "type": "web_search"
+            },
+            "openrouter:apply_patch": {
+              "type": "apply_patch"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "Azure | openai/gpt-6-luna-20260922",
+          "model_id": "openai/gpt-6-luna",
+          "model_name": "OpenAI: GPT-6 Luna",
+          "context_length": 1050000,
+          "pricing": {
+            "prompt": "0.00000011",
+            "completion": "0.00000055",
+            "web_search": "0.01",
+            "input_cache_read": "0.000000011",
+            "input_cache_write": "0.0000001375",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 272000,
+                "prompt": "0.00000022",
+                "completion": "0.000000825",
+                "input_cache_read": "0.000000022",
+                "input_cache_write": "0.000000275"
+              }
+            ]
+          },
+          "provider_name": "Azure",
+          "tag": "azure/us",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "max_completion_tokens",
+            "tools",
+            "tool_choice",
+            "seed",
+            "response_format",
+            "structured_outputs",
+            "verbosity",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": true,
+            "function": true
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 99.93045897079277,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:web_search": {
+              "type": "web_search"
+            },
+            "openrouter:apply_patch": {
+              "type": "apply_patch"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "Azure | openai/gpt-6-luna-20260922",
+          "model_id": "openai/gpt-6-luna",
+          "model_name": "OpenAI: GPT-6 Luna",
+          "context_length": 1050000,
+          "pricing": {
+            "prompt": "0.00000011",
+            "completion": "0.00000055",
+            "web_search": "0.01",
+            "input_cache_read": "0.000000011",
+            "input_cache_write": "0.0000001375",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 272000,
+                "prompt": "0.00000022",
+                "completion": "0.000000825",
+                "input_cache_read": "0.000000022",
+                "input_cache_write": "0.000000275"
+              }
+            ]
+          },
+          "provider_name": "Azure",
+          "tag": "azure/eu",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "max_completion_tokens",
+            "tools",
+            "tool_choice",
+            "seed",
+            "response_format",
+            "structured_outputs",
+            "verbosity",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": true,
+            "function": true
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 100,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:web_search": {
+              "type": "web_search"
+            },
+            "openrouter:apply_patch": {
+              "type": "apply_patch"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "Amazon Bedrock | openai/gpt-6-luna-20260922",
+          "model_id": "openai/gpt-6-luna",
+          "model_name": "OpenAI: GPT-6 Luna",
+          "context_length": 1050000,
+          "pricing": {
+            "prompt": "0.00000011",
+            "completion": "0.00000055",
+            "web_search": "0.01",
+            "input_cache_read": "0.000000011",
+            "input_cache_write": "0.0000001375",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 272000,
+                "prompt": "0.00000022",
+                "completion": "0.000000825",
+                "input_cache_read": "0.000000022",
+                "input_cache_write": "0.000000275"
+              }
+            ]
+          },
+          "provider_name": "Amazon Bedrock",
+          "tag": "amazon-bedrock/us-east-1",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": 922000,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "max_tokens",
+            "tools",
+            "tool_choice",
+            "response_format",
+            "structured_outputs",
+            "verbosity",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": true,
+            "function": true
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 100,
+          "supports_implicit_caching": false,
+          "native_tools": {},
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "OpenAI | openai/gpt-6-luna-20260922",
+          "model_id": "openai/gpt-6-luna",
+          "model_name": "OpenAI: GPT-6 Luna",
+          "context_length": 1050000,
+          "pricing": {
+            "prompt": "0.0000002",
+            "completion": "0.000001",
+            "web_search": "0.01",
+            "input_cache_read": "0.00000002",
+            "input_cache_write": "0.00000025",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 272000,
+                "prompt": "0.0000004",
+                "completion": "0.0000015",
+                "input_cache_read": "0.00000004",
+                "input_cache_write": "0.0000005"
+              }
+            ]
+          },
+          "provider_name": "OpenAI",
+          "tag": "openai/fast",
+          "service_tier": "priority",
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": 922000,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "seed",
+            "max_tokens",
+            "response_format",
+            "structured_outputs",
+            "tools",
+            "tool_choice",
+            "verbosity",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": true,
+            "function": true
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 100,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:web_search": {
+              "type": "web_search"
+            },
+            "openrouter:apply_patch": {
+              "type": "apply_patch"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        }
+      ]
+    }
+  },
+  "anthropic/claude-haiku-5.5": {
+    "data": {
+      "id": "anthropic/claude-haiku-5.5",
+      "name": "Anthropic: Claude Haiku 5.5",
+      "created": 1791397883,
+      "description": "Claude Haiku 5.5 is Anthropic's small, fast model for high-volume, cost-sensitive work such as summarization, subagents, and browser use. It succeeds Claude Haiku 4.5 with stronger coding, computer use, and...",
+      "architecture": {
+        "tokenizer": "Claude",
+        "instruct_type": null,
+        "modality": "text+image+file->text",
+        "input_modalities": [
+          "text",
+          "image",
+          "file"
+        ],
+        "output_modalities": [
+          "text"
+        ]
+      },
+      "endpoints": [
+        {
+          "name": "Google | anthropic/claude-haiku-5.5-20261007",
+          "model_id": "anthropic/claude-haiku-5.5",
+          "model_name": "Anthropic: Claude Haiku 5.5",
+          "context_length": 1000000,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0.0000005",
+            "web_search": "0.01",
+            "input_cache_read": "0.00000001",
+            "input_cache_write": "0.000000125",
+            "input_cache_write_1h": "0.0000002",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 100000,
+                "prompt": "0.0000005",
+                "completion": "0.0000025",
+                "input_cache_read": "0.00000005",
+                "input_cache_write": "0.000000625",
+                "input_cache_write_1h": "0.000001"
+              }
+            ]
+          },
+          "provider_name": "Google",
+          "tag": "google-vertex/global",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "max_tokens",
+            "response_format",
+            "tool_choice",
+            "tools",
+            "verbosity",
+            "structured_outputs",
+            "stop",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": false,
+            "function": false
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 100,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:bash": {
+              "type": "bash_20250124"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "Claude Platform on AWS | anthropic/claude-haiku-5.5-20261007",
+          "model_id": "anthropic/claude-haiku-5.5",
+          "model_name": "Anthropic: Claude Haiku 5.5",
+          "context_length": 1000000,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0.0000005",
+            "web_search": "0.01",
+            "input_cache_read": "0.00000001",
+            "input_cache_write": "0.000000125",
+            "input_cache_write_1h": "0.0000002",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 100000,
+                "prompt": "0.0000005",
+                "completion": "0.0000025",
+                "input_cache_read": "0.00000005",
+                "input_cache_write": "0.000000625",
+                "input_cache_write_1h": "0.000001"
+              }
+            ]
+          },
+          "provider_name": "Claude Platform on AWS",
+          "tag": "claude-on-aws",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "max_tokens",
+            "stop",
+            "tool_choice",
+            "tools",
+            "response_format",
+            "verbosity",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": false,
+            "function": false
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 100,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:web_search": {
+              "type": "web_search_20260209"
+            },
+            "openrouter:web_fetch": {
+              "type": "web_fetch_20260209"
+            },
+            "openrouter:bash": {
+              "type": "bash_20250124"
+            },
+            "openrouter:advisor": {
+              "type": "advisor_20260301"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "Azure | anthropic/claude-haiku-5.5-20261007",
+          "model_id": "anthropic/claude-haiku-5.5",
+          "model_name": "Anthropic: Claude Haiku 5.5",
+          "context_length": 1000000,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0.0000005",
+            "web_search": "0.01",
+            "input_cache_read": "0.00000001",
+            "input_cache_write": "0.000000125",
+            "input_cache_write_1h": "0.0000002",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 100000,
+                "prompt": "0.0000005",
+                "completion": "0.0000025",
+                "input_cache_read": "0.00000005",
+                "input_cache_write": "0.000000625",
+                "input_cache_write_1h": "0.000001"
+              }
+            ]
+          },
+          "provider_name": "Azure",
+          "tag": "azure/global",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "structured_outputs",
+            "max_tokens",
+            "max_completion_tokens",
+            "tools",
+            "tool_choice",
+            "response_format",
+            "verbosity",
+            "stop",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": false,
+            "function": false
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 100,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:bash": {
+              "type": "bash_20250124"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "Anthropic | anthropic/claude-haiku-5.5-20261007",
+          "model_id": "anthropic/claude-haiku-5.5",
+          "model_name": "Anthropic: Claude Haiku 5.5",
+          "context_length": 1000000,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0.0000005",
+            "web_search": "0.01",
+            "input_cache_read": "0.00000001",
+            "input_cache_write": "0.000000125",
+            "input_cache_write_1h": "0.0000002",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 100000,
+                "prompt": "0.0000005",
+                "completion": "0.0000025",
+                "input_cache_read": "0.00000005",
+                "input_cache_write": "0.000000625",
+                "input_cache_write_1h": "0.000001"
+              }
+            ]
+          },
+          "provider_name": "Anthropic",
+          "tag": "anthropic",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "max_tokens",
+            "stop",
+            "tools",
+            "tool_choice",
+            "structured_outputs",
+            "response_format",
+            "verbosity",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": false,
+            "function": false
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 99.86111111111111,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:web_search": {
+              "type": "web_search_20260209"
+            },
+            "openrouter:web_fetch": {
+              "type": "web_fetch_20260209"
+            },
+            "openrouter:bash": {
+              "type": "bash_20250124"
+            },
+            "openrouter:advisor": {
+              "type": "advisor_20260301"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "Amazon Bedrock | anthropic/claude-haiku-5.5-20261007",
+          "model_id": "anthropic/claude-haiku-5.5",
+          "model_name": "Anthropic: Claude Haiku 5.5",
+          "context_length": 1000000,
+          "pricing": {
+            "prompt": "0.0000001",
+            "completion": "0.0000005",
+            "web_search": "0.01",
+            "input_cache_read": "0.00000001",
+            "input_cache_write": "0.000000125",
+            "input_cache_write_1h": "0.0000002",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 100000,
+                "prompt": "0.0000005",
+                "completion": "0.0000025",
+                "input_cache_read": "0.00000005",
+                "input_cache_write": "0.000000625",
+                "input_cache_write_1h": "0.000001"
+              }
+            ]
+          },
+          "provider_name": "Amazon Bedrock",
+          "tag": "amazon-bedrock",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "max_tokens",
+            "stop",
+            "tool_choice",
+            "tools",
+            "response_format",
+            "verbosity",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": false,
+            "function": false
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 100,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:bash": {
+              "type": "bash_20250124"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "Google | anthropic/claude-haiku-5.5-20261007",
+          "model_id": "anthropic/claude-haiku-5.5",
+          "model_name": "Anthropic: Claude Haiku 5.5",
+          "context_length": 1000000,
+          "pricing": {
+            "prompt": "0.00000011",
+            "completion": "0.00000055",
+            "web_search": "0.01",
+            "input_cache_read": "0.000000011",
+            "input_cache_write": "0.0000001375",
+            "input_cache_write_1h": "0.00000022",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 100000,
+                "prompt": "0.00000055",
+                "completion": "0.00000275",
+                "input_cache_read": "0.000000055",
+                "input_cache_write": "0.0000006875",
+                "input_cache_write_1h": "0.0000011"
+              }
+            ]
+          },
+          "provider_name": "Google",
+          "tag": "google-vertex/europe",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "max_tokens",
+            "response_format",
+            "tool_choice",
+            "tools",
+            "verbosity",
+            "structured_outputs",
+            "stop",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": false,
+            "function": false
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 100,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:bash": {
+              "type": "bash_20250124"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "Google | anthropic/claude-haiku-5.5-20261007",
+          "model_id": "anthropic/claude-haiku-5.5",
+          "model_name": "Anthropic: Claude Haiku 5.5",
+          "context_length": 1000000,
+          "pricing": {
+            "prompt": "0.00000011",
+            "completion": "0.00000055",
+            "web_search": "0.01",
+            "input_cache_read": "0.000000011",
+            "input_cache_write": "0.0000001375",
+            "input_cache_write_1h": "0.00000022",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 100000,
+                "prompt": "0.00000055",
+                "completion": "0.00000275",
+                "input_cache_read": "0.000000055",
+                "input_cache_write": "0.0000006875",
+                "input_cache_write_1h": "0.0000011"
+              }
+            ]
+          },
+          "provider_name": "Google",
+          "tag": "google-vertex/us",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "max_tokens",
+            "response_format",
+            "tool_choice",
+            "tools",
+            "verbosity",
+            "structured_outputs",
+            "stop",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": false,
+            "function": false
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 100,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:bash": {
+              "type": "bash_20250124"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "Azure | anthropic/claude-haiku-5.5-20261007",
+          "model_id": "anthropic/claude-haiku-5.5",
+          "model_name": "Anthropic: Claude Haiku 5.5",
+          "context_length": 1000000,
+          "pricing": {
+            "prompt": "0.00000011",
+            "completion": "0.00000055",
+            "web_search": "0.01",
+            "input_cache_read": "0.000000011",
+            "input_cache_write": "0.0000001375",
+            "input_cache_write_1h": "0.00000022",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 100000,
+                "prompt": "0.00000055",
+                "completion": "0.00000275",
+                "input_cache_read": "0.000000055",
+                "input_cache_write": "0.0000006875",
+                "input_cache_write_1h": "0.0000011"
+              }
+            ]
+          },
+          "provider_name": "Azure",
+          "tag": "azure/us",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "structured_outputs",
+            "max_tokens",
+            "max_completion_tokens",
+            "tools",
+            "tool_choice",
+            "response_format",
+            "verbosity",
+            "stop",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": false,
+            "function": false
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 100,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:bash": {
+              "type": "bash_20250124"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "Amazon Bedrock | anthropic/claude-haiku-5.5-20261007",
+          "model_id": "anthropic/claude-haiku-5.5",
+          "model_name": "Anthropic: Claude Haiku 5.5",
+          "context_length": 1000000,
+          "pricing": {
+            "prompt": "0.00000011",
+            "completion": "0.00000055",
+            "web_search": "0.01",
+            "input_cache_read": "0.000000011",
+            "input_cache_write": "0.0000001375",
+            "input_cache_write_1h": "0.00000022",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 100000,
+                "prompt": "0.00000055",
+                "completion": "0.00000275",
+                "input_cache_read": "0.000000055",
+                "input_cache_write": "0.0000006875",
+                "input_cache_write_1h": "0.0000011"
+              }
+            ]
+          },
+          "provider_name": "Amazon Bedrock",
+          "tag": "amazon-bedrock/us-east-1",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "max_tokens",
+            "stop",
+            "tool_choice",
+            "tools",
+            "response_format",
+            "verbosity",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": false,
+            "function": false
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 99.89669421487604,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:bash": {
+              "type": "bash_20250124"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        },
+        {
+          "name": "Amazon Bedrock | anthropic/claude-haiku-5.5-20261007",
+          "model_id": "anthropic/claude-haiku-5.5",
+          "model_name": "Anthropic: Claude Haiku 5.5",
+          "context_length": 1000000,
+          "pricing": {
+            "prompt": "0.00000011",
+            "completion": "0.00000055",
+            "web_search": "0.01",
+            "input_cache_read": "0.000000011",
+            "input_cache_write": "0.0000001375",
+            "input_cache_write_1h": "0.00000022",
+            "discount": 0,
+            "overrides": [
+              {
+                "min_prompt_tokens": 100000,
+                "prompt": "0.00000055",
+                "completion": "0.00000275",
+                "input_cache_read": "0.000000055",
+                "input_cache_write": "0.0000006875",
+                "input_cache_write_1h": "0.0000011"
+              }
+            ]
+          },
+          "provider_name": "Amazon Bedrock",
+          "tag": "amazon-bedrock/eu-west-1",
+          "service_tier": null,
+          "quantization": "unknown",
+          "max_completion_tokens": 128000,
+          "max_prompt_tokens": null,
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "max_tokens",
+            "stop",
+            "tool_choice",
+            "tools",
+            "response_format",
+            "verbosity",
+            "reasoning_effort"
+          ],
+          "supports_tool_choice": {
+            "none": true,
+            "auto": true,
+            "required": false,
+            "function": false
+          },
+          "status": 0,
+          "uptime_last_30m": 100,
+          "uptime_last_5m": 100,
+          "uptime_last_1d": 100,
+          "supports_implicit_caching": false,
+          "native_tools": {
+            "openrouter:bash": {
+              "type": "bash_20250124"
+            }
+          },
+          "supports_voice_cloning": false,
+          "supports_multiple_audio_references": false,
+          "supports_image_reference": false,
+          "supports_diarization": false,
+          "latency_last_30m": null,
+          "throughput_last_30m": null
+        }
+      ]
+    }
+  }
+}

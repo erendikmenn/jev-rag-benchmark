@@ -1,7 +1,7 @@
 # jev-rag-benchmark
 
 A small, auditable Turkish RAG experiment: does reranking improve passage selection,
-and how do two answer models perform on identical retrieved evidence?
+and how do four answer models perform on identical retrieved evidence?
 
 **Current evaluation: 29 October 2026 — 1,044 XQuAD-TR test questions, 240 passages.**
 This is a short-answer benchmark on a small corpus, not a general-purpose RAG leaderboard.
@@ -9,13 +9,15 @@ This is a short-answer benchmark on a small corpus, not a general-purpose RAG le
 ## What is held constant?
 
 - The candidate pool is the historical hybrid BM25 + BGE-M3 baseline's top 20, frozen once.
-- Jev, Cohere and Clef Flash receive identical candidate **texts and order** for every question.
+- Jev, Cohere, Clef Flash and Luna Decisions receive identical candidate **texts and order** for every question.
 - All rerankers return five passages. The baseline retains the original hybrid order.
 - Clef Flash is reported separately for 20-question batch and one-passage-per-request
-  scoring; Jev 1.13 is the original batch run, Jev 1.14 has both modes, and Cohere uses its native rerank endpoint.
-- Gemini and DeepSeek receive the **same Jev top-five context and exact prompt**, capped at
+  scoring; Jev 1.13 is the original batch run, Jev 1.14 and Luna Decisions have both modes, and Cohere uses its native rerank endpoint.
+- Gemini, DeepSeek, Haiku and Luna receive the **same Jev 1.13 top-five context and exact prompt**, capped at
   6,000 context characters. They must return a short answer span with a source citation.
-- Both use temperature 0, seed 20260919, medium reasoning and a 4,096 output-token limit.
+- All use nominal medium reasoning and a 4,096 output-token limit. Gemini/DeepSeek use
+  temperature 0 and seed 20260919. Temperature is unsupported for Luna/Haiku; only Luna
+  supports the seed. Equal effort labels do not imply equal reasoning compute.
 - Generation errors and truncated outputs receive zero EM/F1; they are not dropped.
 
 The published run contains 1,044 unique, matched questions and **zero candidate mismatches**.
@@ -35,6 +37,8 @@ Generation is excluded from this comparison. All metrics use the final **five** 
 | Cohere Rerank 3.5 — native API | 99.425% | 1,038 / 1,044 | 98.626% | 98.348% | $1.044000 |
 | Clef Flash — batch, DeepInfra FP8 | 94.444% | 986 / 1,044 | 92.567% | 91.935% | $0.168440 |
 | Clef Flash — pointwise, DeepInfra FP8 | 99.521% | 1,039 / 1,044 | 98.270% | 97.840% | $0.195843 |
+| Luna Decisions — batch | 98.659% | 1,030 / 1,044 | 97.503% | 97.106% | $1.041619 |
+| Luna Decisions — pointwise | 99.234% | 1,036 / 1,044 | 98.268% | 97.933% | $1.077098 |
 
 
 Jev 1.14 is pinned to `typesafe/jev-1.14-20261014` through TypeSafe on OpenRouter.
@@ -53,6 +57,49 @@ model-selection test.
 
 ![Questions missing the gold passage in the top five](assets/benchmark/retrieval-errors.png)
 
+
+Luna Decisions improves from 1,030 batch hits to 1,036 pointwise hits. Its pointwise
+nDCG@5 (98.268%) is nearly equal to Flash pointwise (98.270%), but it loses three more gold
+passages from the top five and costs about 5.5 times as much. Cohere has higher nDCG and
+two more hits at a slightly lower cost, though its native scoring strategy differs. No general model winner is implied by these small-set observations.
+
+### Luna Decisions + Haiku/Luna extension
+
+All four new configurations completed the same 1,044 questions: **24,012 completed API responses**.
+Luna Decisions used the unchanged batch and pointwise relevance prompts, candidate order
+and tie-break rule. The first ten-query technical pilot is retained in the full results.
+The batch prompt retains the target-reference ambiguity described in the Clef diagnostics;
+compare models within the same scoring strategy.
+
+Haiku 5.5 and GPT-6 Luna generated answers using **the original Jev 1.13 top-five contexts**,
+not the new Luna Decisions rankings. Every prompt hash matches the original generation run.
+These are separate retrieval and generation comparisons, not end-to-end measurements of
+all possible model combinations. Terra was not run.
+
+OpenRouter routing was pinned to OpenAI / Anthropic with fallbacks disabled. Endpoint metadata
+advertised dated versions, but generator responses returned undated aliases; the snapshot
+is provenance, not proof of an immutable resolved version. Both generators use nominal
+medium reasoning and 4,096 output tokens. Neither supports temperature; Haiku does not support
+seed. Luna uses seed 20260919, standard service tier and explicit cache mode without breakpoints.
+No search or tools were used. Equal reasoning labels do not imply equal compute across models.
+
+There were **16 failed transport attempts**, retained in the raw journal;
+only transport failures were retried. Empty/truncated generator answers remain zero-scored.
+Retained model costs are shown in the tables. Haiku returned two empty content-filter
+refusals without usage telemetry: its $0.397719 includes a $0.008 reserve; observed billed
+usage totals $0.389719. Token totals cover only the 1,042 responses with usage.
+The 16 unsuccessful transport attempts were HTTP 504 timeouts, reserved at $0.0015 each.
+Including uncertain-call reserves, the new extension accounts for **$2.728969**. Conservative cumulative project
+accounting is **$9.294570**, within the approved **$11** cap.
+These are telemetry/reserve figures, not a reconciled invoice. New model differences are
+descriptive; no new confidence interval or controlled speed claim is made.
+
+[Raw responses, rankings, answers, protocol, endpoint snapshot and costs](results/luna-haiku-2026-10-29/)
+are committed. Recompute without API calls:
+
+```bash
+uv run python scripts/analyze_luna_haiku.py
+```
 
 ### Jev 1.14 extension
 
@@ -216,17 +263,21 @@ uv run python scripts/analyze_reranker_audit.py
 Citations are removed before text scoring. Token F1 measures word overlap with extractive
 references; exact match measures normalized text equality. Neither is a human factuality score.
 
-| Metric | Gemini 3.8 Flash | DeepSeek V4.1 Flash |
-|---|---:|---:|
-| Questions, including failures | 1,044 | 1,044 |
-| Mean token F1 | **77.058%** | 70.634% |
-| Exact match | **57.567%** | 44.732% |
-| F1 ≥ 0.5 rate (lexical threshold) | **83.716%** | 78.927% |
-| Empty/truncated responses | **0** | 6 |
-| Generation-only cost | $2.539025 | **$0.459019** |
-| Jev + generation cost | $2.949891 | **$0.869884** |
+| Model (1,044 questions each) | Token F1 ↑ | Exact match ↑ | F1 ≥ 0.5 | Empty/truncated | Generation cost |
+|---|---:|---:|---:|---:|---:|
+| Gemini 3.8 Flash | 77.058% | 57.567% | 83.716% | 0 | $2.539025 |
+| DeepSeek V4.1 Flash | 70.634% | 44.732% | 78.927% | 6 | $0.459019 |
+| GPT-6 Luna | 59.402% | 29.215% | 66.762% | 0 | $0.188533 |
+| Haiku 5.5 | 71.185% | 49.138% | 78.927% | 2 | $0.397719 |
 
-Gemini's paired mean-F1 advantage is **6.424 percentage points**; the question-level paired
+Haiku scores 71.185% F1, 0.551 percentage points above DeepSeek and 5.873 below Gemini.
+Its $0.397719 accounted cost (including $0.008 for two missing-usage refusals) is 13.4%
+below DeepSeek. Luna is cheapest at $0.188533, but its 59.402% F1 and 29.215% exact match
+are lowest under this short-answer protocol. These lexical scores do not establish factuality.
+Add $0.410866 for the original Jev 1.13 reranking stage if calculating Jev-plus-generation
+cost; preprocessing and earlier operational overhead remain excluded.
+
+For the original Gemini/DeepSeek pair only, Gemini's paired mean-F1 advantage is **6.424 percentage points**; the question-level paired
 bootstrap 95% interval is **4.806–7.987 points** (2,000 resamples, seed 20261029).
 Questions sharing passages are not independent; this interval does not model passage/article
 clustering, repeated runs or provider variability. DeepSeek has lower observed API cost.
@@ -240,11 +291,16 @@ Provider routes and time of measurement can also affect latency.
 
 ## Budget and operational record
 
-The approved cap was $6. Recorded API charges across pilots, partial attempts and the full
+Current approved cumulative cap: **$11**. After all extensions, conservative accounting is
+**$9.294570**; see the extension records above. The following is the original run history.
+
+The original run cap was $6. Recorded API charges across pilots, partial attempts and the full
 run were **$4.552380**. An additional **$0.50 uncertainty reserve** was retained for interrupted
 in-flight requests: conservative budget accounting was **$5.052380**, below the cap.
 This is telemetry-based accounting, not a reconciled invoice. Method costs above describe
-retained full-run observations and exclude pilot/restart overhead and the uncertainty reserve.
+retained full-run observations and exclude pilot/restart overhead and transport reserves.
+Haiku is the explicit exception: its table cost includes $0.008 reserved for two responses
+that lack usage telemetry.
 
 The first generation pilot rejected disabled reasoning. The successful pilot and full run
 used medium reasoning. Execution was restarted to increase concurrency and later after an

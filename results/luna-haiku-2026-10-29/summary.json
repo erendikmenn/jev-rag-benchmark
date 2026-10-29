@@ -1,0 +1,62 @@
+{
+  "reranking": {
+    "batch": {
+      "questions": 1044,
+      "hits": 1030,
+      "recall_at_5": 0.9865900383141762,
+      "ndcg_at_5": 0.9750272100636546,
+      "mrr_at_5": 0.9710568326947637,
+      "cost_usd": 1.0416186
+    },
+    "pointwise": {
+      "questions": 1044,
+      "hits": 1036,
+      "recall_at_5": 0.9923371647509579,
+      "ndcg_at_5": 0.9826804040957194,
+      "mrr_at_5": 0.9793263090676884,
+      "cost_usd": 1.0770981
+    }
+  },
+  "generation": {
+    "Luna": {
+      "questions": 1044,
+      "f1": 0.5940228301993917,
+      "em": 0.2921455938697318,
+      "f1_at_least_half": 0.6676245210727969,
+      "failures": 0,
+      "missing_usage_responses": 0,
+      "cost_reserve_usd": 0,
+      "cost_usd": 0.1885332,
+      "prompt_tokens": 1490302,
+      "completion_tokens": 79006,
+      "f1_difference_vs_Gemini": -0.17655960661208936,
+      "f1_difference_vs_DeepSeek": -0.11232025310850424
+    },
+    "Haiku": {
+      "questions": 1044,
+      "f1": 0.7118525200108099,
+      "em": 0.49137931034482757,
+      "f1_at_least_half": 0.789272030651341,
+      "failures": 2,
+      "missing_usage_responses": 2,
+      "cost_reserve_usd": 0.008,
+      "cost_usd": 0.3977186,
+      "prompt_tokens": 2739751,
+      "completion_tokens": 231487,
+      "f1_difference_vs_Gemini": -0.05872991680067118,
+      "f1_difference_vs_DeepSeek": 0.005509436702913938
+    }
+  },
+  "attempts": 24028,
+  "failed_attempts": 16,
+  "charged_or_reserved_usd": 2.7289685,
+  "project_total_conservative_usd": 9.294570044360016,
+  "project_cap_usd": 11,
+  "limitations": [
+    "Same reused 1044-query evaluation set; 240 corpus passages.",
+    "Same generator context/prompt and nominal medium effort; effort is not equivalent compute across models.",
+    "Temperature unsupported on both new generators; Haiku lacks seed.",
+    "Generator responses return undated model names; endpoint metadata snapshots retain advertised dated versions.",
+    "No new retrieval or cross-product of every reranker with every generator."
+  ]
+}
