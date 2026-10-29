@@ -1,0 +1,215 @@
+{
+  "selection_warning": "Six outcome-selected failures and six successful controls; NOT a new unbiased benchmark.",
+  "questions": [
+    {
+      "query_id": "xquad-tr-56bec6ac3aeaaa14008c9401",
+      "query": "Marlee Matlin ulusal marşın hangi dilde çevirisini yapmıştır?",
+      "group": "original_failure",
+      "reference_answers": [
+        "Amerikan İşaret Dili"
+      ],
+      "original_candidate_rank": 1,
+      "repeat_gold_rank": 12,
+      "explicit_gold_rank": 5,
+      "reverse_questions_gold_rank": 2,
+      "reverse_candidates_gold_rank": 11,
+      "provider_bf16_gold_rank": 14,
+      "pointwise_gold_rank": 1
+    },
+    {
+      "query_id": "xquad-tr-57280f0d3acd2414000df35f",
+      "query": "Doktor Kim hangi bölümde, erkek kardeşi olduğunu kabul ediyor?",
+      "group": "original_failure",
+      "reference_answers": [
+        "Smith ve Jones'ta"
+      ],
+      "original_candidate_rank": 1,
+      "reverse_questions_gold_rank": 1,
+      "repeat_gold_rank": 12,
+      "explicit_gold_rank": 10,
+      "reverse_candidates_gold_rank": 14,
+      "provider_bf16_gold_rank": 11,
+      "pointwise_gold_rank": 1
+    },
+    {
+      "query_id": "xquad-tr-572750e8dd62a815002e9af3",
+      "query": "Kanun tarafından yasaklananlar nelerdir?",
+      "group": "original_failure",
+      "reference_answers": [
+        "gelenekler ya da beklentilerin söz konusu olduğu şeylerden"
+      ],
+      "original_candidate_rank": 1,
+      "repeat_gold_rank": 8,
+      "reverse_questions_gold_rank": 2,
+      "reverse_candidates_gold_rank": 18,
+      "explicit_gold_rank": 2,
+      "provider_bf16_gold_rank": 6,
+      "pointwise_gold_rank": 3
+    },
+    {
+      "query_id": "xquad-tr-57115ff82419e314009555c5",
+      "query": "Statorlara adlandırmanın başka bir yolu nedir?",
+      "group": "original_failure",
+      "reference_answers": [
+        "statik diskler"
+      ],
+      "original_candidate_rank": 2,
+      "repeat_gold_rank": 16,
+      "reverse_candidates_gold_rank": 15,
+      "explicit_gold_rank": 11,
+      "reverse_questions_gold_rank": 18,
+      "provider_bf16_gold_rank": 16,
+      "pointwise_gold_rank": 1
+    },
+    {
+      "query_id": "xquad-tr-572940973f37b319004781a7",
+      "query": "Hatanın kaynağı neydi?",
+      "group": "original_failure",
+      "reference_answers": [
+        "WWF raporu"
+      ],
+      "original_candidate_rank": 12,
+      "repeat_gold_rank": 11,
+      "explicit_gold_rank": 10,
+      "reverse_questions_gold_rank": 14,
+      "reverse_candidates_gold_rank": 2,
+      "provider_bf16_gold_rank": 10,
+      "pointwise_gold_rank": 1
+    },
+    {
+      "query_id": "xquad-tr-572648e8dd62a815002e8076",
+      "query": "Taraklıların kıllarına ne denir?",
+      "group": "original_failure",
+      "reference_answers": [
+        "siliya"
+      ],
+      "original_candidate_rank": 15,
+      "repeat_gold_rank": 6,
+      "explicit_gold_rank": 9,
+      "reverse_questions_gold_rank": 4,
+      "reverse_candidates_gold_rank": 7,
+      "provider_bf16_gold_rank": 6,
+      "pointwise_gold_rank": 1
+    },
+    {
+      "query_id": "xquad-tr-5726e37ef1498d1400e8eed9",
+      "query": "Hangi departman kostüm koleksiyonunun kağıt üzerindeki eserlerine ev sahipliği yapmaktadır?",
+      "group": "control",
+      "reference_answers": [
+        "Söz ve Şekil"
+      ],
+      "original_candidate_rank": 1,
+      "repeat_gold_rank": 1,
+      "explicit_gold_rank": 1,
+      "reverse_questions_gold_rank": 2,
+      "reverse_candidates_gold_rank": 18,
+      "provider_bf16_gold_rank": 1,
+      "pointwise_gold_rank": 1
+    },
+    {
+      "query_id": "xquad-tr-5725f00938643c19005aced9",
+      "query": "Kearney Bulvarı boyunca hangi iki cadde arasında bir zamanlar zengin Afrikalı-Amerikalılar yaşıyordu?",
+      "group": "control",
+      "reference_answers": [
+        "Fresno Caddesi ile Thorne Bulvarı"
+      ],
+      "original_candidate_rank": 1,
+      "explicit_gold_rank": 1,
+      "repeat_gold_rank": 1,
+      "reverse_questions_gold_rank": 1,
+      "reverse_candidates_gold_rank": 11,
+      "provider_bf16_gold_rank": 1,
+      "pointwise_gold_rank": 1
+    },
+    {
+      "query_id": "xquad-tr-570d2f5bfed7b91900d45cd3",
+      "query": "Victoria Parlamentosu'nu hangi belge oluşturmuştur?",
+      "group": "control",
+      "reference_answers": [
+        "Victoria Anayasası Kanunu 1855"
+      ],
+      "original_candidate_rank": 1,
+      "repeat_gold_rank": 1,
+      "explicit_gold_rank": 1,
+      "reverse_questions_gold_rank": 2,
+      "reverse_candidates_gold_rank": 9,
+      "provider_bf16_gold_rank": 1,
+      "pointwise_gold_rank": 1
+    },
+    {
+      "query_id": "xquad-tr-572968cf1d046914007793cb",
+      "query": "Kloroplast DNA'sı ne olarak kısaltılır?",
+      "group": "control",
+      "reference_answers": [
+        "ctDNA veya cp DNA"
+      ],
+      "original_candidate_rank": 1,
+      "repeat_gold_rank": 1,
+      "explicit_gold_rank": 1,
+      "reverse_candidates_gold_rank": 10,
+      "reverse_questions_gold_rank": 1,
+      "provider_bf16_gold_rank": 1,
+      "pointwise_gold_rank": 1
+    },
+    {
+      "query_id": "xquad-tr-572920d73f37b31900478055",
+      "query": "Çalışan çocukların çoğu nerede çalışmaktadır?",
+      "group": "control",
+      "reference_answers": [
+        "tarım"
+      ],
+      "original_candidate_rank": 1,
+      "repeat_gold_rank": 1,
+      "explicit_gold_rank": 1,
+      "reverse_questions_gold_rank": 2,
+      "reverse_candidates_gold_rank": 5,
+      "provider_bf16_gold_rank": 1,
+      "pointwise_gold_rank": 1
+    },
+    {
+      "query_id": "xquad-tr-5726e08e5951b619008f8113",
+      "query": "Eczacılık mevzuatı neyi zorunlu kılmaktadır?",
+      "group": "control",
+      "reference_answers": [
+        "depolama koşulları, zorunlu metinler, araç gereç vb."
+      ],
+      "original_candidate_rank": 1,
+      "explicit_gold_rank": 1,
+      "reverse_candidates_gold_rank": 12,
+      "reverse_questions_gold_rank": 1,
+      "repeat_gold_rank": 1,
+      "provider_bf16_gold_rank": 1,
+      "pointwise_gold_rank": 1
+    }
+  ],
+  "top5_hits_out_of_6_per_group": {
+    "repeat": {
+      "original_failure": 0,
+      "control": 6
+    },
+    "explicit": {
+      "original_failure": 2,
+      "control": 6
+    },
+    "reverse_questions": {
+      "original_failure": 4,
+      "control": 6
+    },
+    "reverse_candidates": {
+      "original_failure": 1,
+      "control": 1
+    },
+    "provider_bf16": {
+      "original_failure": 0,
+      "control": 6
+    },
+    "pointwise": {
+      "original_failure": 6,
+      "control": 6
+    }
+  },
+  "paid_calls": 312,
+  "cost_usd": 0.013129513,
+  "pointwise_240_calls_cost_usd": 0.0022406130000000002,
+  "repeat_12_batch_calls_cost_usd": 0.001937126
+}

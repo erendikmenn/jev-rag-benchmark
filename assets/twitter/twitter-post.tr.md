@@ -10,7 +10,9 @@
 | Clef Flash / DeepInfra FP8 | %94.444 | %92.567 | $0.168 |
 
 Jev ile Cohere'in top-5 erişim başarısı eşit; Cohere sıralamada biraz daha iyi.
-Clef Flash daha ucuz, fakat bu protokolde baseline'ın da gerisinde.
+Clef Flash daha ucuz, fakat 20 soruluk batch biçiminde baseline'ın da gerisinde.
+Sonraki küçük tanı testinde pasajları ayrı puanlamak seçilen 6 hatayı düzeltti;
+bu, modelin genel yeteneği hakkında kesin hüküm vermemeyi gerektiriyor.
 
 Küçük, 240 pasajlık veri seti; genel liderlik iddiası değil. Fiyatlar bu koşuların
 ölçülen API kullanımını gösterir; pilot, tekrar ve altyapı giderleri tabloya dahil değil.

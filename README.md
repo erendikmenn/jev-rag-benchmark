@@ -52,8 +52,9 @@ about every Clef Flash deployment.
 Clef Flash achieved **94.444% Recall@5** and **92.567% nDCG@5**,
 below both Jev and the hybrid baseline. Its retained-run cost was **$0.168440**,
 59.0% below Jev, at the observed $0.019/million input-token rate.
-Its lower cost came with worse retrieval quality on this protocol; it is not the recommended
-replacement for Jev on this dataset. No answer generation was rerun for Clef Flash.
+Its lower cost came with worse retrieval quality in this **20-question batch configuration**.
+Follow-up diagnostics below show strong configuration sensitivity; this result should not be
+read as an intrinsic Turkish-language capability ranking. No answer generation was rerun for Clef Flash.
 
 A longest-character-input preflight correctly read a sentinel at the end of the state;
 this is a truncation smoke check, not exhaustive proof that every passage was attended to.
@@ -69,6 +70,51 @@ The dry-run command below makes no API calls; adding `--run` starts paid calls:
 
 ```bash
 uv run python scripts/run_clef_flash.py
+```
+
+### Clef Flash failure diagnosis
+
+Of 58 misses, five had no annotated gold passage in the frozen top-20 pool; 53 were
+ranking failures. Clef Flash lost 41 baseline hits and recovered eight baseline misses.
+Some failures were obvious: for the Marlee Matlin sign-language question, the answer-bearing
+passage fell from candidate rank 1 to rank 12 while an unrelated Tibetan Buddhism passage
+ranked first.
+
+We selected six failures with gold present plus six successful controls (selection IDs/seed
+committed), then varied one aspect of the request at a time:
+
+| Diagnostic | Original failures recovered (of 6) | Controls retained (of 6) |
+|---|---:|---:|
+| Repeat original batch request | 0 | 6 |
+| Explicit target path in relevance question | 2 | 6 |
+| Reverse question order, same candidate state | 4 | 6 |
+| Reverse candidate order, same question template | 1 | 1 |
+| Original batch on Makora BF16 instead of DeepInfra FP8 | 0 | 6 |
+| Score every passage separately, then sort all 20 scores | 6 | 6 |
+
+The batch prompt starts with `candidate.text` although the state contains `candidates[]`,
+then appends `Evaluate only candidates[i]`. Explicit paths remove this ambiguity, but that
+change alone did not resolve four of the six selected failures. Candidate/question-order
+sensitivity and isolated-passage recovery are stronger evidence of an interaction between
+this model and the batch formulation. The BF16 check does not support blaming FP8 alone;
+it cannot isolate every provider/runtime difference.
+
+Pointwise scoring put the gold passage first for 11 of these 12 queries and third for one.
+This is **a diagnostic case-control sample selected partly from failures, not a 100% recall
+benchmark**. The full 1,044-query result above remains the original batch result. No prompt
+was tuned and then relabeled as an independent test. A fresh, prespecified held-out comparison
+of batch and pointwise scoring is needed before changing the model recommendation.
+
+The 312 diagnostic calls cost **$0.013130**, bringing Clef Flash usage including the earlier
+preflight/full run to **$0.181777**, within the $0.60 limit. On these 12 queries, 240 pointwise
+calls cost $0.002241 versus $0.001937 for 12 repeated batch calls; request count and latency
+also matter, and these costs are not a full-run estimate.
+
+[All 58 misses, exact diagnostic requests/responses and per-query ranks](results/clef-flash-diagnostics-2026-10-29/)
+are committed. Recompute the diagnostic table without API calls:
+
+```bash
+uv run python scripts/analyze_clef_diagnostics.py
 ```
 
 ## Short-answer generation on identical Jev contexts

@@ -1,0 +1,20 @@
+{
+  "failure_ids": [
+    "xquad-tr-56bec6ac3aeaaa14008c9401",
+    "xquad-tr-57280f0d3acd2414000df35f",
+    "xquad-tr-572750e8dd62a815002e9af3",
+    "xquad-tr-57115ff82419e314009555c5",
+    "xquad-tr-572940973f37b319004781a7",
+    "xquad-tr-572648e8dd62a815002e8076"
+  ],
+  "success_ids": [
+    "xquad-tr-5726e37ef1498d1400e8eed9",
+    "xquad-tr-5725f00938643c19005aced9",
+    "xquad-tr-570d2f5bfed7b91900d45cd3",
+    "xquad-tr-572968cf1d046914007793cb",
+    "xquad-tr-572920d73f37b31900478055",
+    "xquad-tr-5726e08e5951b619008f8113"
+  ],
+  "seed": 20261029,
+  "purpose": "diagnostic case-control, not unbiased benchmark"
+}

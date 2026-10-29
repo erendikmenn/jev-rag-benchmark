@@ -46,3 +46,18 @@ def test_clef_requests_preserve_jev_batch_questions_and_candidate_texts():
         assert fingerprint(body) == row["request_sha256"]
         assert body["provider"] == {"only": ["DeepInfra"], "allow_fallbacks": False}
         assert len(body["questions"]) == len(body["state"]["candidates"]) == 20
+
+
+def test_clef_diagnostics_preserve_inputs_and_reproduce_summary():
+    import json
+
+    root = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location(
+        "clef_diagnostics", root / "scripts/analyze_clef_diagnostics.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    actual = module.analyze()
+    saved = json.loads((module.DATA / "summary.json").read_text())
+    assert actual == saved
+    assert actual["paid_calls"] == 312
