@@ -1,0 +1,37 @@
+{
+  "random_ids": [
+    "xquad-tr-5727f3193acd2414000df0a8",
+    "xquad-tr-5726ea985951b619008f8261",
+    "xquad-tr-572968cf1d046914007793cd",
+    "xquad-tr-570610b275f01819005e792d",
+    "xquad-tr-56e1b62ecd28a01900c67aa5",
+    "xquad-tr-572685cd5951b619008f7573",
+    "xquad-tr-5726f1ec708984140094d6aa",
+    "xquad-tr-5733834ed058e614000b5c26",
+    "xquad-tr-5726a299dd62a815002e8b9e",
+    "xquad-tr-5725fe63ec44d21400f3d7de",
+    "xquad-tr-57111380a58dae1900cd6bda",
+    "xquad-tr-56d9c455dc89441400fdb7c6",
+    "xquad-tr-572743fb708984140094db94",
+    "xquad-tr-5726acc1f1498d1400e8e6cb",
+    "xquad-tr-570966e0200fba1400367f4f",
+    "xquad-tr-573380e0d058e614000b5bea"
+  ],
+  "targeted_jev_miss_ids": [
+    "xquad-tr-57107d73b654c5140001f91f"
+  ],
+  "seed": 20261031,
+  "static_audit": {
+    "Jev": {
+      "score_mapping_mismatches": 0,
+      "incomplete_score_sets": 0
+    },
+    "Cohere": {
+      "score_mapping_mismatches": 0,
+      "incomplete_score_sets": 0
+    }
+  },
+  "targeted_cohere_miss_ids": [
+    "xquad-tr-5733f309d058e614000b6649"
+  ]
+}

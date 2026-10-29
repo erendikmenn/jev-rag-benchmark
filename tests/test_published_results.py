@@ -61,3 +61,29 @@ def test_clef_diagnostics_preserve_inputs_and_reproduce_summary():
     saved = json.loads((module.DATA / "summary.json").read_text())
     assert actual == saved
     assert actual["paid_calls"] == 312
+
+
+def test_full_pointwise_scores_and_request_identity():
+    import json
+
+    root = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location(
+        "pointwise_analysis", root / "scripts/analyze_clef_pointwise.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    rows, summary = module.analyze()
+    assert len(rows) == 1044
+    assert summary == json.loads((module.DATA / "summary.json").read_text())
+
+
+def test_jev_cohere_audit_mappings_and_variants():
+    import json
+
+    root = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location(
+        "reranker_audit", root / "scripts/analyze_reranker_audit.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    assert module.analyze() == json.loads((module.DATA / "summary.json").read_text())

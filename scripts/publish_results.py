@@ -6,6 +6,7 @@ Run: uv run --with matplotlib==3.10.8 python scripts/publish_results.py
 from __future__ import annotations
 
 import gzip
+import importlib.util
 import json
 from pathlib import Path
 from statistics import mean
@@ -146,7 +147,12 @@ def draw(path, title, subtitle, panels, footer):
     fig.suptitle(title, x=0.06, y=0.965, ha="left", fontsize=27, fontweight="bold")
     fig.text(0.06, 0.88 if len(panels) == 1 else 0.915, subtitle, fontsize=12, color="#555")
     for ax, (heading, labels, values, unit, maximum) in zip(axes[:, 0], panels):
-        ax.barh(labels, values, color=["#777", "#111", "#aaa", "#444"][: len(labels)], height=0.5)
+        ax.barh(
+            labels,
+            values,
+            color=["#777", "#111", "#aaa", "#bbb", "#444"][: len(labels)],
+            height=0.5,
+        )
         ax.invert_yaxis()
         ax.set_xlim(0, maximum)
         ax.set_title(heading, loc="left", fontweight="bold", pad=17)
@@ -184,9 +190,21 @@ def draw(path, title, subtitle, panels, footer):
 def main():
     rows, s = validate()
     r = dict(s["reranking"])
-    r["Clef Flash"] = validate_clef()
+    r["Clef Flash batch"] = validate_clef()
+    spec = importlib.util.spec_from_file_location(
+        "pointwise_analysis", ROOT / "scripts/analyze_clef_pointwise.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    r["Clef Flash pointwise"] = module.analyze()[1]
     g = s["generation"]
-    labels = ["Hybrid baseline", "Jev 1.13", "Cohere 3.5", "Clef Flash (DeepInfra)"]
+    labels = [
+        "Hybrid baseline",
+        "Jev 1.13 batch",
+        "Cohere 3.5",
+        "Clef Flash batch",
+        "Clef Flash pointwise",
+    ]
     rerank = [
         (
             "RECALL@5 — HIGHER IS BETTER",
@@ -258,7 +276,7 @@ def main():
             panels,
             "Same Jev top-5 context and prompt for both generators. Six DeepSeek failures score zero. F1 is not human factuality."
             if panels == gens
-            else "Same candidate texts and order for all methods. Retrieval preprocessing and pilot overhead excluded from method costs.",
+            else "Same frozen candidates; pointwise sends one passage per request. Clef Flash: DeepInfra FP8.\nCosts exclude preprocessing, pilots and uncertain timed-out calls; model and strategy both vary.",
         )
     print("Validated 1,044 paired queries; regenerated 6 SVG + 6 PNG charts.")
 

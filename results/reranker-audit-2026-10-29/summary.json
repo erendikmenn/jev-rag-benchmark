@@ -1,0 +1,1545 @@
+{
+  "full_set_score_mapping_checks": {
+    "queries": 1044,
+    "Jev_mismatches": 0,
+    "Cohere_mismatches": 0
+  },
+  "selection": {
+    "random_ids": [
+      "xquad-tr-5727f3193acd2414000df0a8",
+      "xquad-tr-5726ea985951b619008f8261",
+      "xquad-tr-572968cf1d046914007793cd",
+      "xquad-tr-570610b275f01819005e792d",
+      "xquad-tr-56e1b62ecd28a01900c67aa5",
+      "xquad-tr-572685cd5951b619008f7573",
+      "xquad-tr-5726f1ec708984140094d6aa",
+      "xquad-tr-5733834ed058e614000b5c26",
+      "xquad-tr-5726a299dd62a815002e8b9e",
+      "xquad-tr-5725fe63ec44d21400f3d7de",
+      "xquad-tr-57111380a58dae1900cd6bda",
+      "xquad-tr-56d9c455dc89441400fdb7c6",
+      "xquad-tr-572743fb708984140094db94",
+      "xquad-tr-5726acc1f1498d1400e8e6cb",
+      "xquad-tr-570966e0200fba1400367f4f",
+      "xquad-tr-573380e0d058e614000b5bea"
+    ],
+    "targeted_jev_miss_ids": [
+      "xquad-tr-57107d73b654c5140001f91f"
+    ],
+    "seed": 20261031,
+    "static_audit": {
+      "Jev": {
+        "score_mapping_mismatches": 0,
+        "incomplete_score_sets": 0
+      },
+      "Cohere": {
+        "score_mapping_mismatches": 0,
+        "incomplete_score_sets": 0
+      }
+    },
+    "targeted_cohere_miss_ids": [
+      "xquad-tr-5733f309d058e614000b6649"
+    ]
+  },
+  "questions": [
+    {
+      "query_id": "xquad-tr-5727f3193acd2414000df0a8",
+      "query": "Doktor seyahatlerinde genellikle yanına ne tür varlıklar alır?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 2,
+        "Cohere_original": 1,
+        "jev_explicit": 2,
+        "jev_reverse_candidates": 3,
+        "jev_reverse_questions": 2,
+        "jev_repeat": 2,
+        "cohere_repeat": 1,
+        "cohere_reverse": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-3257da1da5c9",
+          "xquad-tr-8849e9f42f01",
+          "xquad-tr-fc07a484dfcc",
+          "xquad-tr-1b8a8e3bbd48",
+          "xquad-tr-9ee2454dedcd"
+        ],
+        "Cohere_original": [
+          "xquad-tr-8849e9f42f01",
+          "xquad-tr-3257da1da5c9",
+          "xquad-tr-1b8a8e3bbd48",
+          "xquad-tr-fc07a484dfcc",
+          "xquad-tr-9ee2454dedcd"
+        ],
+        "jev_explicit": [
+          "xquad-tr-3257da1da5c9",
+          "xquad-tr-8849e9f42f01",
+          "xquad-tr-fc07a484dfcc",
+          "xquad-tr-1b8a8e3bbd48",
+          "xquad-tr-b0a07a94d027"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-3257da1da5c9",
+          "xquad-tr-138af7162b1d",
+          "xquad-tr-8849e9f42f01",
+          "xquad-tr-e43356118978",
+          "xquad-tr-fc07a484dfcc"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-3257da1da5c9",
+          "xquad-tr-8849e9f42f01",
+          "xquad-tr-fc07a484dfcc",
+          "xquad-tr-1b8a8e3bbd48",
+          "xquad-tr-9ee2454dedcd"
+        ],
+        "jev_repeat": [
+          "xquad-tr-3257da1da5c9",
+          "xquad-tr-8849e9f42f01",
+          "xquad-tr-fc07a484dfcc",
+          "xquad-tr-1b8a8e3bbd48",
+          "xquad-tr-0d54e1458a4d"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-8849e9f42f01",
+          "xquad-tr-3257da1da5c9",
+          "xquad-tr-1b8a8e3bbd48",
+          "xquad-tr-fc07a484dfcc",
+          "xquad-tr-9ee2454dedcd"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-8849e9f42f01",
+          "xquad-tr-3257da1da5c9",
+          "xquad-tr-1b8a8e3bbd48",
+          "xquad-tr-fc07a484dfcc",
+          "xquad-tr-9ee2454dedcd"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-8849e9f42f01",
+          "xquad-tr-3257da1da5c9",
+          "xquad-tr-fc07a484dfcc",
+          "xquad-tr-1b8a8e3bbd48",
+          "xquad-tr-138af7162b1d"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-5726ea985951b619008f8261",
+      "query": "Danışman eczacılık esas olarak neyle ilgilidir?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_reverse_candidates": 1,
+        "jev_reverse_questions": 1,
+        "jev_explicit": 1,
+        "jev_repeat": 1,
+        "cohere_repeat": 1,
+        "cohere_reverse": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-3323eafeea1c",
+          "xquad-tr-e4de0bd829f8",
+          "xquad-tr-93789f9716ec",
+          "xquad-tr-5efd004121af",
+          "xquad-tr-2d75b44c21c1"
+        ],
+        "Cohere_original": [
+          "xquad-tr-3323eafeea1c",
+          "xquad-tr-e4de0bd829f8",
+          "xquad-tr-1b8a8e3bbd48",
+          "xquad-tr-1005ea8ca58f",
+          "xquad-tr-93789f9716ec"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-3323eafeea1c",
+          "xquad-tr-e4de0bd829f8",
+          "xquad-tr-1005ea8ca58f",
+          "xquad-tr-3257da1da5c9",
+          "xquad-tr-9ee2454dedcd"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-3323eafeea1c",
+          "xquad-tr-e4de0bd829f8",
+          "xquad-tr-93789f9716ec",
+          "xquad-tr-5efd004121af",
+          "xquad-tr-2d75b44c21c1"
+        ],
+        "jev_explicit": [
+          "xquad-tr-3323eafeea1c",
+          "xquad-tr-e4de0bd829f8",
+          "xquad-tr-93789f9716ec",
+          "xquad-tr-2d75b44c21c1",
+          "xquad-tr-5efd004121af"
+        ],
+        "jev_repeat": [
+          "xquad-tr-3323eafeea1c",
+          "xquad-tr-e4de0bd829f8",
+          "xquad-tr-93789f9716ec",
+          "xquad-tr-5efd004121af",
+          "xquad-tr-2d75b44c21c1"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-3323eafeea1c",
+          "xquad-tr-e4de0bd829f8",
+          "xquad-tr-1b8a8e3bbd48",
+          "xquad-tr-1005ea8ca58f",
+          "xquad-tr-93789f9716ec"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-3323eafeea1c",
+          "xquad-tr-e4de0bd829f8",
+          "xquad-tr-1b8a8e3bbd48",
+          "xquad-tr-1005ea8ca58f",
+          "xquad-tr-93789f9716ec"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-3323eafeea1c",
+          "xquad-tr-e4de0bd829f8",
+          "xquad-tr-93789f9716ec",
+          "xquad-tr-1b8a8e3bbd48",
+          "xquad-tr-2d75b44c21c1"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-572968cf1d046914007793cd",
+      "query": "Plastom ne zaman keşfedilmiştir?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_reverse_questions": 1,
+        "jev_repeat": 1,
+        "jev_reverse_candidates": 1,
+        "jev_explicit": 1,
+        "cohere_repeat": 1,
+        "cohere_reverse": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-2e52c5a647dd",
+          "xquad-tr-c2757e065d82",
+          "xquad-tr-3549ea4088fa",
+          "xquad-tr-3a955860c4e0",
+          "xquad-tr-57db7183a0c4"
+        ],
+        "Cohere_original": [
+          "xquad-tr-2e52c5a647dd",
+          "xquad-tr-17f8de581e6d",
+          "xquad-tr-c2757e065d82",
+          "xquad-tr-3549ea4088fa",
+          "xquad-tr-500de7a9382f"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-2e52c5a647dd",
+          "xquad-tr-c2757e065d82",
+          "xquad-tr-17f8de581e6d",
+          "xquad-tr-dfff3315b967",
+          "xquad-tr-3549ea4088fa"
+        ],
+        "jev_repeat": [
+          "xquad-tr-2e52c5a647dd",
+          "xquad-tr-c2757e065d82",
+          "xquad-tr-17f8de581e6d",
+          "xquad-tr-dfff3315b967",
+          "xquad-tr-3a955860c4e0"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-2e52c5a647dd",
+          "xquad-tr-500de7a9382f",
+          "xquad-tr-09da7e8547ec",
+          "xquad-tr-17f8de581e6d",
+          "xquad-tr-cf9d3c41c0ee"
+        ],
+        "jev_explicit": [
+          "xquad-tr-2e52c5a647dd",
+          "xquad-tr-c2757e065d82",
+          "xquad-tr-17f8de581e6d",
+          "xquad-tr-dfff3315b967",
+          "xquad-tr-3a955860c4e0"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-2e52c5a647dd",
+          "xquad-tr-17f8de581e6d",
+          "xquad-tr-c2757e065d82",
+          "xquad-tr-3549ea4088fa",
+          "xquad-tr-500de7a9382f"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-2e52c5a647dd",
+          "xquad-tr-17f8de581e6d",
+          "xquad-tr-c2757e065d82",
+          "xquad-tr-3549ea4088fa",
+          "xquad-tr-500de7a9382f"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-2e52c5a647dd",
+          "xquad-tr-c2757e065d82",
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-dfff3315b967",
+          "xquad-tr-3549ea4088fa"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-570610b275f01819005e792d",
+      "query": "Hangi havalimanı dünyadaki en yoğun tek piste ev sahipliği yapar?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_explicit": 1,
+        "jev_reverse_questions": 1,
+        "jev_repeat": 1,
+        "jev_reverse_candidates": 1,
+        "cohere_reverse": 1,
+        "cohere_repeat": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-f9cee47afa9a",
+          "xquad-tr-301b639f3ac9",
+          "xquad-tr-4a841f83d10a",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-ff7d0fa77806"
+        ],
+        "Cohere_original": [
+          "xquad-tr-f9cee47afa9a",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-95526a3d3722",
+          "xquad-tr-ff7d0fa77806",
+          "xquad-tr-49c0972ee320"
+        ],
+        "jev_explicit": [
+          "xquad-tr-f9cee47afa9a",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-ff7d0fa77806",
+          "xquad-tr-301b639f3ac9",
+          "xquad-tr-3235577fd416"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-f9cee47afa9a",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-ff7d0fa77806",
+          "xquad-tr-95526a3d3722",
+          "xquad-tr-301b639f3ac9"
+        ],
+        "jev_repeat": [
+          "xquad-tr-f9cee47afa9a",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-ff7d0fa77806",
+          "xquad-tr-301b639f3ac9",
+          "xquad-tr-7576438f5501"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-f9cee47afa9a",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-ff7d0fa77806",
+          "xquad-tr-49c0972ee320",
+          "xquad-tr-301b639f3ac9"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-f9cee47afa9a",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-95526a3d3722",
+          "xquad-tr-ff7d0fa77806",
+          "xquad-tr-49c0972ee320"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-f9cee47afa9a",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-95526a3d3722",
+          "xquad-tr-ff7d0fa77806",
+          "xquad-tr-49c0972ee320"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-f9cee47afa9a",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-ff7d0fa77806",
+          "xquad-tr-95526a3d3722",
+          "xquad-tr-49c0972ee320"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-56e1b62ecd28a01900c67aa5",
+      "query": "Deterministik bir Turing makinesinde zaman içinde çözülebilen herhangi bir bilinen seriyi tanımlamak için kullanılan ifade nedir?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_repeat": 1,
+        "jev_explicit": 1,
+        "jev_reverse_questions": 1,
+        "jev_reverse_candidates": 1,
+        "cohere_repeat": 1,
+        "cohere_reverse": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-cc3cff2b6711",
+          "xquad-tr-3c9d10101c61",
+          "xquad-tr-fc07a484dfcc",
+          "xquad-tr-515e520983bf",
+          "xquad-tr-9f588a6112f7"
+        ],
+        "Cohere_original": [
+          "xquad-tr-cc3cff2b6711",
+          "xquad-tr-f35e308d9792",
+          "xquad-tr-660ba94e4a8b",
+          "xquad-tr-d3201e523e0b",
+          "xquad-tr-f5c49da75e44"
+        ],
+        "jev_repeat": [
+          "xquad-tr-cc3cff2b6711",
+          "xquad-tr-3c9d10101c61",
+          "xquad-tr-fc07a484dfcc",
+          "xquad-tr-515e520983bf",
+          "xquad-tr-9f588a6112f7"
+        ],
+        "jev_explicit": [
+          "xquad-tr-cc3cff2b6711",
+          "xquad-tr-3c9d10101c61",
+          "xquad-tr-660ba94e4a8b",
+          "xquad-tr-9f588a6112f7",
+          "xquad-tr-c70ce4ff4d58"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-cc3cff2b6711",
+          "xquad-tr-3c9d10101c61",
+          "xquad-tr-fc07a484dfcc",
+          "xquad-tr-515e520983bf",
+          "xquad-tr-660ba94e4a8b"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-cc3cff2b6711",
+          "xquad-tr-cf9d3c41c0ee",
+          "xquad-tr-660ba94e4a8b",
+          "xquad-tr-3c9d10101c61",
+          "xquad-tr-f35e308d9792"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-cc3cff2b6711",
+          "xquad-tr-f35e308d9792",
+          "xquad-tr-660ba94e4a8b",
+          "xquad-tr-d3201e523e0b",
+          "xquad-tr-f5c49da75e44"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-cc3cff2b6711",
+          "xquad-tr-f35e308d9792",
+          "xquad-tr-660ba94e4a8b",
+          "xquad-tr-d3201e523e0b",
+          "xquad-tr-f5c49da75e44"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-cc3cff2b6711",
+          "xquad-tr-3c9d10101c61",
+          "xquad-tr-660ba94e4a8b",
+          "xquad-tr-9f588a6112f7",
+          "xquad-tr-6434b8c478c4"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-572685cd5951b619008f7573",
+      "query": "Victoria ve Albert Müzesi'nin kökeni hangi dünya sergisindendir?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_repeat": 1,
+        "jev_explicit": 1,
+        "jev_reverse_candidates": 1,
+        "jev_reverse_questions": 1,
+        "cohere_repeat": 1,
+        "cohere_reverse": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-2d053c371ab3",
+          "xquad-tr-0da52699e654",
+          "xquad-tr-a40f711fb279",
+          "xquad-tr-28724ad8bf70",
+          "xquad-tr-817b27790c90"
+        ],
+        "Cohere_original": [
+          "xquad-tr-2d053c371ab3",
+          "xquad-tr-02d7ab96e83c",
+          "xquad-tr-b2be6da0eb69",
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-7208ece436ee"
+        ],
+        "jev_repeat": [
+          "xquad-tr-2d053c371ab3",
+          "xquad-tr-0da52699e654",
+          "xquad-tr-28724ad8bf70",
+          "xquad-tr-817b27790c90",
+          "xquad-tr-fc07a484dfcc"
+        ],
+        "jev_explicit": [
+          "xquad-tr-2d053c371ab3",
+          "xquad-tr-0da52699e654",
+          "xquad-tr-817b27790c90",
+          "xquad-tr-f33ae3529e8d",
+          "xquad-tr-fc07a484dfcc"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-2d053c371ab3",
+          "xquad-tr-b2be6da0eb69",
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-02d7ab96e83c",
+          "xquad-tr-3ef5f57c6f4b"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-2d053c371ab3",
+          "xquad-tr-0da52699e654",
+          "xquad-tr-a40f711fb279",
+          "xquad-tr-28724ad8bf70",
+          "xquad-tr-817b27790c90"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-2d053c371ab3",
+          "xquad-tr-02d7ab96e83c",
+          "xquad-tr-b2be6da0eb69",
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-7208ece436ee"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-2d053c371ab3",
+          "xquad-tr-02d7ab96e83c",
+          "xquad-tr-b2be6da0eb69",
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-7208ece436ee"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-2d053c371ab3",
+          "xquad-tr-b2be6da0eb69",
+          "xquad-tr-02d7ab96e83c",
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-3ef5f57c6f4b"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-5726f1ec708984140094d6aa",
+      "query": "Müzik Enstrümanları galerisinin kapanmasına cevaben Parlamento web sitesinde bir çevrimiçi dilekçede yaklaşık kaç isim imzalanmıştır?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_repeat": 1,
+        "jev_reverse_questions": 1,
+        "jev_explicit": 1,
+        "jev_reverse_candidates": 1,
+        "cohere_reverse": 1,
+        "cohere_repeat": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-c8b68ce4b8fd",
+          "xquad-tr-408e1ceaefad",
+          "xquad-tr-a40f711fb279"
+        ],
+        "Cohere_original": [
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-c8b68ce4b8fd",
+          "xquad-tr-4f05dd05be91",
+          "xquad-tr-655fdb0366c0"
+        ],
+        "jev_repeat": [
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-408e1ceaefad",
+          "xquad-tr-a40f711fb279",
+          "xquad-tr-3ecd8572f796"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-408e1ceaefad",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-1205a55bc8be",
+          "xquad-tr-3ecd8572f796"
+        ],
+        "jev_explicit": [
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-408e1ceaefad",
+          "xquad-tr-a40f711fb279",
+          "xquad-tr-c7f949af8938"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-3ecd8572f796",
+          "xquad-tr-a84963933ac7",
+          "xquad-tr-4f05dd05be91"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-c8b68ce4b8fd",
+          "xquad-tr-4f05dd05be91",
+          "xquad-tr-655fdb0366c0"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-c8b68ce4b8fd",
+          "xquad-tr-4f05dd05be91",
+          "xquad-tr-655fdb0366c0"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-07b450b99a51",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-c8b68ce4b8fd",
+          "xquad-tr-48519463137f",
+          "xquad-tr-a84963933ac7"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-5733834ed058e614000b5c26",
+      "query": "Varşova'nın ilk borsası ne zaman kurulmuştur?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_repeat": 1,
+        "jev_reverse_questions": 1,
+        "jev_explicit": 1,
+        "jev_reverse_candidates": 1,
+        "cohere_reverse": 1,
+        "cohere_repeat": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-13344c31f203",
+          "xquad-tr-31d9fe1c67d8",
+          "xquad-tr-3dcc3bbc2c25",
+          "xquad-tr-32ef242629e9"
+        ],
+        "Cohere_original": [
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-f11ce30393c7",
+          "xquad-tr-699a8785e8af",
+          "xquad-tr-02b48bacfd77",
+          "xquad-tr-32f9b3f9058f"
+        ],
+        "jev_repeat": [
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-13344c31f203",
+          "xquad-tr-31d9fe1c67d8",
+          "xquad-tr-3dcc3bbc2c25",
+          "xquad-tr-32ef242629e9"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-31d9fe1c67d8",
+          "xquad-tr-13344c31f203",
+          "xquad-tr-3dcc3bbc2c25",
+          "xquad-tr-32ef242629e9"
+        ],
+        "jev_explicit": [
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-13344c31f203",
+          "xquad-tr-31d9fe1c67d8",
+          "xquad-tr-3dcc3bbc2c25",
+          "xquad-tr-7af23ea5eb6c"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-f11ce30393c7",
+          "xquad-tr-02b48bacfd77",
+          "xquad-tr-699a8785e8af",
+          "xquad-tr-32f9b3f9058f"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-f11ce30393c7",
+          "xquad-tr-699a8785e8af",
+          "xquad-tr-02b48bacfd77",
+          "xquad-tr-32f9b3f9058f"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-f11ce30393c7",
+          "xquad-tr-699a8785e8af",
+          "xquad-tr-02b48bacfd77",
+          "xquad-tr-32f9b3f9058f"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-02b48bacfd77",
+          "xquad-tr-f11ce30393c7",
+          "xquad-tr-699a8785e8af",
+          "xquad-tr-13344c31f203"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-5726a299dd62a815002e8b9e",
+      "query": "AB'yi kuran orijinal antlaşmalardan kaç tanesi temel hakları korumuştur?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_repeat": 1,
+        "jev_explicit": 1,
+        "jev_reverse_candidates": 1,
+        "jev_reverse_questions": 1,
+        "cohere_repeat": 1,
+        "cohere_reverse": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-e1a11a742b61",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-8116185d96cb",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-47af34496cb9"
+        ],
+        "Cohere_original": [
+          "xquad-tr-e1a11a742b61",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-47af34496cb9",
+          "xquad-tr-78921f103805"
+        ],
+        "jev_repeat": [
+          "xquad-tr-e1a11a742b61",
+          "xquad-tr-8116185d96cb",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-47af34496cb9"
+        ],
+        "jev_explicit": [
+          "xquad-tr-e1a11a742b61",
+          "xquad-tr-8116185d96cb",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-47af34496cb9"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-e1a11a742b61",
+          "xquad-tr-47af34496cb9",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-78921f103805",
+          "xquad-tr-8116185d96cb"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-e1a11a742b61",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-8116185d96cb",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-47af34496cb9"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-e1a11a742b61",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-47af34496cb9",
+          "xquad-tr-78921f103805"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-e1a11a742b61",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-47af34496cb9",
+          "xquad-tr-78921f103805"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-e1a11a742b61",
+          "xquad-tr-c84dc45a4483",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-47af34496cb9",
+          "xquad-tr-86491cd136e1"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-5725fe63ec44d21400f3d7de",
+      "query": "Eyaletlerarası Otoban Sistemi hangi yıl oluşturulmuştur?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_repeat": 1,
+        "jev_reverse_questions": 1,
+        "jev_reverse_candidates": 1,
+        "jev_explicit": 1,
+        "cohere_reverse": 1,
+        "cohere_repeat": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-d1dc8f55bc69",
+          "xquad-tr-1955dfb7dcf8",
+          "xquad-tr-1434d4ebf733",
+          "xquad-tr-21a94d3066b1",
+          "xquad-tr-f4f06203cea7"
+        ],
+        "Cohere_original": [
+          "xquad-tr-d1dc8f55bc69",
+          "xquad-tr-04c15ed36672",
+          "xquad-tr-1a004f10d96c",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-32ef242629e9"
+        ],
+        "jev_repeat": [
+          "xquad-tr-d1dc8f55bc69",
+          "xquad-tr-21a94d3066b1",
+          "xquad-tr-f4f06203cea7",
+          "xquad-tr-1434d4ebf733",
+          "xquad-tr-1955dfb7dcf8"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-d1dc8f55bc69",
+          "xquad-tr-09adcd67a6a7",
+          "xquad-tr-1955dfb7dcf8",
+          "xquad-tr-1434d4ebf733",
+          "xquad-tr-61d21e7047fd"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-d1dc8f55bc69",
+          "xquad-tr-85c71e54c978",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-1005ea8ca58f",
+          "xquad-tr-3549ea4088fa"
+        ],
+        "jev_explicit": [
+          "xquad-tr-d1dc8f55bc69",
+          "xquad-tr-f4f06203cea7",
+          "xquad-tr-32ef242629e9",
+          "xquad-tr-04c15ed36672",
+          "xquad-tr-1955dfb7dcf8"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-d1dc8f55bc69",
+          "xquad-tr-04c15ed36672",
+          "xquad-tr-1a004f10d96c",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-32ef242629e9"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-d1dc8f55bc69",
+          "xquad-tr-04c15ed36672",
+          "xquad-tr-1a004f10d96c",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-32ef242629e9"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-d1dc8f55bc69",
+          "xquad-tr-32ef242629e9",
+          "xquad-tr-1a004f10d96c",
+          "xquad-tr-33a85f292858",
+          "xquad-tr-04c15ed36672"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-57111380a58dae1900cd6bda",
+      "query": "Paris Üniversitesi'nde başka hangi Avrupa Protestan lideri de eğitim gördü?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_repeat": 1,
+        "jev_explicit": 1,
+        "cohere_repeat": 1,
+        "jev_reverse_candidates": 1,
+        "cohere_reverse": 1,
+        "jev_reverse_questions": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-294593759fcc",
+          "xquad-tr-31059ce45c8a",
+          "xquad-tr-44f843a18fe3",
+          "xquad-tr-34fa99e66bd1",
+          "xquad-tr-1b252cecccf1"
+        ],
+        "Cohere_original": [
+          "xquad-tr-294593759fcc",
+          "xquad-tr-f33ae3529e8d",
+          "xquad-tr-4de586fed59c",
+          "xquad-tr-717a8e567f6e",
+          "xquad-tr-dd26c002354e"
+        ],
+        "jev_repeat": [
+          "xquad-tr-294593759fcc",
+          "xquad-tr-31059ce45c8a",
+          "xquad-tr-44f843a18fe3",
+          "xquad-tr-1b252cecccf1",
+          "xquad-tr-32ef242629e9"
+        ],
+        "jev_explicit": [
+          "xquad-tr-294593759fcc",
+          "xquad-tr-31059ce45c8a",
+          "xquad-tr-7576438f5501",
+          "xquad-tr-7f444e38fda5",
+          "xquad-tr-9ee2454dedcd"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-294593759fcc",
+          "xquad-tr-f33ae3529e8d",
+          "xquad-tr-4de586fed59c",
+          "xquad-tr-717a8e567f6e",
+          "xquad-tr-dd26c002354e"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-294593759fcc",
+          "xquad-tr-86491cd136e1",
+          "xquad-tr-dd26c002354e",
+          "xquad-tr-f33ae3529e8d",
+          "xquad-tr-01a436bd8738"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-294593759fcc",
+          "xquad-tr-f33ae3529e8d",
+          "xquad-tr-4de586fed59c",
+          "xquad-tr-717a8e567f6e",
+          "xquad-tr-dd26c002354e"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-294593759fcc",
+          "xquad-tr-31059ce45c8a",
+          "xquad-tr-44f843a18fe3",
+          "xquad-tr-7f444e38fda5",
+          "xquad-tr-1b252cecccf1"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-294593759fcc",
+          "xquad-tr-f33ae3529e8d",
+          "xquad-tr-34fa99e66bd1",
+          "xquad-tr-31059ce45c8a",
+          "xquad-tr-86491cd136e1"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-56d9c455dc89441400fdb7c6",
+      "query": "Super Bowl 50'de Ulusal Marşın dili için kim görevlendirilmiştir?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_repeat": 1,
+        "jev_explicit": 1,
+        "jev_reverse_questions": 1,
+        "jev_reverse_candidates": 1,
+        "cohere_reverse": 1,
+        "cohere_repeat": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-94077ca0db25",
+          "xquad-tr-138af7162b1d",
+          "xquad-tr-54ad3394fb35",
+          "xquad-tr-f33ae3529e8d",
+          "xquad-tr-515e520983bf"
+        ],
+        "Cohere_original": [
+          "xquad-tr-94077ca0db25",
+          "xquad-tr-54ad3394fb35",
+          "xquad-tr-94de63f55db8",
+          "xquad-tr-391129eff6d9",
+          "xquad-tr-2b81f10d1c9b"
+        ],
+        "jev_repeat": [
+          "xquad-tr-94077ca0db25",
+          "xquad-tr-138af7162b1d",
+          "xquad-tr-54ad3394fb35",
+          "xquad-tr-515e520983bf",
+          "xquad-tr-193e3666bbf5"
+        ],
+        "jev_explicit": [
+          "xquad-tr-94077ca0db25",
+          "xquad-tr-138af7162b1d",
+          "xquad-tr-515e520983bf",
+          "xquad-tr-da0a49ac3dbf",
+          "xquad-tr-04c15ed36672"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-94077ca0db25",
+          "xquad-tr-138af7162b1d",
+          "xquad-tr-c0272f2104fa",
+          "xquad-tr-54ad3394fb35",
+          "xquad-tr-f33ae3529e8d"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-94077ca0db25",
+          "xquad-tr-655fdb0366c0",
+          "xquad-tr-028bfe64cad5",
+          "xquad-tr-94de63f55db8",
+          "xquad-tr-391129eff6d9"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-94077ca0db25",
+          "xquad-tr-54ad3394fb35",
+          "xquad-tr-94de63f55db8",
+          "xquad-tr-391129eff6d9",
+          "xquad-tr-2b81f10d1c9b"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-94077ca0db25",
+          "xquad-tr-54ad3394fb35",
+          "xquad-tr-94de63f55db8",
+          "xquad-tr-391129eff6d9",
+          "xquad-tr-2b81f10d1c9b"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-94077ca0db25",
+          "xquad-tr-94de63f55db8",
+          "xquad-tr-391129eff6d9",
+          "xquad-tr-2b81f10d1c9b",
+          "xquad-tr-138af7162b1d"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-572743fb708984140094db94",
+      "query": "1970'ler, hangi ağın reytinglerde ilk sıraya yerleşmesine izin vermiştir?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_explicit": 1,
+        "jev_repeat": 1,
+        "jev_reverse_candidates": 1,
+        "jev_reverse_questions": 1,
+        "cohere_repeat": 1,
+        "cohere_reverse": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-3a955860c4e0",
+          "xquad-tr-193e3666bbf5",
+          "xquad-tr-929b15643900",
+          "xquad-tr-515e520983bf",
+          "xquad-tr-f4bcf5ea40ac"
+        ],
+        "Cohere_original": [
+          "xquad-tr-3a955860c4e0",
+          "xquad-tr-193e3666bbf5",
+          "xquad-tr-e43356118978",
+          "xquad-tr-515e520983bf",
+          "xquad-tr-f4bcf5ea40ac"
+        ],
+        "jev_explicit": [
+          "xquad-tr-3a955860c4e0",
+          "xquad-tr-193e3666bbf5",
+          "xquad-tr-1a02c22956bb",
+          "xquad-tr-515e520983bf",
+          "xquad-tr-a315f6bc59d0"
+        ],
+        "jev_repeat": [
+          "xquad-tr-3a955860c4e0",
+          "xquad-tr-193e3666bbf5",
+          "xquad-tr-515e520983bf",
+          "xquad-tr-929b15643900",
+          "xquad-tr-a315f6bc59d0"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-3a955860c4e0",
+          "xquad-tr-e43356118978",
+          "xquad-tr-193e3666bbf5",
+          "xquad-tr-515e520983bf",
+          "xquad-tr-61d21e7047fd"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-3a955860c4e0",
+          "xquad-tr-193e3666bbf5",
+          "xquad-tr-515e520983bf",
+          "xquad-tr-929b15643900",
+          "xquad-tr-a315f6bc59d0"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-3a955860c4e0",
+          "xquad-tr-193e3666bbf5",
+          "xquad-tr-e43356118978",
+          "xquad-tr-515e520983bf",
+          "xquad-tr-f4bcf5ea40ac"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-3a955860c4e0",
+          "xquad-tr-193e3666bbf5",
+          "xquad-tr-e43356118978",
+          "xquad-tr-515e520983bf",
+          "xquad-tr-f4bcf5ea40ac"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-3a955860c4e0",
+          "xquad-tr-193e3666bbf5",
+          "xquad-tr-f4bcf5ea40ac",
+          "xquad-tr-e43356118978",
+          "xquad-tr-515e520983bf"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-5726acc1f1498d1400e8e6cb",
+      "query": "Hangi şamanın ilanı Temuçin'in yükselişine yardımcı oldu?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_repeat": 1,
+        "jev_explicit": 1,
+        "jev_reverse_questions": 1,
+        "jev_reverse_candidates": 1,
+        "cohere_repeat": 1,
+        "cohere_reverse": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-a4a9631d7475",
+          "xquad-tr-d22d36d2718f",
+          "xquad-tr-65f29f3619dd",
+          "xquad-tr-71cdfa240ba3",
+          "xquad-tr-817b27790c90"
+        ],
+        "Cohere_original": [
+          "xquad-tr-a4a9631d7475",
+          "xquad-tr-65f29f3619dd",
+          "xquad-tr-d4632e39c044",
+          "xquad-tr-94de63f55db8",
+          "xquad-tr-1b9bdfc6fcad"
+        ],
+        "jev_repeat": [
+          "xquad-tr-a4a9631d7475",
+          "xquad-tr-d22d36d2718f",
+          "xquad-tr-817b27790c90",
+          "xquad-tr-028bfe64cad5",
+          "xquad-tr-71cdfa240ba3"
+        ],
+        "jev_explicit": [
+          "xquad-tr-a4a9631d7475",
+          "xquad-tr-d22d36d2718f",
+          "xquad-tr-817b27790c90",
+          "xquad-tr-65f29f3619dd",
+          "xquad-tr-93789f9716ec"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-a4a9631d7475",
+          "xquad-tr-d22d36d2718f",
+          "xquad-tr-65f29f3619dd",
+          "xquad-tr-71cdfa240ba3",
+          "xquad-tr-817b27790c90"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-a4a9631d7475",
+          "xquad-tr-65f29f3619dd",
+          "xquad-tr-1b252cecccf1",
+          "xquad-tr-a0a6beee2b32",
+          "xquad-tr-1b9bdfc6fcad"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-a4a9631d7475",
+          "xquad-tr-65f29f3619dd",
+          "xquad-tr-d4632e39c044",
+          "xquad-tr-94de63f55db8",
+          "xquad-tr-1b9bdfc6fcad"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-a4a9631d7475",
+          "xquad-tr-65f29f3619dd",
+          "xquad-tr-d4632e39c044",
+          "xquad-tr-94de63f55db8",
+          "xquad-tr-1b9bdfc6fcad"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-a4a9631d7475",
+          "xquad-tr-65f29f3619dd",
+          "xquad-tr-1b252cecccf1",
+          "xquad-tr-1b9bdfc6fcad",
+          "xquad-tr-a0a6beee2b32"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-570966e0200fba1400367f4f",
+      "query": "BSkyB'nin standart tanımlı yayınları neyle uyumludur?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_repeat": 1,
+        "jev_reverse_questions": 1,
+        "jev_explicit": 1,
+        "jev_reverse_candidates": 1,
+        "cohere_repeat": 1,
+        "cohere_reverse": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-6aaf26e70f3b",
+          "xquad-tr-85c71e54c978",
+          "xquad-tr-1955dfb7dcf8",
+          "xquad-tr-56f4eaadaab4",
+          "xquad-tr-a315f6bc59d0"
+        ],
+        "Cohere_original": [
+          "xquad-tr-6aaf26e70f3b",
+          "xquad-tr-78921f103805",
+          "xquad-tr-3ecd8572f796",
+          "xquad-tr-4ce3b039da5b",
+          "xquad-tr-56f4eaadaab4"
+        ],
+        "jev_repeat": [
+          "xquad-tr-6aaf26e70f3b",
+          "xquad-tr-56f4eaadaab4",
+          "xquad-tr-1955dfb7dcf8",
+          "xquad-tr-85c71e54c978",
+          "xquad-tr-4abaaaf8c66e"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-6aaf26e70f3b",
+          "xquad-tr-1955dfb7dcf8",
+          "xquad-tr-85c71e54c978",
+          "xquad-tr-56f4eaadaab4",
+          "xquad-tr-a315f6bc59d0"
+        ],
+        "jev_explicit": [
+          "xquad-tr-6aaf26e70f3b",
+          "xquad-tr-56f4eaadaab4",
+          "xquad-tr-a315f6bc59d0",
+          "xquad-tr-1955dfb7dcf8",
+          "xquad-tr-85c71e54c978"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-6aaf26e70f3b",
+          "xquad-tr-78921f103805",
+          "xquad-tr-da0a49ac3dbf",
+          "xquad-tr-3ecd8572f796",
+          "xquad-tr-4ce3b039da5b"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-6aaf26e70f3b",
+          "xquad-tr-78921f103805",
+          "xquad-tr-3ecd8572f796",
+          "xquad-tr-4ce3b039da5b",
+          "xquad-tr-56f4eaadaab4"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-6aaf26e70f3b",
+          "xquad-tr-78921f103805",
+          "xquad-tr-3ecd8572f796",
+          "xquad-tr-4ce3b039da5b",
+          "xquad-tr-56f4eaadaab4"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-6aaf26e70f3b",
+          "xquad-tr-56f4eaadaab4",
+          "xquad-tr-3ecd8572f796",
+          "xquad-tr-78921f103805",
+          "xquad-tr-4ce3b039da5b"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-573380e0d058e614000b5bea",
+      "query": "Polonya'daki bölgesel ayrımlardaki ikinci seviye nedir?",
+      "group": "random",
+      "ranks": {
+        "Jev_original": 1,
+        "Cohere_original": 1,
+        "jev_repeat": 1,
+        "jev_explicit": 1,
+        "jev_reverse_questions": 1,
+        "jev_reverse_candidates": 2,
+        "cohere_repeat": 1,
+        "cohere_reverse": 1,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-32f9b3f9058f",
+          "xquad-tr-91160634d19f",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-199a59f3dea6",
+          "xquad-tr-65f5d5b07220"
+        ],
+        "Cohere_original": [
+          "xquad-tr-32f9b3f9058f",
+          "xquad-tr-02b48bacfd77",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-cf9d3c41c0ee"
+        ],
+        "jev_repeat": [
+          "xquad-tr-32f9b3f9058f",
+          "xquad-tr-199a59f3dea6",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-65f5d5b07220",
+          "xquad-tr-5550c7743e65"
+        ],
+        "jev_explicit": [
+          "xquad-tr-32f9b3f9058f",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-6434b8c478c4",
+          "xquad-tr-65f5d5b07220",
+          "xquad-tr-02b48bacfd77"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-32f9b3f9058f",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-199a59f3dea6",
+          "xquad-tr-65f5d5b07220",
+          "xquad-tr-5550c7743e65"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-02b48bacfd77",
+          "xquad-tr-32f9b3f9058f",
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-699a8785e8af",
+          "xquad-tr-cf9d3c41c0ee"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-32f9b3f9058f",
+          "xquad-tr-02b48bacfd77",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-cf9d3c41c0ee"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-32f9b3f9058f",
+          "xquad-tr-02b48bacfd77",
+          "xquad-tr-625cca9213ec",
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-cf9d3c41c0ee"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-32f9b3f9058f",
+          "xquad-tr-02b48bacfd77",
+          "xquad-tr-ec8b393a2f7b",
+          "xquad-tr-699a8785e8af",
+          "xquad-tr-f11ce30393c7"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-57107d73b654c5140001f91f",
+      "query": "Bu bildirimi hangi soydan Fransızlar yayımladı?",
+      "group": "targeted",
+      "ranks": {
+        "Jev_original": 7,
+        "Cohere_original": 4,
+        "jev_repeat": 8,
+        "jev_explicit": 6,
+        "jev_reverse_questions": 8,
+        "jev_reverse_candidates": 4,
+        "cohere_repeat": 4,
+        "cohere_reverse": 4,
+        "jev_pointwise": 1
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-d22d36d2718f",
+          "xquad-tr-b0a07a94d027",
+          "xquad-tr-2096d87118ed",
+          "xquad-tr-294593759fcc",
+          "xquad-tr-61d21e7047fd"
+        ],
+        "Cohere_original": [
+          "xquad-tr-dd26c002354e",
+          "xquad-tr-a0a6beee2b32",
+          "xquad-tr-ab204f003977",
+          "xquad-tr-71cdfa240ba3",
+          "xquad-tr-294593759fcc"
+        ],
+        "jev_repeat": [
+          "xquad-tr-d22d36d2718f",
+          "xquad-tr-b0a07a94d027",
+          "xquad-tr-2096d87118ed",
+          "xquad-tr-294593759fcc",
+          "xquad-tr-61d21e7047fd"
+        ],
+        "jev_explicit": [
+          "xquad-tr-d22d36d2718f",
+          "xquad-tr-b0a07a94d027",
+          "xquad-tr-2096d87118ed",
+          "xquad-tr-294593759fcc",
+          "xquad-tr-a0a6beee2b32"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-d22d36d2718f",
+          "xquad-tr-b0a07a94d027",
+          "xquad-tr-2096d87118ed",
+          "xquad-tr-a0a6beee2b32",
+          "xquad-tr-294593759fcc"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-d22d36d2718f",
+          "xquad-tr-294593759fcc",
+          "xquad-tr-dd26c002354e",
+          "xquad-tr-71cdfa240ba3",
+          "xquad-tr-96ffd1240bc7"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-dd26c002354e",
+          "xquad-tr-a0a6beee2b32",
+          "xquad-tr-ab204f003977",
+          "xquad-tr-71cdfa240ba3",
+          "xquad-tr-294593759fcc"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-dd26c002354e",
+          "xquad-tr-a0a6beee2b32",
+          "xquad-tr-ab204f003977",
+          "xquad-tr-71cdfa240ba3",
+          "xquad-tr-294593759fcc"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-71cdfa240ba3",
+          "xquad-tr-d22d36d2718f",
+          "xquad-tr-294593759fcc",
+          "xquad-tr-c70ce4ff4d58",
+          "xquad-tr-2096d87118ed"
+        ]
+      }
+    },
+    {
+      "query_id": "xquad-tr-5733f309d058e614000b6649",
+      "query": "Savaşın bilançosu neydi? ",
+      "group": "targeted",
+      "ranks": {
+        "Jev_original": 3,
+        "Cohere_original": 7,
+        "jev_explicit": 4,
+        "cohere_repeat": 7,
+        "jev_reverse_candidates": 3,
+        "jev_repeat": 3,
+        "cohere_reverse": 7,
+        "jev_reverse_questions": 3,
+        "jev_pointwise": 2
+      },
+      "top5": {
+        "Jev_original": [
+          "xquad-tr-1b9bdfc6fcad",
+          "xquad-tr-2a13deb186bd",
+          "xquad-tr-1b252cecccf1",
+          "xquad-tr-102947b53d99",
+          "xquad-tr-699a8785e8af"
+        ],
+        "Cohere_original": [
+          "xquad-tr-acef039dc7e9",
+          "xquad-tr-391129eff6d9",
+          "xquad-tr-699a8785e8af",
+          "xquad-tr-4a841f83d10a",
+          "xquad-tr-01a436bd8738"
+        ],
+        "jev_explicit": [
+          "xquad-tr-1b9bdfc6fcad",
+          "xquad-tr-2a13deb186bd",
+          "xquad-tr-102947b53d99",
+          "xquad-tr-1b252cecccf1",
+          "xquad-tr-4a841f83d10a"
+        ],
+        "cohere_repeat": [
+          "xquad-tr-acef039dc7e9",
+          "xquad-tr-391129eff6d9",
+          "xquad-tr-699a8785e8af",
+          "xquad-tr-4a841f83d10a",
+          "xquad-tr-01a436bd8738"
+        ],
+        "jev_reverse_candidates": [
+          "xquad-tr-1b9bdfc6fcad",
+          "xquad-tr-391129eff6d9",
+          "xquad-tr-1b252cecccf1",
+          "xquad-tr-699a8785e8af",
+          "xquad-tr-1205a55bc8be"
+        ],
+        "jev_repeat": [
+          "xquad-tr-1b9bdfc6fcad",
+          "xquad-tr-2a13deb186bd",
+          "xquad-tr-1b252cecccf1",
+          "xquad-tr-4a841f83d10a",
+          "xquad-tr-699a8785e8af"
+        ],
+        "cohere_reverse": [
+          "xquad-tr-acef039dc7e9",
+          "xquad-tr-391129eff6d9",
+          "xquad-tr-699a8785e8af",
+          "xquad-tr-4a841f83d10a",
+          "xquad-tr-01a436bd8738"
+        ],
+        "jev_reverse_questions": [
+          "xquad-tr-1b9bdfc6fcad",
+          "xquad-tr-2a13deb186bd",
+          "xquad-tr-1b252cecccf1",
+          "xquad-tr-699a8785e8af",
+          "xquad-tr-acef039dc7e9"
+        ],
+        "jev_pointwise": [
+          "xquad-tr-1b9bdfc6fcad",
+          "xquad-tr-1b252cecccf1",
+          "xquad-tr-391129eff6d9",
+          "xquad-tr-2a13deb186bd",
+          "xquad-tr-41d0eeaba356"
+        ]
+      }
+    }
+  ],
+  "top5_hits": {
+    "random": {
+      "Jev_original": 16,
+      "Cohere_original": 16,
+      "jev_explicit": 16,
+      "jev_reverse_candidates": 16,
+      "jev_reverse_questions": 16,
+      "jev_repeat": 16,
+      "cohere_repeat": 16,
+      "cohere_reverse": 16,
+      "jev_pointwise": 16
+    },
+    "targeted": {
+      "Jev_original": 1,
+      "Cohere_original": 1,
+      "jev_explicit": 1,
+      "jev_reverse_candidates": 2,
+      "jev_reverse_questions": 1,
+      "jev_repeat": 1,
+      "cohere_repeat": 1,
+      "cohere_reverse": 1,
+      "jev_pointwise": 2
+    }
+  },
+  "order_sensitivity": {
+    "Jev": {
+      "top5_set_changed_on_repeat": 12,
+      "gold_rank_changed_on_repeat": 1,
+      "top5_set_changed_on_reverse": 18,
+      "gold_rank_changed_on_reverse": 3
+    },
+    "Cohere": {
+      "top5_set_changed_on_repeat": 0,
+      "gold_rank_changed_on_repeat": 0,
+      "top5_set_changed_on_reverse": 0,
+      "gold_rank_changed_on_reverse": 0
+    }
+  },
+  "calls": 468,
+  "cost_usd": 0.0753477,
+  "limits": "16 random gold-present cases plus 2 targeted failures, not proof of general invariance; original rank used to break ties."
+}

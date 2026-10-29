@@ -1,0 +1,47 @@
+{
+  "questions": 1044,
+  "hits": 1039,
+  "recall_at_5": 0.9952107279693486,
+  "ndcg_at_5": 0.9826974371999397,
+  "mrr_at_5": 0.9784003831417625,
+  "cost_usd": 0.195843374,
+  "gold_present_in_top20": 1039,
+  "previously_probed_12": {
+    "questions": 12,
+    "hits": 12,
+    "recall_at_5": 1.0,
+    "ndcg_at_5": 0.9583333333333334,
+    "mrr_at_5": 0.9444444444444444,
+    "cost_usd": 0.0022406130000000002
+  },
+  "other_1032": {
+    "questions": 1032,
+    "hits": 1027,
+    "recall_at_5": 0.9951550387596899,
+    "ndcg_at_5": 0.9829807407332724,
+    "mrr_at_5": 0.9787952196382429,
+    "cost_usd": 0.193602761
+  },
+  "paired_hits": {
+    "Baseline": {
+      "pointwise_only_hit": 20,
+      "comparator_only_hit": 0
+    },
+    "Jev": {
+      "pointwise_only_hit": 1,
+      "comparator_only_hit": 0
+    },
+    "Cohere": {
+      "pointwise_only_hit": 1,
+      "comparator_only_hit": 0
+    },
+    "Clef batch": {
+      "pointwise_only_hit": 53,
+      "comparator_only_hit": 0
+    }
+  },
+  "attempts": 20885,
+  "failed_attempts": 5,
+  "charged_or_reserved_usd": 0.198343374,
+  "evaluation_note": "Same evaluation dataset revisited after exploratory diagnostics, not an independent test set. All 1044 rerun, no reused probe scores."
+}

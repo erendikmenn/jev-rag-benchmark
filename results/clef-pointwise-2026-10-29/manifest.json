@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-29",
+  "model": "cloudflare/clef-flash",
+  "provider": "DeepInfra",
+  "precision": "FP8 per endpoint metadata",
+  "rate_usd_per_million_input_tokens": 0.019,
+  "successful_calls": 20880,
+  "total_attempts": 20885,
+  "timeout_attempts": 5,
+  "uncertain_timeout_reserve_usd": 0.0025,
+  "successful_call_cost_usd": 0.195843374,
+  "charged_or_reserved_usd": 0.198343374,
+  "clef_cumulative_usd_including_prior_runs_and_reserves": 0.380120307,
+  "separate_jev_cohere_audit_usd": 0.0753477,
+  "total_project_conservative_budget_usd": 5.507848008360016,
+  "artifacts_sha256": {
+    "calls.jsonl.gz": "4dcdbdcdd13f03374d08ff6a8f50d70b72a808c1c7dd6566b4e00d05a43c1337",
+    "results.jsonl": "106552f150fd2068796dc296b73b22266cc193f8afc9f54e85bbfd2b9b819e97",
+    "summary.json": "18d98565134298c0e589e5d924848899c2df34291280f9a44840ac707f4100e8",
+    "protocol.json": "d4028c1515987def3e759faf4396e017bdbaaca954621eefe81077f9cdb9aa7a"
+  },
+  "notes": [
+    "All 1044 queries rerun; no previous diagnostic observations reused.",
+    "Exact single-passage relevance question from the earlier diagnosis, no additional prompt tuning.",
+    "Transient transport retries only, all attempts journaled; no quality-based retries.",
+    "Concurrency: pilot8, full64. No controlled latency comparison.",
+    "Jev and Cohere full-set results reused; Jev pointwise checked on 18 audit cases only.",
+    "Model and execution strategy both differ in the comparison.",
+    "Evaluation dataset revisited after diagnosis; not an independent model-selection test."
+  ]
+}

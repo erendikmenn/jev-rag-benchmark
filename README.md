@@ -11,6 +11,8 @@ This is a short-answer benchmark on a small corpus, not a general-purpose RAG le
 - The candidate pool is the historical hybrid BM25 + BGE-M3 baseline's top 20, frozen once.
 - Jev, Cohere and Clef Flash receive identical candidate **texts and order** for every question.
 - All rerankers return five passages. The baseline retains the original hybrid order.
+- Clef Flash is reported separately for 20-question batch and one-passage-per-request
+  scoring; Jev is the original batch run, and Cohere uses its native rerank endpoint.
 - Gemini and DeepSeek receive the **same Jev top-five context and exact prompt**, capped at
   6,000 context characters. They must return a short answer span with a source citation.
 - Both use temperature 0, seed 20260919, medium reasoning and a 4,096 output-token limit.
@@ -27,14 +29,21 @@ Generation is excluded from this comparison. All metrics use the final **five** 
 | Method | Recall@5 ↑ | Gold in top-5 | nDCG@5 ↑ | MRR@5 ↑ | Reranking cost |
 |---|---:|---:|---:|---:|---:|
 | Hybrid baseline | 97.605% | 1,019 / 1,044 | 94.314% | 93.194% | $0 API reranking |
-| Jev 1.13 | **99.425%** | **1,038 / 1,044** | 98.151% | 97.712% | $0.410866 |
-| Cohere Rerank 3.5 | **99.425%** | **1,038 / 1,044** | **98.626%** | **98.348%** | $1.044000 |
-| Clef Flash (DeepInfra FP8) | 94.444% | 986 / 1,044 | 92.567% | 91.935% | **$0.168440** |
+| Jev 1.13 — batch | 99.425% | 1,038 / 1,044 | 98.151% | 97.712% | $0.410866 |
+| Cohere Rerank 3.5 — native API | 99.425% | 1,038 / 1,044 | **98.626%** | **98.348%** | $1.044000 |
+| Clef Flash — batch, DeepInfra FP8 | 94.444% | 986 / 1,044 | 92.567% | 91.935% | **$0.168440** |
+| Clef Flash — pointwise, DeepInfra FP8 | **99.521%** | **1,039 / 1,044** | 98.270% | 97.840% | $0.195843 |
 
-Jev and Cohere achieve the same aggregate top-five recall. Cohere has slightly higher
-ranking scores; Jev costs 60.6% less for reranking. Jev yields 19 additional top-five hits
-relative to the hybrid baseline. Equal hit counts do not imply identical retrieved sets.
-These are observations on this dataset, not universal superiority claims.
+Clef Flash pointwise reaches the frozen candidate pool's recall ceiling: all 1,039 questions
+whose annotated gold passage is present in the top 20. The other five cannot be recovered by
+any reranker on this pool. It recovers 53 batch misses without losing any batch hits, and one
+additional hit relative to each of Jev and Cohere. Cohere retains the highest nDCG/MRR.
+
+Pointwise Flash costs 52.3% less than the existing Jev batch run and 81.2% less than Cohere,
+but sends 20 requests per query. This comparison varies both model and scoring strategy:
+Jev pointwise was only audited on a small sample, not rerun across the full set. A one-question
+recall advantage is not evidence of general model superiority. The dataset was reused after
+exploratory diagnosis; these are not independent model-selection test results.
 
 ![Reranker recall, nDCG at five, and cost](assets/benchmark/reranker-comparison.png)
 
@@ -105,8 +114,8 @@ benchmark**. The full 1,044-query result above remains the original batch result
 was tuned and then relabeled as an independent test. A fresh, prespecified held-out comparison
 of batch and pointwise scoring is needed before changing the model recommendation.
 
-The 312 diagnostic calls cost **$0.013130**, bringing Clef Flash usage including the earlier
-preflight/full run to **$0.181777**, within the $0.60 limit. On these 12 queries, 240 pointwise
+The 312 diagnostic calls cost **$0.013130**, bringing Clef Flash usage at that stage, including the earlier
+preflight/full run, to **$0.181777**, within the $0.60 limit. On these 12 queries, 240 pointwise
 calls cost $0.002241 versus $0.001937 for 12 repeated batch calls; request count and latency
 also matter, and these costs are not a full-run estimate.
 
@@ -115,6 +124,52 @@ are committed. Recompute the diagnostic table without API calls:
 
 ```bash
 uv run python scripts/analyze_clef_diagnostics.py
+```
+
+### Full-set pointwise rerun and Jev/Cohere audit
+
+The pointwise rerun scored all 20 passages separately for each of the 1,044 questions:
+**20,880 successful calls**. No diagnostic scores were reused. The same relevance question,
+provider and tie-breaking rule were fixed before this run. Five requests timed out and were
+retried for transport failure only; every attempt is retained. Successful-call cost was
+**$0.195843**, plus a conservative $0.002500 reserve for uncertain timed-out calls,
+giving **$0.198343** run accounting.
+
+The 12 previously probed questions scored 12/12; the other 1,032 scored 1,027/1,032
+(99.516% Recall@5). This split is descriptive: revisiting the same evaluation dataset after
+diagnosis is not equivalent to a new independent test set.
+
+We checked **all 1,044 original Jev/Cohere records**: all 20 candidate scores were present,
+and score-to-document mapping plus top-five selection matched the saved outputs.
+There was no indexing or sorting bug. Cohere receives a query and document list through
+its native rerank API; the Jev relevance prompt is not sent to Cohere.
+
+Live audit: 16 seeded random gold-present queries, excluding the earlier 12 diagnostics,
+plus each model's one gold-present miss (18 distinct queries). In the 16 random cases,
+Jev retained all gold hits under explicit paths, reversed questions, reversed candidates
+and pointwise scoring. It is **not invariant**, however: reversing candidates changed its
+top-five set in 18/18 audit cases and gold rank in 3/18. Even repeated original requests
+changed its top-five set in 12/18, so not every difference can be attributed to order.
+
+For Jev's targeted miss, gold rank was 7 originally, 8 on repeat, 6 with explicit paths,
+4 with reversed candidates and 1 pointwise. The shared batch formulation can therefore
+hurt Jev too, although the observed effect on gold retrieval was much smaller here.
+
+Cohere's repeat and reversed-order runs preserved both the top-five sets and gold ranks
+in all 18 cases. Its targeted miss remained rank 7. This is evidence against a mapping/order
+problem in this sample, not a proof that Cohere is universally order-invariant.
+
+[Pointwise requests, ranks and accounting](results/clef-pointwise-2026-10-29/) and
+[the Jev/Cohere audit](results/reranker-audit-2026-10-29/) are available for inspection.
+The audit cost $0.075348. Cumulative Clef Flash accounting is $0.380120, below its $0.60 cap.
+Total project accounting including earlier uncertainty reserves and this audit is $5.507848,
+below the original $6 cap. These amounts are telemetry/reserve accounting, not reconciled invoices.
+
+Recompute without API calls:
+
+```bash
+uv run python scripts/analyze_clef_pointwise.py
+uv run python scripts/analyze_reranker_audit.py
 ```
 
 ## Short-answer generation on identical Jev contexts

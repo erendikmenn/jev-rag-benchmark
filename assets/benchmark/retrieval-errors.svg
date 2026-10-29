@@ -156,97 +156,115 @@ L 950.201379 162
     <g id="ytick_1">
      <g id="line2d_15"/>
      <g id="text_9">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="194.196024" transform="rotate(-0 261.46 194.196024)">Hybrid baseline</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="190.533686" transform="rotate(-0 261.46 190.533686)">Hybrid baseline</text>
      </g>
     </g>
     <g id="ytick_2">
      <g id="line2d_16"/>
      <g id="text_10">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="260.118102" transform="rotate(-0 261.46 260.118102)">Jev 1.13</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="241.806413" transform="rotate(-0 261.46 241.806413)">Jev 1.13 batch</text>
      </g>
     </g>
     <g id="ytick_3">
      <g id="line2d_17"/>
      <g id="text_11">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="326.04018" transform="rotate(-0 261.46 326.04018)">Cohere 3.5</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="293.079141" transform="rotate(-0 261.46 293.079141)">Cohere 3.5</text>
      </g>
     </g>
     <g id="ytick_4">
      <g id="line2d_18"/>
      <g id="text_12">
-      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="391.962258" transform="rotate(-0 261.46 391.962258)">Clef Flash (DeepInfra)</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="344.351868" transform="rotate(-0 261.46 344.351868)">Clef Flash batch</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_19"/>
+     <g id="text_13">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end" x="261.46" y="395.624595" transform="rotate(-0 261.46 395.624595)">Clef Flash pointwise</text>
      </g>
     </g>
    </g>
    <g id="patch_3">
     <path d="M 264.96 173.536364
 L 550.477241 173.536364
-L 550.477241 206.497403
-L 264.96 206.497403
+L 550.477241 199.172727
+L 264.96 199.172727
 z
 " clip-path="url(#pfc490dd623)" style="fill: #777777"/>
    </g>
    <g id="patch_4">
-    <path d="M 264.96 239.458442
-L 333.484138 239.458442
-L 333.484138 272.419481
-L 264.96 272.419481
+    <path d="M 264.96 224.809091
+L 333.484138 224.809091
+L 333.484138 250.445455
+L 264.96 250.445455
 z
 " clip-path="url(#pfc490dd623)" style="fill: #111111"/>
    </g>
    <g id="patch_5">
-    <path d="M 264.96 305.380519
-L 333.484138 305.380519
-L 333.484138 338.341558
-L 264.96 338.341558
+    <path d="M 264.96 276.081818
+L 333.484138 276.081818
+L 333.484138 301.718182
+L 264.96 301.718182
 z
 " clip-path="url(#pfc490dd623)" style="fill: #aaaaaa"/>
    </g>
    <g id="patch_6">
-    <path d="M 264.96 371.302597
-L 927.36 371.302597
-L 927.36 404.263636
+    <path d="M 264.96 327.354545
+L 927.36 327.354545
+L 927.36 352.990909
+L 264.96 352.990909
+z
+" clip-path="url(#pfc490dd623)" style="fill: #bbbbbb"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 264.96 378.627273
+L 322.063448 378.627273
+L 322.063448 404.263636
 L 264.96 404.263636
 z
 " clip-path="url(#pfc490dd623)" style="fill: #444444"/>
    </g>
-   <g id="patch_7">
+   <g id="patch_8">
     <path d="M 264.96 415.8
 L 1059.84 415.8
 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
-   <g id="text_13">
-    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="560.015801" y="193.328133" transform="rotate(-0 560.015801 193.328133)">25.00</text>
-   </g>
    <g id="text_14">
-    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="343.022698" y="259.250211" transform="rotate(-0 343.022698 259.250211)">6.00</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="560.015801" y="189.665795" transform="rotate(-0 560.015801 189.665795)">25.00</text>
    </g>
    <g id="text_15">
-    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="343.022698" y="325.172289" transform="rotate(-0 343.022698 325.172289)">6.00</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="343.022698" y="240.938523" transform="rotate(-0 343.022698 240.938523)">6.00</text>
    </g>
    <g id="text_16">
-    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="936.89856" y="391.094367" transform="rotate(-0 936.89856 391.094367)">58.00</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="343.022698" y="292.21125" transform="rotate(-0 343.022698 292.21125)">6.00</text>
    </g>
    <g id="text_17">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="936.89856" y="343.483977" transform="rotate(-0 936.89856 343.483977)">58.00</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="331.602008" y="394.756705" transform="rotate(-0 331.602008 394.756705)">5.00</text>
+   </g>
+   <g id="text_19">
     <text style="font-weight: 700; font-size: 13.2px; font-family: 'DejaVu Sans'; text-anchor: start" x="264.96" y="145" transform="rotate(-0 264.96 145)">GOLD PASSAGE MISSING FROM TOP FIVE — LOWER IS BETTER</text>
    </g>
   </g>
-  <g id="text_18">
+  <g id="text_20">
    <text style="font-weight: 700; font-size: 27px; font-family: 'DejaVu Sans'; text-anchor: start" x="69.12" y="39.415781" transform="rotate(-0 69.12 39.415781)">Retrieval errors</text>
   </g>
-  <g id="text_19">
+  <g id="text_21">
    <text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #555555" x="69.12" y="64.8" transform="rotate(-0 69.12 64.8)">XQUAD-TR  •  29 OCT 2026  •  1,044 QUESTIONS  •  FROZEN HYBRID TOP-20</text>
   </g>
-  <g id="text_20">
-   <g id="patch_8">
+  <g id="text_22">
+   <g id="patch_9">
     <path d="M 59.11 533.397656
-L 750.68 533.397656
-L 750.68 502.731719
-L 59.11 502.731719
+L 612.110937 533.397656
+L 612.110937 490.414125
+L 59.11 490.414125
 z
 " style="fill: #f4f4f4; stroke: #111111; stroke-linejoin: miter"/>
    </g>
-   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #333333" x="69.12" y="521.1" transform="rotate(-0 69.12 521.1)">Same candidate texts and order for all methods. Retrieval preprocessing and pilot overhead excluded from method costs.</text>
+   <text style="font-size: 11px; font-family: 'DejaVu Sans'; fill: #333333" transform="translate(69.12 508.782406)">Same frozen candidates; pointwise sends one passage per request. Clef Flash: DeepInfra FP8.</text>
+   <text style="font-size: 11px; font-family: 'DejaVu Sans'; fill: #333333" transform="translate(69.12 521.1)">Costs exclude preprocessing, pilots and uncertain timed-out calls; model and strategy both vary.</text>
   </g>
  </g>
  <defs>
