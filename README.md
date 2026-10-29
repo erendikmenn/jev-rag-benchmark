@@ -9,8 +9,8 @@ This is a short-answer benchmark on a small corpus, not a general-purpose RAG le
 ## What is held constant?
 
 - The candidate pool is the historical hybrid BM25 + BGE-M3 baseline's top 20, frozen once.
-- Jev and Cohere receive identical candidate **texts and order** for every question.
-- Both return five passages. The baseline retains the original hybrid order.
+- Jev, Cohere and Clef Flash receive identical candidate **texts and order** for every question.
+- All rerankers return five passages. The baseline retains the original hybrid order.
 - Gemini and DeepSeek receive the **same Jev top-five context and exact prompt**, capped at
   6,000 context characters. They must return a short answer span with a source citation.
 - Both use temperature 0, seed 20260919, medium reasoning and a 4,096 output-token limit.
@@ -27,8 +27,9 @@ Generation is excluded from this comparison. All metrics use the final **five** 
 | Method | Recall@5 ↑ | Gold in top-5 | nDCG@5 ↑ | MRR@5 ↑ | Reranking cost |
 |---|---:|---:|---:|---:|---:|
 | Hybrid baseline | 97.605% | 1,019 / 1,044 | 94.314% | 93.194% | $0 API reranking |
-| Jev 1.13 | **99.425%** | **1,038 / 1,044** | 98.151% | 97.712% | **$0.410866** |
+| Jev 1.13 | **99.425%** | **1,038 / 1,044** | 98.151% | 97.712% | $0.410866 |
 | Cohere Rerank 3.5 | **99.425%** | **1,038 / 1,044** | **98.626%** | **98.348%** | $1.044000 |
+| Clef Flash (DeepInfra FP8) | 94.444% | 986 / 1,044 | 92.567% | 91.935% | **$0.168440** |
 
 Jev and Cohere achieve the same aggregate top-five recall. Cohere has slightly higher
 ranking scores; Jev costs 60.6% less for reranking. Jev yields 19 additional top-five hits
@@ -38,6 +39,37 @@ These are observations on this dataset, not universal superiority claims.
 ![Reranker recall, nDCG at five, and cost](assets/benchmark/reranker-comparison.png)
 
 ![Questions missing the gold passage in the top five](assets/benchmark/retrieval-errors.png)
+
+
+### Clef Flash extension
+
+Clef Flash was evaluated on the same frozen 1,044 questions, with exactly the Jev batch
+state and relevance questions, selecting five passages by descending probability and
+breaking ties by original candidate order. OpenRouter routing was pinned to **DeepInfra
+(FP8)** with provider fallbacks disabled. This is a provider-specific result, not a claim
+about every Clef Flash deployment.
+
+Clef Flash achieved **94.444% Recall@5** and **92.567% nDCG@5**,
+below both Jev and the hybrid baseline. Its retained-run cost was **$0.168440**,
+59.0% below Jev, at the observed $0.019/million input-token rate.
+Its lower cost came with worse retrieval quality on this protocol; it is not the recommended
+replacement for Jev on this dataset. No answer generation was rerun for Clef Flash.
+
+A longest-character-input preflight correctly read a sentinel at the end of the state;
+this is a truncation smoke check, not exhaustive proof that every passage was attended to.
+All measured requests stayed below the provider's 24,576-token window
+(maximum observed: 10,815). Ten pilot queries passed technical checks and were
+retained in the full run. All 1,044 requests completed without errors or retries.
+The extension cost **$0.168647 including preflight**, under its separate $0.60 cap.
+The original $6 run accounting below is unchanged.
+
+[Raw Clef Flash responses and provenance](results/clef-flash-2026-10-29/) include all
+20 candidate probabilities, provider-reported usage, request hashes and paired hit counts.
+The dry-run command below makes no API calls; adding `--run` starts paid calls:
+
+```bash
+uv run python scripts/run_clef_flash.py
+```
 
 ## Short-answer generation on identical Jev contexts
 

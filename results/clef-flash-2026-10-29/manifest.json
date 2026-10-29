@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-29",
+  "model": "cloudflare/clef-flash",
+  "provider": "DeepInfra",
+  "precision": "fp8 (provider metadata)",
+  "price_usd_per_million_input_tokens": 0.019,
+  "output_price": 0,
+  "context_limit": 24576,
+  "candidate_pool": "../fair-2026-10-29/frozen-pool.json.gz",
+  "protocol": "59587a1886a0849fbff95ab929a358235133d65cb31ca015eae4ef6b89e9d397",
+  "pool_sha256_canonical": "d19a2e21172dc6941c999017245755ce77aa3a3336b79f78d24d305a80f46437",
+  "results_sha256": "6646276221b871e8edf1cd858c3787d3511a02eb17150fff96da713641ad6850",
+  "questions": 1044,
+  "candidate_k": 20,
+  "context_k": 5,
+  "concurrency": 8,
+  "pilot_queries_retained": 10,
+  "retries": 0,
+  "notes": [
+    "Identical Jev batch state and relevance questions; only model and provider routing differ.",
+    "Provider fixed to DeepInfra; provider fallbacks disabled.",
+    "Preflight on longest character-length candidate package successfully read a tail sentinel. This is a smoke check, not exhaustive proof of attention.",
+    "All reported token usages below context limit.",
+    "Pilot only checked technical validity, not answer quality; retained in full run.",
+    "No answer generation rerun. Old reranker results reused; latency is not controlled across runs.",
+    "No dated Clef Flash weight revision available in response; provider is FP8.",
+    "Budget includes preflight; table cost is 1044 retained queries only."
+  ]
+}

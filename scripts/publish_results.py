@@ -88,6 +88,43 @@ def validate():
     return rows, summary
 
 
+def validate_clef():
+    """Recompute metrics from provider probabilities and verify frozen-pool parity."""
+    folder = ROOT / "results/clef-flash-2026-10-29"
+    rows = [json.loads(line) for line in (folder / "results.jsonl").read_text().splitlines()]
+    pool = json.loads(gzip.decompress((DATA / "frozen-pool.json.gz").read_bytes()))
+    by_id = {r["query_id"]: r for r in pool}
+    qrels = json.loads((DATA / "qrels.json").read_text())
+    assert len(rows) == len({r["query_id"] for r in rows}) == len(by_id) == 1044
+    assert {r["query_id"] for r in rows} == set(by_id)
+    assert len({r["protocol"] for r in rows}) == 1
+    digest = fingerprint(pool)
+    for row in rows:
+        frozen = by_id[row["query_id"]]
+        assert row["pool_sha256"] == digest
+        assert row["query"] == frozen["query"]
+        assert row["candidate_ids"] == [d["doc_id"] for d in frozen["candidates"]]
+        payload = row["response"]
+        assert payload["model"] == "cloudflare/clef-flash"
+        assert payload["provider"] == "DeepInfra"
+        assert 0 < payload["usage"]["input_tokens"] < 24576
+        scores = [payload["answers"][f"candidate_{i}"]["noul"] for i in range(20)]
+        assert all(0 <= value <= 1 for value in scores)
+        order = sorted(range(20), key=lambda i: (-scores[i], i))
+        assert row["context_ids"] == [row["candidate_ids"][i] for i in order[:5]]
+    result = {
+        name: mean(metric(r["context_ids"], set(qrels[r["query_id"]]), 5) for r in rows)
+        for name, metric in (
+            ("recall_at_5", recall_at_k),
+            ("ndcg_at_5", ndcg_at_k),
+            ("mrr_at_5", mrr_at_k),
+        )
+    }
+    result["hits"] = sum(bool(set(r["context_ids"]) & set(qrels[r["query_id"]])) for r in rows)
+    result["cost_usd"] = sum(r["response"]["usage"]["cost"] for r in rows)
+    return result
+
+
 def draw(path, title, subtitle, panels, footer):
     import matplotlib
 
@@ -109,7 +146,7 @@ def draw(path, title, subtitle, panels, footer):
     fig.suptitle(title, x=0.06, y=0.965, ha="left", fontsize=27, fontweight="bold")
     fig.text(0.06, 0.88 if len(panels) == 1 else 0.915, subtitle, fontsize=12, color="#555")
     for ax, (heading, labels, values, unit, maximum) in zip(axes[:, 0], panels):
-        ax.barh(labels, values, color=["#777", "#111", "#aaa"][: len(labels)], height=0.5)
+        ax.barh(labels, values, color=["#777", "#111", "#aaa", "#444"][: len(labels)], height=0.5)
         ax.invert_yaxis()
         ax.set_xlim(0, maximum)
         ax.set_title(heading, loc="left", fontweight="bold", pad=17)
@@ -146,9 +183,10 @@ def draw(path, title, subtitle, panels, footer):
 
 def main():
     rows, s = validate()
-    r = s["reranking"]
+    r = dict(s["reranking"])
+    r["Clef Flash"] = validate_clef()
     g = s["generation"]
-    labels = ["Hybrid baseline", "Jev 1.13", "Cohere 3.5"]
+    labels = ["Hybrid baseline", "Jev 1.13", "Cohere 3.5", "Clef Flash (DeepInfra)"]
     rerank = [
         (
             "RECALL@5 — HIGHER IS BETTER",
@@ -201,7 +239,7 @@ def main():
             labels,
             [round((1 - r[k]["recall_at_5"]) * 1044) for k in r],
             "Number of questions",
-            30,
+            max(30, max(round((1 - r[k]["recall_at_5"]) * 1044) for k in r) * 1.2),
         )
     ]
     outputs = [

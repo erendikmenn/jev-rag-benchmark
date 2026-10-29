@@ -1,0 +1,107 @@
+{
+  "status": 200,
+  "elapsed_ms": 1491.7913749995932,
+  "query_id": "xquad-tr-5726a5525951b619008f78e0",
+  "response": {
+    "model": "cloudflare/clef-flash",
+    "answers": {
+      "candidate_0": {
+        "type": "noul",
+        "noul": 0.7937
+      },
+      "candidate_1": {
+        "type": "noul",
+        "noul": 0.0656
+      },
+      "candidate_2": {
+        "type": "noul",
+        "noul": 0.2056
+      },
+      "candidate_3": {
+        "type": "noul",
+        "noul": 0.363
+      },
+      "candidate_4": {
+        "type": "noul",
+        "noul": 0.2037
+      },
+      "candidate_5": {
+        "type": "noul",
+        "noul": 0.3285
+      },
+      "candidate_6": {
+        "type": "noul",
+        "noul": 0.329
+      },
+      "candidate_7": {
+        "type": "noul",
+        "noul": 0.3849
+      },
+      "candidate_8": {
+        "type": "noul",
+        "noul": 0.4045
+      },
+      "candidate_9": {
+        "type": "noul",
+        "noul": 0.3975
+      },
+      "candidate_10": {
+        "type": "noul",
+        "noul": 0.4149
+      },
+      "candidate_11": {
+        "type": "noul",
+        "noul": 0.4144
+      },
+      "candidate_12": {
+        "type": "noul",
+        "noul": 0.5249
+      },
+      "candidate_13": {
+        "type": "noul",
+        "noul": 0.4815
+      },
+      "candidate_14": {
+        "type": "noul",
+        "noul": 0.4017
+      },
+      "candidate_15": {
+        "type": "noul",
+        "noul": 0.4083
+      },
+      "candidate_16": {
+        "type": "noul",
+        "noul": 0.3531
+      },
+      "candidate_17": {
+        "type": "noul",
+        "noul": 0.3711
+      },
+      "candidate_18": {
+        "type": "noul",
+        "noul": 0.4054
+      },
+      "candidate_19": {
+        "type": "noul",
+        "noul": 0.4022
+      },
+      "tail_check": {
+        "type": "choice",
+        "choice": "a",
+        "probabilities": {
+          "a": 0.8726,
+          "b": 0.0151,
+          "c": 0.1122
+        },
+        "confidence": 0.6614
+      }
+    },
+    "usage": {
+      "input_tokens": 10924,
+      "output_tokens": 0,
+      "cost": 0.000207556
+    },
+    "id": "gen-dec-1793275850-dhm3WkCCheXX55Z3VT5U",
+    "provider": "DeepInfra"
+  }
+}

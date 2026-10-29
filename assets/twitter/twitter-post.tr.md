@@ -1,19 +1,19 @@
-# Güncel paylaşım taslağı — 29 Ekim 2026
+# Güncel paylaşım taslağı — yayımlanmadı
 
-Jev RAG benchmarkını aynı aday metinleri ve sırasıyla 1.044 Türkçe XQuAD sorusunda yeniden çalıştırdık.
+1.044 Türkçe XQuAD sorusu, aynı sabit 20 aday pasaj:
 
-Jev ve Cohere Recall@5: %99,43. Cohere nDCG@5'te az farkla önde (%98,63 / %98,15);
-Jev reranking maliyetinde yaklaşık %61 daha ucuz ($0,411 / $1,044).
+| Model | Recall@5 | nDCG@5 | Reranking maliyeti |
+|---|---:|---:|---:|
+| Hybrid baseline | %97,605 | %94,314 | $0 ek reranking |
+| Jev 1.13 | %99,425 | %98,151 | $0,411 |
+| Cohere 3.5 | %99,425 | %98,626 | $1,044 |
+| Clef Flash / DeepInfra FP8 | %94.444 | %92.567 | $0.168 |
 
-Aynı Jev bağlamı ve kısa cevap promptuyla Gemini F1 %77,06; DeepSeek %70,63.
-Gemini bu protokolde daha yüksek sözcüksel kalite, DeepSeek daha düşük üretim maliyeti verdi.
-DeepSeek'in altı boş/kesilmiş cevabı sıfır puanla dahil edildi.
+Jev ile Cohere'in top-5 erişim başarısı eşit; Cohere sıralamada biraz daha iyi.
+Clef Flash daha ucuz, fakat bu protokolde baseline'ın da gerisinde.
 
-Eski cümle-cevap puanlaması, farklı Cohere adayları ve @10 etiketleri yanıltıcıydı.
-Önceki kalite önerileri geçersiz; eski raporlar tarihsel kayıt olarak işaretlendi.
-Recall cevap doğruluğu değildir; F1 da insan değerlendirmesi değildir.
+Küçük, 240 pasajlık veri seti; genel liderlik iddiası değil. Fiyatlar bu koşuların
+ölçülen API kullanımını gösterir; pilot, tekrar ve altyapı giderleri tabloya dahil değil.
+Clef Flash için cevap üretimi tekrar çalıştırılmadı.
 
-Kod ve ham sonuçlar: https://github.com/erendikmenn/jev-rag-benchmark
-
-Görseller: benchmark-bars.png, benchmark-summary.png, benchmark-details.png.
-Bu bir taslaktır; otomatik olarak sosyal medyada yayımlanmamıştır.
+Kaynak: https://github.com/erendikmenn/jev-rag-benchmark

@@ -1,0 +1,34 @@
+{
+  "recall_at_5": 0.9444444444444444,
+  "ndcg_at_5": 0.925667621921823,
+  "mrr_at_5": 0.9193486590038314,
+  "hits": 986,
+  "cost_usd": 0.168439864,
+  "questions": 1044,
+  "model": "cloudflare/clef-flash",
+  "provider": "DeepInfra",
+  "paired_hits": {
+    "Baseline": {
+      "clef_only_hit": 8,
+      "comparator_only_hit": 41
+    },
+    "Jev": {
+      "clef_only_hit": 0,
+      "comparator_only_hit": 52
+    },
+    "Cohere": {
+      "clef_only_hit": 0,
+      "comparator_only_hit": 52
+    }
+  },
+  "median_latency_ms": 1185.8009999996284,
+  "input_tokens": 8865256,
+  "max_input_tokens": 10815,
+  "errors": 0,
+  "budget": {
+    "spent_usd": 0.16864742,
+    "completed": 1044,
+    "protocol": "59587a1886a0849fbff95ab929a358235133d65cb31ca015eae4ef6b89e9d397",
+    "limit_usd": 0.6
+  }
+}
